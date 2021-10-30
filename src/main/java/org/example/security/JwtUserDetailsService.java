@@ -1,0 +1,30 @@
+package org.example.security;
+
+import org.example.security.jwt.JwtFactory;
+import org.example.security.jwt.JwtUser;
+import org.example.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+@Service
+public class JwtUserDetailsService implements UserDetailsService {
+
+    private final UserService userService;
+    @Autowired
+    public JwtUserDetailsService(UserService userService){
+        this.userService = userService;
+    }
+
+
+
+    @Override
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+
+        JwtUser jwtUser = JwtFactory.create(userService.findByUsername(userName));
+        
+        return jwtUser;
+    }
+}
