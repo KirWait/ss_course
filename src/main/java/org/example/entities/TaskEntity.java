@@ -37,7 +37,7 @@ public class TaskEntity {
     private Long responsibleId;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_id")
+    @JoinColumn(name = "task_id", nullable = false)
     private List<TaskVersionEntity> version;
 
 

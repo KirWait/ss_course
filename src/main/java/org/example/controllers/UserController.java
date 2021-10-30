@@ -3,7 +3,9 @@ package org.example.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.DTOs.TaskRequestDto;
 import org.example.DTOs.TaskResponseDto;
+import org.example.services.ProjectService;
 import org.example.services.TaskService;
+import org.example.services.TaskVersionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,10 +17,13 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final TaskService taskService;
+    private final ProjectService projectService;
+    private final TaskVersionService taskVersionService;
 
-    public UserController(TaskService taskService) {
+    public UserController(TaskService taskService, ProjectService projectService,TaskVersionService taskVersionService) {
 
-
+        this.projectService = projectService;
+        this.taskVersionService = taskVersionService;
         this.taskService = taskService;
     }
 

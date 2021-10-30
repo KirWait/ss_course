@@ -16,7 +16,6 @@ public class TaskVersionEntity {
     @Column(name = "task_version_id")
     private Long id;
 
-    @JsonIgnore
     @Column(name = "start_time")
     private Date start_time;
 
