@@ -1,10 +1,13 @@
 package org.example.DTOs;
 
+import com.sun.istack.NotNull;
 import org.example.entities.TaskEntity;
 import org.example.entities.TaskVersionEntity;
 import org.example.entities.enums.Status;
 import org.example.entities.enums.TaskType;
+import org.springframework.lang.Nullable;
 
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -29,15 +32,15 @@ public class TaskRequestDto {
     private String type;
 
     public TaskEntity convertToTaskEntity(){
+        System.out.println(this.getVersion().get(0).getId());
         TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setId(id);
         taskEntity.setProjectId(projectId);
         taskEntity.setStatus(Status.valueOf(status));
         taskEntity.setName(name);
         taskEntity.setDescription(description);
         taskEntity.setAuthorId(authorId);
-        taskEntity.setResponsibleId(responsibleId);
         taskEntity.setVersion(version);
+        taskEntity.setResponsibleId(responsibleId);
         taskEntity.setType(TaskType.valueOf(type));
 
         return taskEntity;
@@ -47,9 +50,7 @@ public class TaskRequestDto {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 
     public Long getProjectId() {
         return projectId;
@@ -113,5 +114,20 @@ public class TaskRequestDto {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public String toString() {
+        return "TaskRequestDto{" +
+                "id=" + id +
+                ", projectId=" + projectId +
+                ", status='" + status + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", authorId=" + authorId +
+                ", responsibleId=" + responsibleId +
+                ", version=" + version +
+                ", type='" + type + '\'' +
+                '}';
     }
 }

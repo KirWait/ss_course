@@ -10,6 +10,8 @@ public interface TaskService {
     void save(TaskEntity taskEntity);
     void delete(Long id);
     List<TaskEntity> getAll();
+    List<TaskEntity> getAllByProjectId(Long project_id);
     TaskEntity findById(Long id);
+
 
 }

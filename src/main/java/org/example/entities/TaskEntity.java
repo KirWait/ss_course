@@ -1,10 +1,12 @@
 package org.example.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.DTOs.TaskRequestDto;
 import org.example.entities.enums.Status;
 import org.example.entities.enums.TaskType;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -50,7 +52,7 @@ public class TaskEntity {
 
     public TaskRequestDto convertToTaskDto(){
         TaskRequestDto taskRequestDto = new TaskRequestDto();
-        taskRequestDto.setId(task_id);
+
         taskRequestDto.setProjectId(projectId);
         taskRequestDto.setStatus(status.name());
         taskRequestDto.setName(name);

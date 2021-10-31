@@ -3,12 +3,28 @@ package org.example.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 @Table(name = "versions")
 public class TaskVersionEntity {
-    public TaskVersionEntity() {
+    public TaskVersionEntity(String version, Calendar start_time) {
+        this.version = version;
+        this.start_time = start_time;
+    }
+
+    @JsonIgnore
+    public static final TaskVersionEntity DEFAULT_VERSION = new TaskVersionEntity("1.0", Calendar.getInstance());
+
+    @Override
+    public String toString() {
+        return "\nTaskVersionEntity{" +
+                "id=" + id +
+                ", start_time=" + start_time +
+                ", end_time=" + end_time +
+                ", version='" + version + '\'' +
+                '}';
     }
 
     @Id
@@ -17,7 +33,7 @@ public class TaskVersionEntity {
     private Long id;
 
     @Column(name = "start_time")
-    private Date start_time;
+    private Calendar start_time;
 
     @JsonIgnore
     @Column(name = "end_time")
@@ -25,6 +41,10 @@ public class TaskVersionEntity {
 
     @Column(name = "version")
     private String version;
+
+    public TaskVersionEntity() {
+
+    }
 
     public Long getId() {
         return id;
@@ -34,11 +54,11 @@ public class TaskVersionEntity {
         this.id = id;
     }
 
-    public Date getStart_time() {
+    public Calendar getStart_time() {
         return start_time;
     }
 
-    public void setStart_time(Date start_time) {
+    public void setStart_time(Calendar start_time) {
         this.start_time = start_time;
     }
 
