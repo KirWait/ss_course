@@ -14,5 +14,5 @@ public interface TaskService {
     List<TaskEntity> getAllByProjectId(Long project_id);
     TaskEntity findById(Long id);
 
-
+    boolean checkForTasksInProgressAndBacklog(Long projectId);
 }

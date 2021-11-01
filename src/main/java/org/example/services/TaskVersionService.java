@@ -8,5 +8,5 @@ import java.util.List;
 public interface TaskVersionService {
     List<TaskVersionEntity> findAllByTaskOrderById(TaskEntity task);
     void save(TaskVersionEntity version);
-    void changeVersion(TaskVersionEntity version, TaskEntity task);
+    void changeVersion(TaskVersionEntity version, TaskEntity task) throws Exception;
 }

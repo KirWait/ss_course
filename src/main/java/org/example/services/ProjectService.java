@@ -11,5 +11,6 @@ public interface ProjectService{
     List<ProjectEntity> getAll();
     ProjectEntity findById(Long id);
     void delete(Long id);
+    void checkIfProjectInProgress(Long id) throws Exception;
 
 }

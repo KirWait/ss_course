@@ -105,7 +105,7 @@ public class TaskResponseDto {
         this.description = taskEntity.getDescription();
         this.authorId = taskEntity.getAuthorId();
         this.responsibleId = taskEntity.getResponsibleId();
-        this.version = taskEntity.getVersionDto();
+        this.version = taskEntity.getVersions();
         this.type = taskEntity.getType().name();
     }
 }

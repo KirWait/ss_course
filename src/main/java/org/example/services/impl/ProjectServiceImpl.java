@@ -5,6 +5,7 @@ import org.example.entities.ProjectEntity;
 import org.example.entities.enums.Status;
 import org.example.repositories.ProjectRepository;
 import org.example.services.ProjectService;
+import org.example.services.TaskService;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -15,9 +16,11 @@ import java.util.List;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final TaskService taskService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService) {
         this.projectRepository = projectRepository;
+        this.taskService = taskService;
     }
 
     @Override
@@ -32,7 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (pe.getStatus() == Status.DONE) {
             throw new Exception("The project has already been done!");
         }
-        if (pe.getStatus() == Status.IN_PROGRESS) {
+        if (pe.getStatus() == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(pe.getProjectId())) {
             pe.setStatus(Status.DONE);
         }
         if (pe.getStatus() == Status.BACKLOG) {
@@ -40,6 +43,11 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         projectRepository.save(pe);
+    }
+
+    @Override
+    public void checkIfProjectInProgress(Long id) throws Exception {
+        if (projectRepository.findById(id).orElse(null).getStatus() == Status.BACKLOG) throw new Exception("The project is only in BACKLOG stage");
     }
 
     @Override
@@ -56,4 +64,6 @@ public class ProjectServiceImpl implements ProjectService {
     public void delete(Long id) {
         projectRepository.deleteById(id);
     }
+
+
 }

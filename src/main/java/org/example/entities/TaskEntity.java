@@ -39,7 +39,6 @@ public class TaskEntity {
     private Long responsibleId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
-//    @JoinColumn(name = "task_id", nullable = false)
     private List<TaskVersionEntity> versions;
 
 
@@ -138,11 +137,11 @@ public class TaskEntity {
         this.responsibleId = responsibleId;
     }
 
-    public List<TaskVersionEntity> getVersionDto() {
+    public List<TaskVersionEntity> getVersions() {
         return versions;
     }
 
-    public void setVersionDto(List<TaskVersionEntity> version) {
+    public void setVersions(List<TaskVersionEntity> version) {
         this.versions = version;
     }
 

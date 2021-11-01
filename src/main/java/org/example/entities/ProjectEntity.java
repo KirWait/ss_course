@@ -12,13 +12,13 @@ public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id")
-    private Long project_id;
+    private Long projectId;
 
     @Column(name = "project_name")
-    private String project_name;
+    private String projectName;
 
     @Column(name = "customer_id")
-    private Long customer_id;
+    private Long customerId;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
@@ -32,27 +32,27 @@ public class ProjectEntity {
         this.status = status;
     }
 
-    public Long getProject_id() {
-        return project_id;
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setProject_id(Long project_id) {
-        this.project_id = project_id;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
     }
 
-    public String getProject_name() {
-        return project_name;
+    public String getProjectName() {
+        return projectName;
     }
 
-    public void setProject_name(String project_name) {
-        this.project_name = project_name;
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
     }
 
-    public Long getCustomer_id() {
-        return customer_id;
+    public Long getCustomerId() {
+        return customerId;
     }
 
-    public void setCustomer_id(Long customer_id) {
-        this.customer_id = customer_id;
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
     }
 }

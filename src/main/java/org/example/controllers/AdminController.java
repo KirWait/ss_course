@@ -1,12 +1,17 @@
 package org.example.controllers;
 
+import org.example.DTOs.ProjectRequestDto;
 import org.example.DTOs.TaskRequestDto;
+import org.example.entities.ProjectEntity;
 import org.example.entities.TaskVersionEntity;
 
+import org.example.entities.UserEntity;
 import org.example.entities.enums.Status;
 import org.example.services.ProjectService;
 import org.example.services.TaskService;
+import org.example.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
@@ -18,25 +23,44 @@ public class AdminController {
 
     private final TaskService taskService;
     private final ProjectService projectService;
+    private final UserService userService;
 
-    public AdminController(TaskService taskService, ProjectService projectService) {
+    public AdminController(TaskService taskService, ProjectService projectService, UserService userService) {
         this.taskService = taskService;
         this.projectService = projectService;
+        this.userService = userService;
     }
+
+    @PostMapping("/projects")
+    public void createProject(@RequestBody ProjectRequestDto requestDto){
+
+        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
+
+        requestDto.setCustomerId(currentSessionUser.getUser_id());
+        projectService.save(requestDto.convertToProjectEntity());
+    }
+
 
     @PostMapping("/projects/{id}/task")
     public ResponseEntity<Object> createTaskInProject(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
 
-        taskRequestDto.setStatus(Status.BACKLOG.name());
         taskRequestDto.setProjectId(id);
         taskRequestDto.setVersion(List.of(new TaskVersionEntity("1.0", Calendar.getInstance())));
+        taskRequestDto.setStatus(Status.BACKLOG.name());
 
-        taskService.save(taskRequestDto.convertToTaskEntity());
+            try {
+                taskService.save(taskRequestDto.convertToTaskEntity());
+            }
+
+           catch(Exception e){
+           return ResponseEntity.badRequest().body("Bad Request: [ The project doesn't exist or already been done! ]");
+       }
 
     return ResponseEntity.ok().build();
 }
 
-    @DeleteMapping("/task/{id}")
+    @DeleteMapping("/tasks/{id}")
     public ResponseEntity<Object> deleteTaskById(@PathVariable Long id){
         taskService.delete(id);
         return ResponseEntity.ok().build();
@@ -44,11 +68,21 @@ public class AdminController {
 
     @PostMapping("/projects/{id}/change")
     public ResponseEntity<Object> changeProjectStatus(@PathVariable Long id){
-        try {
-            projectService.changeStatus(id);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Bad Request: [ The project has already been done! ]");
+        ProjectEntity project = projectService.findById(id);
+        if ((project.getStatus() == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
+                || (project.getStatus() == Status.BACKLOG)
+                || (project.getStatus() == Status.DONE)) {
+
+            try {
+                projectService.changeStatus(id);
+            } catch (Exception e) {
+                return ResponseEntity.badRequest().body("Bad Request: [ The project has already been done! ]");
+            }
+
         }
+        else return ResponseEntity.badRequest().body(
+                "Bad Request: [ Can't finish the project: there are unfinished tasks! ]"
+        );
         return ResponseEntity.ok().build();
     }
 }

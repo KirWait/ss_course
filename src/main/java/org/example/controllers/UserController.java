@@ -49,10 +49,16 @@ public class UserController {
 
       @PostMapping("/tasks/{id}/change/status")
         public ResponseEntity<Object> changeTaskStatus(@PathVariable Long id){
-
+            Long projectId = taskService.findById(id).getProjectId();
+          try {
+              projectService.checkIfProjectInProgress(projectId);
+          } catch (Exception e) {
+              return ResponseEntity.badRequest().body("Bad Request: [ The project is only in 'BACKLOG' stage! ]");
+          }
           try {
               taskService.changeStatus(id);
-          } catch (Exception e) {
+
+          } catch (Exception exception) {
               return ResponseEntity.badRequest().body("Bad Request: [ The task has already been done! ]");
           }
           return ResponseEntity.ok().build();
@@ -63,9 +69,13 @@ public class UserController {
         version.setStartTime(Calendar.getInstance());
         TaskEntity task = taskService.findById(id);
         version.setTask(task);
-        taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
+          try {
+              taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
+          } catch (Exception e) {
+              return ResponseEntity.badRequest().body("Bad Request: [ Can't change version of the task with 'BACKLOG' status! ]");
+          }
 
-        return ResponseEntity.ok().build();
+          return ResponseEntity.ok().build();
       }
 
     @GetMapping("/tasks/{id}/versions")
