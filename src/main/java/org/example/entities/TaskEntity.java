@@ -38,9 +38,9 @@ public class TaskEntity {
     @Column(name = "responsible_id")
     private Long responsibleId;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "task_id", nullable = false)
-    private List<TaskVersionEntity> version;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
+//    @JoinColumn(name = "task_id", nullable = false)
+    private List<TaskVersionEntity> versions;
 
 
     @Column(name = "type")
@@ -59,14 +59,19 @@ public class TaskEntity {
         taskRequestDto.setDescription(description);
         taskRequestDto.setAuthorId(authorId);
         taskRequestDto.setResponsibleId(responsibleId);
-        taskRequestDto.setVersion(version);
+        taskRequestDto.setVersion(versions);
         taskRequestDto.setType(taskType.name());
 
         return taskRequestDto;
     }
 
-    public void setVersion(List<TaskVersionEntity> version) {
-        this.version = version;
+    public void setVersion(List<TaskVersionEntity> versions) {
+
+        if (versions != null) {
+            versions.forEach(a -> a.setTask(this));
+
+        }
+        this.versions = versions;
     }
 
     public TaskType getTaskType() {
@@ -134,11 +139,11 @@ public class TaskEntity {
     }
 
     public List<TaskVersionEntity> getVersionDto() {
-        return version;
+        return versions;
     }
 
     public void setVersionDto(List<TaskVersionEntity> version) {
-        this.version = version;
+        this.versions = version;
     }
 
     public TaskType getType() {

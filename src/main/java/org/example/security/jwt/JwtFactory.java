@@ -19,8 +19,6 @@ public class JwtFactory {
                 List.of(userEntity.getRoles().name()).stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList()));
-        System.out.println(userEntity.getRoles().name());
-        System.out.println(List.of(userEntity.getRoles().name()));
 
         return jwtUser;
     }

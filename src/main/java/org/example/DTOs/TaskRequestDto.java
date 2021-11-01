@@ -32,7 +32,7 @@ public class TaskRequestDto {
     private String type;
 
     public TaskEntity convertToTaskEntity(){
-        System.out.println(this.getVersion().get(0).getId());
+
         TaskEntity taskEntity = new TaskEntity();
         taskEntity.setProjectId(projectId);
         taskEntity.setStatus(Status.valueOf(status));
@@ -104,7 +104,7 @@ public class TaskRequestDto {
         return version;
     }
 
-    public void setVersion(List<TaskVersionEntity> version) {
+        public void setVersion(List<TaskVersionEntity> version) {
         this.version = version;
     }
 

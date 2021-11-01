@@ -5,7 +5,7 @@ import org.example.entities.ProjectEntity;
 
 import java.util.List;
 
-public interface ProjectService {
+public interface ProjectService{
     void save(ProjectEntity projectEntity);
     void changeStatus(Long id) throws Exception;
     List<ProjectEntity> getAll();

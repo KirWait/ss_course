@@ -1,49 +1,78 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.example.DTOs.TaskRequestDto;
+import org.example.DTOs.VersionRequestDto;
 
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "versions")
 public class TaskVersionEntity {
-    public TaskVersionEntity(String version, Calendar start_time) {
-        this.version = version;
-        this.start_time = start_time;
-    }
 
-    @JsonIgnore
-    public static final TaskVersionEntity DEFAULT_VERSION = new TaskVersionEntity("1.0", Calendar.getInstance());
+
+    public TaskVersionEntity(String version, Calendar startTime) {
+        this.version = version;
+        this.startTime = startTime;
+    }
 
     @Override
     public String toString() {
         return "\nTaskVersionEntity{" +
                 "id=" + id +
-                ", start_time=" + start_time +
-                ", end_time=" + end_time +
+                ", start_time=" + startTime +
+                ", end_time=" + endTime +
                 ", version='" + version + '\'' +
                 '}';
     }
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_version_id")
     private Long id;
 
+    @JsonIgnore
     @Column(name = "start_time")
-    private Calendar start_time;
+    private Calendar startTime;
 
     @JsonIgnore
     @Column(name = "end_time")
-    private Date end_time;
+    private Calendar endTime;
 
     @Column(name = "version")
     private String version;
 
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "task_id")
+    private TaskEntity task;
+
+    public VersionRequestDto convertToTaskVersionDto(){
+        VersionRequestDto requestDto = new VersionRequestDto();
+        requestDto.setVersion(version);
+        requestDto.setStartTime(startTime);
+        requestDto.setEndTime(endTime);
+        requestDto.setTask(task);
+        requestDto.setId(id);
+
+        return requestDto;
+
+    }
+
     public TaskVersionEntity() {
 
+    }
+
+    public TaskEntity getTask() {
+        return task;
+    }
+
+    public void setTask(TaskEntity task) {
+        this.task = task;
     }
 
     public Long getId() {
@@ -54,21 +83,19 @@ public class TaskVersionEntity {
         this.id = id;
     }
 
-    public Calendar getStart_time() {
-        return start_time;
+    public Calendar getStartTime() {
+        return startTime;
     }
 
-    public void setStart_time(Calendar start_time) {
-        this.start_time = start_time;
+    public void setStartTime(Calendar start_time) {
+        this.startTime = start_time;
     }
 
-    public Date getEnd_time() {
-        return end_time;
+    public Calendar getEndTime() {
+        return endTime;
     }
 
-    public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
-    }
+    public void setEndTime(Calendar endTime) {this.endTime = endTime;}
 
     public String getVersion() {
         return version;

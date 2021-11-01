@@ -32,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AuthenticationRequestDto requestDto) {
-        System.out.println(requestDto.getUserName() + " " + requestDto.getPassword());
+
 
             String username = requestDto.getUserName();
 

@@ -3,12 +3,18 @@ package org.example.controllers;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.DTOs.ProjectResponseDto;
 import org.example.DTOs.TaskResponseDto;
+import org.example.DTOs.VersionRequestDto;
+import org.example.DTOs.VersionResponseDto;
+import org.example.entities.TaskEntity;
+import org.example.entities.TaskVersionEntity;
 import org.example.services.ProjectService;
 import org.example.services.TaskService;
 import org.example.services.TaskVersionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Calendar;
 
 
 @Tag(name="")
@@ -31,15 +37,44 @@ public class UserController {
           return new ResponseEntity<>(projectService.getAll().stream().map(ProjectResponseDto::new), HttpStatus.OK);
       }
 
-      @GetMapping("/projects/{project_id}")
-      public ResponseEntity<Object> viewProject(@PathVariable Long project_id){
-        return new ResponseEntity<>(new ProjectResponseDto(projectService.findById(project_id)), HttpStatus.OK);
+      @GetMapping("/projects/{id}")
+      public ResponseEntity<Object> viewProject(@PathVariable Long id){
+        return new ResponseEntity<>(new ProjectResponseDto(projectService.findById(id)), HttpStatus.OK);
       }
 
-      @GetMapping("/projects/{project_id}/tasks")
-        public ResponseEntity<Object> viewProjectTask(@PathVariable Long project_id){
-        return new ResponseEntity<>(taskService.getAllByProjectId(project_id).stream().map(TaskResponseDto::new), HttpStatus.OK);
+      @GetMapping("/projects/{id}/tasks")
+        public ResponseEntity<Object> viewProjectTask(@PathVariable Long id){
+        return new ResponseEntity<>(taskService.getAllByProjectId(id).stream().map(TaskResponseDto::new), HttpStatus.OK);
       }
+
+      @PostMapping("/tasks/{id}/change/status")
+        public ResponseEntity<Object> changeTaskStatus(@PathVariable Long id){
+
+          try {
+              taskService.changeStatus(id);
+          } catch (Exception e) {
+              return ResponseEntity.badRequest().body("Bad Request: [ The task has already been done! ]");
+          }
+          return ResponseEntity.ok().build();
+      }
+
+      @PostMapping("/tasks/{id}/change/version")
+        public ResponseEntity<Object> changeTaskVersion(@PathVariable Long id, @RequestBody VersionRequestDto version){
+        version.setStartTime(Calendar.getInstance());
+        TaskEntity task = taskService.findById(id);
+        version.setTask(task);
+        taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
+
+        return ResponseEntity.ok().build();
+      }
+
+    @GetMapping("/tasks/{id}/versions")
+    public ResponseEntity<Object> viewTaskVersion(@PathVariable Long id){
+        TaskEntity task = taskService.findById(id);
+        taskVersionService.findAllByTaskOrderById(task);
+
+        return new ResponseEntity<>(taskVersionService.findAllByTaskOrderById(task).stream().map(VersionResponseDto::new), HttpStatus.OK);
+    }
 //    @PostMapping("/versions/{id}")
 //    public ResponseEntity<Object> postTask(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
 //

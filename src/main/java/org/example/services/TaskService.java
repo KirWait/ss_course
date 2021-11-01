@@ -9,6 +9,7 @@ public interface TaskService {
 
     void save(TaskEntity taskEntity);
     void delete(Long id);
+    void changeStatus(Long id) throws Exception;
     List<TaskEntity> getAll();
     List<TaskEntity> getAllByProjectId(Long project_id);
     TaskEntity findById(Long id);
