@@ -32,19 +32,24 @@ public class AdminController {
     }
 
     @PostMapping("/projects")
-    public void createProject(@RequestBody ProjectRequestDto requestDto){
+    public ResponseEntity createProject(@RequestBody ProjectRequestDto requestDto){
 
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
 
         requestDto.setCustomerId(currentSessionUser.getUser_id());
         projectService.save(requestDto.convertToProjectEntity());
+        return ResponseEntity.ok().body("The project with name:"+ requestDto.getName() +" and author: "+currentSessionUserName +"has been submitted successfully!");
     }
 
 
     @PostMapping("/projects/{id}/task")
     public ResponseEntity<Object> createTaskInProject(@PathVariable Long id, @RequestBody TaskRequestDto taskRequestDto){
 
+        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
+
+        taskRequestDto.setAuthorId(currentSessionUser.getUser_id());
         taskRequestDto.setProjectId(id);
         taskRequestDto.setVersion(List.of(new TaskVersionEntity("1.0", Calendar.getInstance())));
         taskRequestDto.setStatus(Status.BACKLOG.name());
@@ -57,13 +62,13 @@ public class AdminController {
            return ResponseEntity.badRequest().body("Bad Request: [ The project doesn't exist or already been done! ]");
        }
 
-    return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("The task with name: "+ taskRequestDto.getName() +" and author: "+currentSessionUserName +" has been submitted successfully!");
 }
 
     @DeleteMapping("/tasks/{id}")
     public ResponseEntity<Object> deleteTaskById(@PathVariable Long id){
         taskService.delete(id);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("The task with id: "+id +" has been deleted successfully!");
     }
 
     @PostMapping("/projects/{id}/change")
@@ -83,6 +88,6 @@ public class AdminController {
         else return ResponseEntity.badRequest().body(
                 "Bad Request: [ Can't finish the project: there are unfinished tasks! ]"
         );
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body("The project status with id: "+id +" and name: "+project.getProjectName()+" has been changed to "+projectService.findById(id).getStatus()+" successfully!");
     }
 }

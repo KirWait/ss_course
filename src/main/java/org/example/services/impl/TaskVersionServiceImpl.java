@@ -32,7 +32,7 @@ public class TaskVersionServiceImpl implements TaskVersionService {
     public void changeVersion(TaskVersionEntity version, TaskEntity task) throws Exception {
         List<TaskVersionEntity> versions = taskVersionRepository.findAllByTaskOrderById(task);
 
-        if (task.getStatus() == Status.BACKLOG) throw new Exception("Can't change version of BACKLOG task!");
+        if (task.getStatus() == Status.BACKLOG || task.getStatus() == Status.DONE) throw new Exception("Can't change version of BACKLOG or DONE task!");
 
         TaskVersionEntity lastVersion = versions.get(versions.size() - 1);
 

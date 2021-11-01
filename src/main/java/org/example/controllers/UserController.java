@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
+import java.util.List;
 
 
 @Tag(name="")
@@ -49,9 +50,9 @@ public class UserController {
 
       @PostMapping("/tasks/{id}/change/status")
         public ResponseEntity<Object> changeTaskStatus(@PathVariable Long id){
-            Long projectId = taskService.findById(id).getProjectId();
+            TaskEntity task = taskService.findById(id);
           try {
-              projectService.checkIfProjectInProgress(projectId);
+              projectService.checkIfProjectInProgress(task.getProjectId());
           } catch (Exception e) {
               return ResponseEntity.badRequest().body("Bad Request: [ The project is only in 'BACKLOG' stage! ]");
           }
@@ -61,21 +62,25 @@ public class UserController {
           } catch (Exception exception) {
               return ResponseEntity.badRequest().body("Bad Request: [ The task has already been done! ]");
           }
-          return ResponseEntity.ok().build();
+          return ResponseEntity.ok().body("Task(id: "+ id+") status has been changed to "+task.getStatus().name()+" successfully!");
       }
 
       @PostMapping("/tasks/{id}/change/version")
         public ResponseEntity<Object> changeTaskVersion(@PathVariable Long id, @RequestBody VersionRequestDto version){
-        version.setStartTime(Calendar.getInstance());
-        TaskEntity task = taskService.findById(id);
-        version.setTask(task);
+
+            version.setStartTime(Calendar.getInstance());
+            TaskEntity task = taskService.findById(id);
+            version.setTask(task);
+          List<TaskVersionEntity> versions = task.getVersions();
+          versions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+
           try {
               taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
           } catch (Exception e) {
-              return ResponseEntity.badRequest().body("Bad Request: [ Can't change version of the task with 'BACKLOG' status! ]");
+              return ResponseEntity.badRequest().body("Bad Request: [ Can't change version of the task with 'BACKLOG' or 'DONE' status! ]");
           }
 
-          return ResponseEntity.ok().build();
+          return ResponseEntity.ok().body("Task (id = "+ task.getId() +") version has been changed to: "+ version.getVersion() +" successfully!");
       }
 
     @GetMapping("/tasks/{id}/versions")
