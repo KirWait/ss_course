@@ -7,7 +7,7 @@ import java.util.Calendar;
 
 public class VersionRequestDto {
 
-    private String version;
+    private Double version;
     private Calendar endTime;
     private Calendar startTime;
     private Long id;
@@ -21,11 +21,11 @@ public class VersionRequestDto {
         this.task = task;
     }
 
-    public String getVersion() {
+    public Double getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Double version) {
         this.version = version;
     }
 
