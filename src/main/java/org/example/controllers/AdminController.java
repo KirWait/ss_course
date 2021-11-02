@@ -86,6 +86,7 @@ public class AdminController {
     @Operation(summary = "Changes status of project by id")
     public ResponseEntity<Object> changeProjectStatus(@PathVariable Long id) throws Exception {
         ProjectEntity project = projectService.findById(id);
+
         if ((project.getStatus() == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
                 || (project.getStatus() == Status.BACKLOG)
                 || (project.getStatus() == Status.DONE)) {

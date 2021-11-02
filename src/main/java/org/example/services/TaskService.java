@@ -2,6 +2,7 @@ package org.example.services;
 
 import javassist.NotFoundException;
 import org.example.entities.TaskEntity;
+import org.example.entities.TaskVersionEntity;
 
 import java.util.List;
 
@@ -16,4 +17,6 @@ public interface TaskService {
     TaskEntity findById(Long id) throws NotFoundException;
 
     boolean checkForTasksInProgressAndBacklog(Long projectId);
+
+    boolean checkVersion(TaskVersionEntity version, List<TaskVersionEntity> versions);
 }

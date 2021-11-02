@@ -7,6 +7,7 @@ import org.example.DTOs.ProjectResponseDto;
 import org.example.DTOs.TaskResponseDto;
 import org.example.DTOs.VersionRequestDto;
 import org.example.DTOs.VersionResponseDto;
+import org.example.entities.InvalidVersionException;
 import org.example.entities.TaskEntity;
 import org.example.entities.TaskVersionEntity;
 import org.example.services.ProjectService;
@@ -46,7 +47,7 @@ public class UserController {
 
       @Operation(summary = "Gets project by id")
       @GetMapping("/projects/{id}")
-      public ResponseEntity<Object> viewProject(@PathVariable Long id){
+      public ResponseEntity<Object> viewProject(@PathVariable Long id) throws NotFoundException {
         return new ResponseEntity<>(new ProjectResponseDto(projectService.findById(id)), HttpStatus.OK);
       }
 
@@ -59,7 +60,7 @@ public class UserController {
       @Operation(summary = "Changes status of task by id")
       @PostMapping("/tasks/{id}/change/status")
         public ResponseEntity<Object> changeTaskStatus(@PathVariable Long id) throws Exception {
-            TaskEntity task = taskService.findById(id);
+             TaskEntity task = taskService.findById(id);
 
               projectService.checkIfProjectInProgress(task.getProjectId());
 
@@ -77,15 +78,15 @@ public class UserController {
         @PostMapping("/tasks/{id}/change/version")
         public ResponseEntity<String> changeTaskVersion(@PathVariable Long id, @RequestBody VersionRequestDto version) throws Exception {
 
-            version.setStartTime(Calendar.getInstance());
-            TaskEntity task = taskService.findById(id);
+                version.setStartTime(Calendar.getInstance());
+                TaskEntity task = taskService.findById(id);
 
-            version.setTask(task);
-          List<TaskVersionEntity> versions = task.getVersions();
-          versions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
-            if (versions.get(versions.size() - 1).getVersion() >= version.getVersion()) return ResponseEntity.badRequest().body("Bad Request: [ Can't set version that is less than current version of the task. Current version is: "+versions.get(versions.size() - 1).getVersion()+" ]");
+                version.setTask(task);
+                List<TaskVersionEntity> versions = task.getVersions();
+                if (taskService.checkVersion(version.convertToTaskVersionEntity(), versions)) taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
+                //return ResponseEntity.badRequest().body("Bad Request: [ Can't set version that is less than current version of the task. Current version is: "+versions.get(versions.size() - 1).getVersion()+" ]");
 
-              taskVersionService.changeVersion(version.convertToTaskVersionEntity(), task);
+
 
               //return ResponseEntity.badRequest().body("Bad Request: [ Can't change version of the task with 'BACKLOG' or 'DONE' status! ]");
 

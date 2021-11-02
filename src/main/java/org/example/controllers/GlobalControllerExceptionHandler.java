@@ -3,6 +3,7 @@ package org.example.controllers;
 
 import javassist.NotFoundException;
 import org.example.entities.InvalidStatusException;
+import org.example.entities.InvalidVersionException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -59,5 +60,13 @@ public class GlobalControllerExceptionHandler {
 
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = {InvalidVersionException.class})
+    public ResponseEntity handleCustomException(InvalidVersionException exception) {
+
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

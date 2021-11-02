@@ -16,16 +16,6 @@ public class TaskVersionEntity {
         this.startTime = startTime;
     }
 
-    @Override
-    public String toString() {
-        return "\nTaskVersionEntity{" +
-                "id=" + id +
-                ", start_time=" + startTime +
-                ", end_time=" + endTime +
-                ", version='" + version + '\'' +
-                '}';
-    }
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

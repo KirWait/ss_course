@@ -2,6 +2,7 @@ package org.example.services.impl;
 
 import javassist.NotFoundException;
 import org.example.entities.InvalidStatusException;
+import org.example.entities.InvalidVersionException;
 import org.example.entities.TaskEntity;
 import org.example.entities.TaskVersionEntity;
 import org.example.entities.enums.Status;
@@ -79,6 +80,14 @@ public class TaskServiceImpl implements TaskService {
              if (task.getStatus() == Status.IN_PROGRESS || task.getStatus() == Status.BACKLOG) result.set(false);
          });
          return result.get();
+    }
+
+    @Override
+    public boolean checkVersion(TaskVersionEntity version, List<TaskVersionEntity> versions) {
+
+        versions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+        if (versions.get(versions.size() - 1).getVersion() >= version.getVersion()) throw new InvalidVersionException("Can't set version that is less than current version of the task. Current version is: "+versions.get(versions.size() - 1).getVersion() );
+        return true;
     }
 
 

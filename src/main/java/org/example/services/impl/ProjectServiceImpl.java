@@ -60,8 +60,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectEntity findById(Long id) {
-        return projectRepository.findById(id).orElse(null);
+    public ProjectEntity findById(Long id) throws NotFoundException {
+        ProjectEntity project = projectRepository.findById(id).orElse(null);
+        if (project == null) throw new NotFoundException("No such project with id: "+id +"!");
+        return project;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.example.services.impl;
 
+import org.example.entities.InvalidVersionException;
 import org.example.entities.TaskEntity;
 import org.example.entities.TaskVersionEntity;
 import org.example.entities.enums.Status;
@@ -32,7 +33,7 @@ public class TaskVersionServiceImpl implements TaskVersionService {
     public void changeVersion(TaskVersionEntity version, TaskEntity task) throws Exception {
         List<TaskVersionEntity> versions = taskVersionRepository.findAllByTaskOrderById(task);
 
-        if (task.getStatus() == Status.BACKLOG || task.getStatus() == Status.DONE) throw new Exception("Can't change version of BACKLOG or DONE task!");
+        if (task.getStatus() == Status.BACKLOG || task.getStatus() == Status.DONE) throw new InvalidVersionException("Can't change version of BACKLOG or DONE task!");
 
         TaskVersionEntity lastVersion = versions.get(versions.size() - 1);
 
