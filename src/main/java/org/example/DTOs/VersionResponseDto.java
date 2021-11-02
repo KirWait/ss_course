@@ -4,7 +4,6 @@ package org.example.DTOs;
 import org.example.entities.TaskVersionEntity;
 
 import java.util.Calendar;
-import java.util.Date;
 
 public class VersionResponseDto {
 
@@ -18,7 +17,7 @@ public class VersionResponseDto {
     }
 
     private Long taskId;
-    private String version;
+    private Double version;
     private Calendar endTime;
     private Calendar startTime;
     private Long id;
@@ -31,11 +30,11 @@ public class VersionResponseDto {
         this.taskId = taskId;
     }
 
-    public String getVersion() {
+    public Double getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Double version) {
         this.version = version;
     }
 

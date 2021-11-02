@@ -1,20 +1,17 @@
 package org.example.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.example.DTOs.TaskRequestDto;
 import org.example.DTOs.VersionRequestDto;
 
 import javax.persistence.*;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "versions")
 public class TaskVersionEntity {
 
 
-    public TaskVersionEntity(String version, Calendar startTime) {
+    public TaskVersionEntity(Double version, Calendar startTime) {
         this.version = version;
         this.startTime = startTime;
     }
@@ -44,7 +41,7 @@ public class TaskVersionEntity {
     private Calendar endTime;
 
     @Column(name = "version")
-    private String version;
+    private Double version;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
@@ -97,11 +94,11 @@ public class TaskVersionEntity {
 
     public void setEndTime(Calendar endTime) {this.endTime = endTime;}
 
-    public String getVersion() {
+    public Double getVersion() {
         return version;
     }
 
-    public void setVersion(String version) {
+    public void setVersion(Double version) {
         this.version = version;
     }
 }
