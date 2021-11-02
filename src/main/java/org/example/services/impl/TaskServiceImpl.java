@@ -1,6 +1,7 @@
 package org.example.services.impl;
 
 import javassist.NotFoundException;
+import org.example.entities.InvalidStatusException;
 import org.example.entities.TaskEntity;
 import org.example.entities.TaskVersionEntity;
 import org.example.entities.enums.Status;
@@ -37,11 +38,11 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void changeStatus(Long id) throws Exception {
-        TaskEntity te = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("No such task"));
+        TaskEntity te = taskRepository.findById(id).orElseThrow(() -> new NotFoundException("No such task with id: "+id+"!"));
 
 
         if (te.getStatus() == Status.DONE) {
-            throw new Exception("The task has already been done!");
+            throw new InvalidStatusException("The task has already been done!");
         }
         if (te.getStatus() == Status.IN_PROGRESS) {
             te.setStatus(Status.DONE);
@@ -67,8 +68,8 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public TaskEntity findById(Long id) {
-        return taskRepository.findById(id).orElse(new TaskEntity());
+    public TaskEntity findById(Long id) throws NotFoundException {
+        return taskRepository.findById(id).orElseThrow(() -> new NotFoundException("No such task with id: "+id+"!"));
     }
 
     @Override

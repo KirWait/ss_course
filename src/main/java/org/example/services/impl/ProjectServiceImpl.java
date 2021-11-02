@@ -1,6 +1,7 @@
 package org.example.services.impl;
 
 import javassist.NotFoundException;
+import org.example.entities.InvalidStatusException;
 import org.example.entities.ProjectEntity;
 import org.example.entities.enums.Status;
 import org.example.repositories.ProjectRepository;
@@ -30,10 +31,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void changeStatus(Long id) throws Exception {
+    public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
         ProjectEntity pe = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("No such projects"));
         if (pe.getStatus() == Status.DONE) {
-            throw new Exception("The project has already been done!");
+            throw new InvalidStatusException("The project has already been done!");
         }
         if (pe.getStatus() == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(pe.getProjectId())) {
             pe.setStatus(Status.DONE);
@@ -47,7 +48,10 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void checkIfProjectInProgress(Long id) throws Exception {
-        if (projectRepository.findById(id).orElse(null).getStatus() == Status.BACKLOG) throw new Exception("The project is only in BACKLOG stage");
+
+        ProjectEntity project = projectRepository.findById(id).orElse(null);
+        //if (project == null) throw new NotFoundException("No such project with id: "+id+"!"); // Useless as far as the task can not be created with non-existent project id!
+        if (project.getStatus() == Status.BACKLOG) throw new InvalidStatusException("The project is only in BACKLOG stage");
     }
 
     @Override

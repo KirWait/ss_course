@@ -11,8 +11,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 public class AuthenticationController {
@@ -35,14 +33,16 @@ public class AuthenticationController {
 
 
             String username = requestDto.getUserName();
-
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
             UserEntity user = userService.findByUsername(username);
-
             if (user == null) {
 
                 throw new UsernameNotFoundException("User with username: " + username + " not found");
             }
+
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
+
+
+
 
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
@@ -53,5 +53,6 @@ public class AuthenticationController {
             return ResponseEntity.ok().body("You have successfully logged in with "+ username+"! Here is your token: "+token);
 
     }
+
 }
 
