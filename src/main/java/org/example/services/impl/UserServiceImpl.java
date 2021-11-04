@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
     @Override
-    public UserEntity register(UserEntity user) {
+    public void register(UserEntity user) {
 
 
 
@@ -34,11 +34,10 @@ public class UserServiceImpl implements UserService {
         user.setRoles(Roles.ROLE_USER);
         user.setStatus(UserStatus.ACTIVE);
 
-        UserEntity registeredUser = userRepository.save(user);
+        userRepository.save(user);
 
-
-        return registeredUser;
     }
+
     @Override
     public List<UserEntity> getAll() {
         return userRepository.findAll();

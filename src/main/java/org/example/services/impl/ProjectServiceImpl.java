@@ -47,11 +47,20 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void checkIfProjectInProgress(Long id) throws Exception {
+    public boolean checkIfProjectInProgress(Long id) throws NotFoundException {
 
-        ProjectEntity project = projectRepository.findById(id).orElse(null);
-        //if (project == null) throw new NotFoundException("No such project with id: "+id+"!"); // Useless as far as the task can not be created with non-existent project id!
-        if (project.getStatus() == Status.BACKLOG) throw new InvalidStatusException("The project is only in BACKLOG stage");
+        ProjectEntity project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("No such project with id: "+id+"!"));
+
+        if (project.getStatus() == Status.BACKLOG || project.getStatus() == Status.DONE) throw new InvalidStatusException("The project is in BACKLOG or DONE stage");
+        return true;
+    }
+
+    @Override
+    public ProjectEntity findByProjectName(String name) throws NotFoundException {
+        ProjectEntity project = projectRepository.findByProjectName(name);
+        if (project == null) throw new NotFoundException("No such project with name: " + name + "!");
+
+        return project;
     }
 
     @Override

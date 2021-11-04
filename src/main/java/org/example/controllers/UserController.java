@@ -62,12 +62,12 @@ public class UserController {
         public ResponseEntity<Object> changeTaskStatus(@PathVariable Long id) throws Exception {
              TaskEntity task = taskService.findById(id);
 
-              projectService.checkIfProjectInProgress(task.getProjectId());
+              if (projectService.checkIfProjectInProgress(task.getProjectId())) taskService.changeStatus(id);
 
               //return ResponseEntity.badRequest().body("Bad Request: [ The project is only in 'BACKLOG' stage! ]");
 
 
-              taskService.changeStatus(id);
+
 
 
               //return ResponseEntity.badRequest().body("Bad Request: [ The task has already been done! ]");

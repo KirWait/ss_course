@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserService {
 
-    UserEntity register(UserEntity user);
+    void register(UserEntity user);
 
     List<UserEntity> getAll();
 
