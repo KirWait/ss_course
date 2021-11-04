@@ -16,6 +16,13 @@ public class TaskVersionEntity {
         this.startTime = startTime;
     }
 
+    public TaskVersionEntity(Long id,Double version, TaskEntity task) {
+        this.id = id;
+        this.startTime = Calendar.getInstance();
+        this.endTime = null;
+        this.version = version;
+        this.task = task;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

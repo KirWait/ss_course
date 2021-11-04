@@ -64,6 +64,21 @@ public class TaskEntity {
         return taskRequestDto;
     }
 
+    public TaskEntity() {
+    }
+
+    public TaskEntity(Long task_id, String name, String description) {
+        this.task_id = task_id;
+        this.projectId = 26L;
+        this.status = Status.BACKLOG;
+        this.name = name;
+        this.description = description;
+        this.authorId = 1L;
+        this.responsibleId = 1L;
+        this.versions = List.of(new TaskVersionEntity(9999L,1.0,this));
+        this.taskType = TaskType.BUG;
+    }
+
     public void setVersion(List<TaskVersionEntity> versions) {
 
         if (versions != null) {

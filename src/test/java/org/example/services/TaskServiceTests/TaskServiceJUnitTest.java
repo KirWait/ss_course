@@ -2,12 +2,15 @@ package org.example.services.TaskServiceTests;
 
 import org.example.entities.ProjectEntity;
 import org.example.entities.TaskEntity;
+import org.example.entities.TaskVersionEntity;
 import org.example.services.TaskService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -31,4 +34,9 @@ public class TaskServiceJUnitTest {
 //        TaskEntity projectAfterDeletion = taskService.findByProjectName(CREATION_NAME);
 //
 //    }
+    @Test
+    public void test(){
+        List<TaskEntity> list = List.of(new TaskEntity(99999L, "NAME", "DESC"));
+        System.out.println(list);
+    }
 }

@@ -42,13 +42,8 @@ public class AuthenticationController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
 
 
-
-
             String token = jwtTokenProvider.createToken(username, user.getRoles());
 
-//            Map<Object, Object> response = new HashMap<>();
-//            response.put("username", username);
-//            response.put("token", token);
 
             return ResponseEntity.ok().body("You have successfully logged in with "+ username+"! Here is your token: "+token);
 
