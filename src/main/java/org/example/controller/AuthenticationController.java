@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import javassist.NotFoundException;
-import org.example.DTO.user.UserRequestDto;
+import org.example.dto.user.UserRequestDto;
 import org.example.entity.UserEntity;
 import org.example.security.jwt.JwtTokenProvider;
 import org.example.service.UserService;

@@ -1,22 +1,24 @@
 package org.example.service.impl;
 
 import javassist.NotFoundException;
-import org.example.DTO.task.TaskRequestDto;
+import org.example.dto.task.TaskRequestDto;
 import org.example.entity.UserEntity;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.TaskEntity;
 import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;
 import org.example.repository.TaskRepository;
+import org.example.service.DateFormatter;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
 import javax.transaction.Transactional;
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -24,6 +26,7 @@ public class TaskServiceImpl implements TaskService {
     
     private final TaskRepository taskRepository;
     private final UserService userService;
+
 
 
     public TaskServiceImpl(TaskRepository taskRepository, UserService userService) {
@@ -58,7 +61,7 @@ public class TaskServiceImpl implements TaskService {
 
             versions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
 
-            versions.get(versions.size() - 1).setEndTime(Calendar.getInstance());
+            versions.get(versions.size() - 1).setEndTime(DateFormatter.formatter.format(new GregorianCalendar().getTime()));
         }
         if (te.getStatus() == Status.BACKLOG) {
 
@@ -118,9 +121,76 @@ public class TaskServiceImpl implements TaskService {
 
         requestDto.setProjectId(id);
 
-        requestDto.setVersions(List.of(new TaskVersionEntity("1.0", Calendar.getInstance())));
+        requestDto.setVersions(List.of(new TaskVersionEntity("1.0", DateFormatter.formatter.format(new GregorianCalendar().getTime()))));
 
         requestDto.setStatus(Status.BACKLOG);
+    }
+
+    @Override
+    public List<TaskEntity> searchByFilter(TaskRequestDto filterDto) throws NotFoundException {
+
+        List<TaskEntity> result = taskRepository.findAll();
+
+        if (filterDto.getAuthorUsername() != null) {
+            UserEntity author = userService.findByUsername(filterDto.getAuthorUsername());
+            result = result.stream().filter(task -> Objects.equals(task.getAuthorId(), author.getId())).collect(Collectors.toList());
+        }
+        if (filterDto.getResponsibleUsername() != null) {
+            UserEntity responsible = userService.findByUsername(filterDto.getResponsibleUsername());
+            result = result.stream().filter(task -> Objects.equals(task.getResponsibleId(), responsible.getId())).collect(Collectors.toList());
+        }
+        if (filterDto.getId() != null){
+           result = taskRepository.findAll().stream().filter(task -> task.getId().toString().contains(filterDto.getId().toString())).collect(Collectors.toList());
+        }
+        if (filterDto.getStatus() != null){
+            result = result.stream().filter(task -> task.getStatus() == filterDto.getStatus()).collect(Collectors.toList());
+        }
+        if (filterDto.getType() != null){
+            result = result.stream().filter(task -> task.getType() == filterDto.getType()).collect(Collectors.toList());
+        }
+        if (filterDto.getAuthorId() != null){
+            result = result.stream().filter(task -> task.getAuthorId().toString().contains(filterDto.getAuthorId().toString())).collect(Collectors.toList());
+        }
+        if (filterDto.getResponsibleId() != null){
+            result = result.stream().filter(task -> task.getResponsibleId().toString().contains(filterDto.getResponsibleId().toString())).collect(Collectors.toList());
+        }
+        if (filterDto.getProjectId() != null){
+            result = result.stream().filter(task -> task.getProjectId().toString().contains(filterDto.getProjectId().toString())).collect(Collectors.toList());
+        }
+        if (filterDto.getName() != null){
+            result = result.stream().filter(task -> task.getName().contains(filterDto.getName())).collect(Collectors.toList());
+        }
+        if (filterDto.getDescription() != null){
+            result = result.stream().filter(task -> task.getDescription().contains(filterDto.getDescription())).collect(Collectors.toList());
+        }
+
+        if (filterDto.getVersionForSearch() != null){
+            result = result.stream().filter(
+                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList()) // finds last version of the task (equal to condition endTime != null)
+                            .get(0).getVersion().contains(filterDto.getVersionForSearch()) //checks if it contains versionForSearchString
+            ).collect(Collectors.toList());
+        }
+
+        if (filterDto.getStartTimeForSearch() != null){
+            result = result.stream().filter(
+                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList())
+                            .get(0).getStartTime().contains(filterDto.getStartTimeForSearch())
+            ).collect(Collectors.toList());
+        }
+        if (filterDto.getEndTimeForSearch() != null){
+            result = result.stream().filter(
+                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList())
+                            .get(0).getEndTime().contains(filterDto.getEndTimeForSearch())
+            ).collect(Collectors.toList());
+        }
+
+
+
+
+
+
+
+        return result;
     }
 
 

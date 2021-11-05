@@ -1,6 +1,6 @@
 package org.example.service;
 
-import org.example.DTO.version.VersionRequestDto;
+import org.example.dto.version.VersionRequestDto;
 import org.example.entity.TaskEntity;
 import org.example.entity.TaskVersionEntity;
 

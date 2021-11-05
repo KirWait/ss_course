@@ -1,7 +1,7 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
-import org.example.DTO.user.UserRequestDto;
-import org.example.DTO.user.UserResponseDto;
+import org.example.dto.user.UserRequestDto;
+import org.example.dto.user.UserResponseDto;
 import org.example.entity.UserEntity;
 import org.mapstruct.Mapper;
 

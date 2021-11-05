@@ -1,8 +1,8 @@
 package org.example.mapper;
 
-import org.example.DTO.project.ProjectRequestDto;
-import org.example.DTO.project.ProjectResponseDto;
-import org.example.DTO.mapper.ProjectMapper;
+import org.example.dto.project.ProjectRequestDto;
+import org.example.dto.project.ProjectResponseDto;
+import org.example.dto.mapper.ProjectMapper;
 import org.example.entity.ProjectEntity;
 import org.example.enumeration.Status;
 import org.junit.Test;

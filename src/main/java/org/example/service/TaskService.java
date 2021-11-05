@@ -1,9 +1,8 @@
 package org.example.service;
 
 import javassist.NotFoundException;
-import org.example.DTO.task.TaskRequestDto;
+import org.example.dto.task.TaskRequestDto;
 import org.example.entity.TaskEntity;
-import org.example.entity.TaskVersionEntity;
 
 import java.util.List;
 
@@ -25,4 +24,5 @@ public interface TaskService {
     boolean checkForTasksInProgressAndBacklog(Long projectId);
 
     void setUpRequestDto(TaskRequestDto requestDto, Long id) throws NotFoundException;
+    List<TaskEntity> searchByFilter(TaskRequestDto task) throws NotFoundException;
 }

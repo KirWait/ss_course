@@ -1,4 +1,4 @@
-package org.example.DTO.user;
+package org.example.dto.user;
 
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;

@@ -1,7 +1,7 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
-import org.example.DTO.version.VersionRequestDto;
-import org.example.DTO.version.VersionResponseDto;
+import org.example.dto.version.VersionRequestDto;
+import org.example.dto.version.VersionResponseDto;
 import org.example.entity.TaskVersionEntity;
 import org.mapstruct.Mapper;
 

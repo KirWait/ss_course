@@ -3,25 +3,13 @@ package org.example.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 @Entity
 @Table(name = "versions")
 public class TaskVersionEntity {
-
-
-    public TaskVersionEntity(String version, Calendar startTime) {
-        this.version = version;
-        this.startTime = startTime;
-    }
-
-    public TaskVersionEntity(Long id, String version, TaskEntity task) {
-        this.id = id;
-        this.startTime = Calendar.getInstance();
-        this.endTime = null;
-        this.version = version;
-        this.task = task;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,11 +18,11 @@ public class TaskVersionEntity {
 
     @JsonIgnore
     @Column(name = "start_time")
-    private Calendar startTime;
+    private String startTime;
 
     @JsonIgnore
     @Column(name = "end_time")
-    private Calendar endTime;
+    private String endTime;
 
     @Column(name = "version")
     private String version;
@@ -44,10 +32,24 @@ public class TaskVersionEntity {
     @JoinColumn(name = "task_id")
     private TaskEntity task;
 
+    public TaskVersionEntity(String version, String startTime) {
+        this.version = version;
+        this.startTime = startTime;
+    }
 
 
     public TaskVersionEntity() {
 
+    }
+
+    @Override
+    public String toString() {
+        return "TaskVersionEntity{" +
+                "id=" + id +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", version='" + version + '\'' +
+                '}';
     }
 
     public TaskEntity getTask() {
@@ -66,19 +68,19 @@ public class TaskVersionEntity {
         this.id = id;
     }
 
-    public Calendar getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Calendar start_time) {
-        this.startTime = start_time;
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
     }
 
-    public Calendar getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Calendar endTime) {this.endTime = endTime;}
+    public void setEndTime(String endTime) {this.endTime = endTime;}
 
     public String getVersion() {
         return version;

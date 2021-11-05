@@ -1,8 +1,8 @@
 package org.example.mapper;
 
-import org.example.DTO.mapper.VersionMapper;
-import org.example.DTO.version.VersionRequestDto;
-import org.example.DTO.version.VersionResponseDto;
+import org.example.dto.mapper.VersionMapper;
+import org.example.dto.version.VersionRequestDto;
+import org.example.dto.version.VersionResponseDto;
 import org.example.entity.TaskEntity;
 import org.example.entity.TaskVersionEntity;
 import org.junit.Test;

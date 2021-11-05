@@ -1,7 +1,7 @@
 package org.example.service;
 
 import javassist.NotFoundException;
-import org.example.DTO.project.ProjectRequestDto;
+import org.example.dto.project.ProjectRequestDto;
 import org.example.enumeration.Status;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.ProjectEntity;

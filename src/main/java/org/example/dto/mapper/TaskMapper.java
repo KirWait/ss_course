@@ -1,7 +1,7 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
-import org.example.DTO.task.TaskRequestDto;
-import org.example.DTO.task.TaskResponseDto;
+import org.example.dto.task.TaskRequestDto;
+import org.example.dto.task.TaskResponseDto;
 import org.example.entity.TaskEntity;
 import org.mapstruct.Mapper;
 

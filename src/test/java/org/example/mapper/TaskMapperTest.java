@@ -2,18 +2,20 @@ package org.example.mapper;
 
 
 
-import org.example.DTO.mapper.TaskMapper;
-import org.example.DTO.task.TaskRequestDto;
-import org.example.DTO.task.TaskResponseDto;
+import org.example.dto.mapper.TaskMapper;
+import org.example.dto.task.TaskRequestDto;
+import org.example.dto.task.TaskResponseDto;
 import org.example.entity.TaskEntity;
 
 import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
+import org.example.service.DateFormatter;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +34,7 @@ TaskMapper mapper = Mappers.getMapper(TaskMapper.class);
         taskEntity.setId(3L);
         taskEntity.setName("NAME");
         taskEntity.setDescription("NONE");
-        taskEntity.setVersions(List.of(new TaskVersionEntity("2.0", Calendar.getInstance())));
+        taskEntity.setVersions(List.of(new TaskVersionEntity("2.0", DateFormatter.formatter.format(new GregorianCalendar().getTime()))));
         taskEntity.setType(Type.BUG);
         taskEntity.setProjectId(4L);
 
@@ -66,7 +68,7 @@ TaskMapper mapper = Mappers.getMapper(TaskMapper.class);
         requestDto.setId(3L);
         requestDto.setName("NAME");
         requestDto.setDescription("NONE");
-        requestDto.setVersions(List.of(new TaskVersionEntity("2.0", Calendar.getInstance())));
+        requestDto.setVersions(List.of(new TaskVersionEntity("2.0", DateFormatter.formatter.format(new GregorianCalendar().getTime()))));
         requestDto.setType(Type.BUG);
         requestDto.setProjectId(4L);
 

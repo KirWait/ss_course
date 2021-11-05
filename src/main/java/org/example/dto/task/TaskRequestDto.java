@@ -1,5 +1,6 @@
-package org.example.DTO.task;
+package org.example.dto.task;
 
+import com.google.gson.annotations.SerializedName;
 import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
@@ -11,6 +12,43 @@ public class TaskRequestDto {
 
     public TaskRequestDto() {
     }
+
+    @SerializedName("version")
+    private String versionForSearch;
+
+    @SerializedName("startTime")//change!!
+    private String startTimeForSearch;
+
+    @SerializedName("endTime")
+    private String endTimeForSearch;
+
+    public TaskRequestDto(String versionForSearch) {
+
+        this.versionForSearch = versionForSearch;
+    }
+
+    public TaskRequestDto(String startTimeForSearch, String endTimeForSearch) {
+        this.startTimeForSearch = startTimeForSearch;
+        this.endTimeForSearch = endTimeForSearch;
+    }
+
+    public String getVersionForSearch() {
+        return versionForSearch;
+    }
+
+    public String getStartTimeForSearch() {
+        return startTimeForSearch;
+    }
+
+    public String getEndTimeForSearch() {
+        return endTimeForSearch;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
+    private String authorUsername;
     private String responsibleUsername;
 
     private Long id;

@@ -47,8 +47,37 @@ public class TaskEntity {
     public TaskEntity() {
     }
 
+    public TaskEntity(Long id,
+                      Long projectId,
+                      Status status,
+                      String name,
+                      String description,
+                      Long authorId,
+                      Long responsibleId,
+                      List<TaskVersionEntity> versions,
+                      Type type) {
+        this.id = id;
+        this.projectId = projectId;
+        this.status = status;
+        this.name = name;
+        this.description = description;
+        this.authorId = authorId;
+        this.responsibleId = responsibleId;
+        this.versions = versions;
+        this.type = type;
+    }
+
     public TaskEntity(String name) {
         this.name = name;
+    }
+
+    public TaskEntity(Long id) {
+        this.id = id;
+    }
+
+    public TaskEntity(Long id, Status status) {
+        this.id = id;
+        this.status = status;
     }
 
     @Override

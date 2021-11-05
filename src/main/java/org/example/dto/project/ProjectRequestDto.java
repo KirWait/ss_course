@@ -1,4 +1,4 @@
-package org.example.DTO.project;
+package org.example.dto.project;
 
 import org.example.enumeration.Status;
 

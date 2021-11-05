@@ -1,8 +1,8 @@
 package org.example.mapper;
 
-import org.example.DTO.user.UserRequestDto;
-import org.example.DTO.user.UserResponseDto;
-import org.example.DTO.mapper.UserMapper;
+import org.example.dto.user.UserRequestDto;
+import org.example.dto.user.UserResponseDto;
+import org.example.dto.mapper.UserMapper;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;

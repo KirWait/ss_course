@@ -1,7 +1,7 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
-import org.example.DTO.project.ProjectRequestDto;
-import org.example.DTO.project.ProjectResponseDto;
+import org.example.dto.project.ProjectRequestDto;
+import org.example.dto.project.ProjectResponseDto;
 import org.example.entity.ProjectEntity;
 import org.mapstruct.Mapper;
 

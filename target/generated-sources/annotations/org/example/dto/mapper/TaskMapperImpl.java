@@ -1,16 +1,16 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.processing.Generated;
-import org.example.DTO.task.TaskRequestDto;
-import org.example.DTO.task.TaskResponseDto;
+import org.example.dto.task.TaskRequestDto;
+import org.example.dto.task.TaskResponseDto;
 import org.example.entity.TaskEntity;
 import org.example.entity.TaskVersionEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-05T15:39:15+0400",
+    date = "2021-11-06T01:17:41+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class TaskMapperImpl implements TaskMapper {

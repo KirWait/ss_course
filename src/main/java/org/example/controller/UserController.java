@@ -3,14 +3,15 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
-import org.example.DTO.mapper.ProjectMapper;
-import org.example.DTO.mapper.TaskMapper;
-import org.example.DTO.mapper.VersionMapper;
-import org.example.DTO.project.ProjectResponseDto;
+import org.example.dto.mapper.ProjectMapper;
+import org.example.dto.mapper.TaskMapper;
+import org.example.dto.mapper.VersionMapper;
+import org.example.dto.project.ProjectResponseDto;
 
-import org.example.DTO.task.TaskResponseDto;
-import org.example.DTO.version.VersionRequestDto;
-import org.example.DTO.version.VersionResponseDto;
+import org.example.dto.task.TaskRequestDto;
+import org.example.dto.task.TaskResponseDto;
+import org.example.dto.version.VersionRequestDto;
+import org.example.dto.version.VersionResponseDto;
 import org.example.entity.TaskEntity;
 import org.example.entity.TaskVersionEntity;
 import org.example.service.ProjectService;
@@ -112,4 +113,22 @@ public class UserController {
 
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
+
+    @Operation(summary = "Finds task by filter")
+    @PostMapping("/tasks/filter_search")
+    public ResponseEntity<List<TaskResponseDto>> changeTaskVersion(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
+
+          List<TaskEntity> resultEntity = taskService.searchByFilter(requestDto);
+
+          List<TaskResponseDto> resultResponseDto = resultEntity.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+
+        return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
+      }
+
+
+
+
+
 }
+
+

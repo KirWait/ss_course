@@ -1,16 +1,17 @@
 package org.example.service.impl;
 
-import org.example.DTO.version.VersionRequestDto;
+import org.example.dto.version.VersionRequestDto;
 import org.example.exception.InvalidVersionException;
 import org.example.entity.TaskEntity;
+import org.example.service.DateFormatter;
 import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;
 import org.example.repository.TaskVersionRepository;
 import org.example.service.TaskVersionService;
 import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
+
 @Service
 public class TaskVersionServiceImpl implements TaskVersionService {
 
@@ -39,7 +40,7 @@ public class TaskVersionServiceImpl implements TaskVersionService {
 
         TaskVersionEntity lastVersion = versions.get(versions.size() - 1);
 
-        if (lastVersion.getEndTime() == null) lastVersion.setEndTime(Calendar.getInstance());
+        if (lastVersion.getEndTime() == null) { lastVersion.setEndTime(DateFormatter.formatter.format(new GregorianCalendar().getTime()));}
 
         version.setTask(task);
 
@@ -50,7 +51,7 @@ public class TaskVersionServiceImpl implements TaskVersionService {
     @Override
     public void setUpRequestDto(VersionRequestDto version, TaskEntity task) {
 
-        version.setStartTime(Calendar.getInstance());
+        version.setStartTime(DateFormatter.formatter.format(new GregorianCalendar().getTime()));
 
         version.setTask(task);
     }

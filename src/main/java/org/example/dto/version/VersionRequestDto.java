@@ -1,8 +1,6 @@
-package org.example.DTO.version;
+package org.example.dto.version;
 
 import org.example.entity.TaskEntity;
-import org.example.entity.TaskVersionEntity;
-import java.util.Calendar;
 
 
 public class VersionRequestDto {
@@ -11,9 +9,9 @@ public class VersionRequestDto {
 
     private String version;
 
-    private Calendar endTime;
+    private String endTime;
 
-    private Calendar startTime;
+    private String startTime;
 
     private Long id;
 
@@ -35,19 +33,19 @@ public class VersionRequestDto {
         this.version = version;
     }
 
-    public Calendar getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Calendar endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
-    public Calendar getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Calendar start_time) {
+    public void setStartTime(String start_time) {
         this.startTime = start_time;
     }
 

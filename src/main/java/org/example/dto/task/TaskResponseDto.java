@@ -1,4 +1,4 @@
-package org.example.DTO.task;
+package org.example.dto.task;
 
 import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;

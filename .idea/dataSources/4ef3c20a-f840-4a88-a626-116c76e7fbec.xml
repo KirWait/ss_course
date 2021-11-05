@@ -3,14 +3,6 @@
   <database-model serializer="dbm" dbms="POSTGRES" family-id="POSTGRES" format-version="4.23">
     <root id="1">
       <ServerVersion>13.4</ServerVersion>
-      <Grants>1||-9223372036854775808|c|G
-1||10|c|G
-1||10|C|G
-1||10|T|G
-13441||-9223372036854775808|c|G
-13441||10|c|G
-13441||10|C|G
-13441||10|T|G</Grants>
       <DateStyle>dmy</DateStyle>
       <TimeZones>true ACDT
 true ACSST
@@ -792,7 +784,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <IntrospectionStateNumber>1033</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1289</IntrospectionStateNumber>
       <StartupTime>1635767091</StartupTime>
     </root>
     <database id="2" parent="1" name="postgres">
@@ -813,7 +805,7 @@ false Zulu
 13158||-9223372036854775808|U|G
 13158||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1034</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1290</IntrospectionStateNumber>
       <Current>1</Current>
       <Relations>sequence|table|16518|16520|1
 sequence|table|16496|16498|1
@@ -887,7 +879,7 @@ sequence|table|16628|16630|5
       <Comment>standard public schema</Comment>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1034</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1290</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="19" parent="3" name="plpgsql">
@@ -1045,7 +1037,7 @@ sequence|table|16628|16630|5
     <table id="40" parent="18" name="versions">
       <ObjectId>16630</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>822</StateNumber>
+      <StateNumber>1287</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
     <column id="41" parent="35" name="id">
@@ -1416,17 +1408,16 @@ sequence|table|16628|16630|5
     </column>
     <column id="90" parent="40" name="start_time">
       <Position>3</Position>
-      <DataType>date|0s</DataType>
+      <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
-      <StateNumber>822</StateNumber>
-      <DefaultExpression>CURRENT_TIMESTAMP</DefaultExpression>
-      <TypeId>1082</TypeId>
+      <StateNumber>1283</StateNumber>
+      <TypeId>1043</TypeId>
     </column>
     <column id="91" parent="40" name="end_time">
       <Position>4</Position>
-      <DataType>date|0s</DataType>
-      <StateNumber>822</StateNumber>
-      <TypeId>1082</TypeId>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>1287</StateNumber>
+      <TypeId>1043</TypeId>
     </column>
     <column id="92" parent="40" name="task_version_id">
       <Position>5</Position>
@@ -1438,7 +1429,7 @@ sequence|table|16628|16630|5
     </column>
     <index id="93" parent="40" name="versions_pk">
       <ObjectId>16636</ObjectId>
-      <StateNumber>822</StateNumber>
+      <StateNumber>1287</StateNumber>
       <ColNames>task_version_id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1448,7 +1439,7 @@ sequence|table|16628|16630|5
     </index>
     <index id="94" parent="40" name="versions_task_version_id_uindex">
       <ObjectId>16643</ObjectId>
-      <StateNumber>824</StateNumber>
+      <StateNumber>1287</StateNumber>
       <ColNames>task_version_id</ColNames>
       <Unique>1</Unique>
       <CollationIds>0</CollationIds>

@@ -1,13 +1,13 @@
-package org.example.DTO.mapper;
+package org.example.dto.mapper;
 
 import javax.annotation.processing.Generated;
-import org.example.DTO.user.UserRequestDto;
-import org.example.DTO.user.UserResponseDto;
+import org.example.dto.user.UserRequestDto;
+import org.example.dto.user.UserResponseDto;
 import org.example.entity.UserEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-05T15:39:15+0400",
+    date = "2021-11-06T01:17:41+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {
