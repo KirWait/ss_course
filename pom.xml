@@ -53,6 +53,14 @@
       <scope>test</scope>
     </dependency>
 
+
+    <dependency>
+      <groupId>org.mapstruct</groupId>
+      <artifactId>mapstruct</artifactId>
+      <version>1.4.2.Final</version>
+    </dependency>
+
+
     <!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -184,8 +192,18 @@
         <configuration>
           <source>9</source>
           <target>9</target>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.mapstruct</groupId>
+              <artifactId>mapstruct-processor</artifactId>
+              <version>1.4.2.Final</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
+
       </plugin>
+
+
     </plugins>
   </build>
 </project>
