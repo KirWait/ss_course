@@ -1,15 +1,10 @@
 package org.example.dto.task;
 
-import org.example.entity.TaskVersionEntity;
+import org.example.entity.ReleaseEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
-import java.util.List;
 
 public class TaskResponseDto {
-
-    public TaskResponseDto(){
-
-    }
 
     private Long id;
 
@@ -25,9 +20,49 @@ public class TaskResponseDto {
 
     private Long responsibleId;
 
-    private List<TaskVersionEntity> versions;
+    private ReleaseEntity release;
 
     private Type type;
+
+    private String releaseVersion;
+
+    private String startTime;
+
+    private String endTime;
+
+    private String creationTime;
+
+    public String getReleaseVersion() {
+        return releaseVersion;
+    }
+
+    public void setReleaseVersion(String releaseVersion) {
+        this.releaseVersion = releaseVersion;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
 
     public Long getId() {
         return id;
@@ -85,12 +120,12 @@ public class TaskResponseDto {
         this.responsibleId = responsibleId;
     }
 
-    public List<TaskVersionEntity> getVersions() {
-        return versions;
+    public ReleaseEntity getRelease() {
+        return release;
     }
 
-    public void setVersions(List<TaskVersionEntity> versions) {
-        this.versions = versions;
+    public void setRelease(ReleaseEntity release) {
+        this.release = release;
     }
 
     public Type getType() {

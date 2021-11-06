@@ -2,22 +2,21 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.task.TaskRequestDto;
+import org.example.entity.ReleaseEntity;
 import org.example.entity.UserEntity;
+import org.example.enumeration.Type;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.TaskEntity;
-import org.example.entity.TaskVersionEntity;
 import org.example.enumeration.Status;
 import org.example.repository.TaskRepository;
 import org.example.service.DateFormatter;
+import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,12 +25,12 @@ public class TaskServiceImpl implements TaskService {
     
     private final TaskRepository taskRepository;
     private final UserService userService;
+    private final ReleaseService releaseService;
 
-
-
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, ReleaseService releaseService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
+        this.releaseService = releaseService;
     }
 
     @Override
@@ -46,29 +45,27 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void changeStatus(Long id) throws NotFoundException {
-        TaskEntity te = taskRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
+        TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
 
-
-        if (te.getStatus() == Status.DONE) {
+        if (task.getStatus() == Status.DONE) {
 
             throw new InvalidStatusException("The task has already been done!");
         }
-        if (te.getStatus() == Status.IN_PROGRESS) {
+        if (task.getStatus() == Status.IN_PROGRESS) {
 
-            te.setStatus(Status.DONE);
+            task.setEndTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
 
-            List<TaskVersionEntity> versions = te.getVersions();
+            task.setStatus(Status.DONE);
 
-            versions.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
-
-            versions.get(versions.size() - 1).setEndTime(DateFormatter.formatter.format(new GregorianCalendar().getTime()));
         }
-        if (te.getStatus() == Status.BACKLOG) {
+        if (task.getStatus() == Status.BACKLOG) {
 
-            te.setStatus(Status.IN_PROGRESS);
+            task.setStartTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
+
+            task.setStatus(Status.IN_PROGRESS);
         }
 
-        taskRepository.save(te);
+        taskRepository.save(task);
     }
 
     @Override
@@ -90,22 +87,31 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId){
 
-         AtomicBoolean result = new AtomicBoolean(true);
-
-         taskRepository.findAllByProjectId(projectId).forEach(task -> {
-             if (task.getStatus() == Status.IN_PROGRESS || task.getStatus() == Status.BACKLOG) { result.set(false);}
-         });
-
-         return result.get();
+         return taskRepository.findAllByProjectId(projectId).stream().allMatch(
+                 task -> (task.getStatus() == Status.DONE));
     }
 
     @Override
-    public void setUpRequestDto(TaskRequestDto requestDto, Long id) throws NotFoundException,IllegalArgumentException{
+    public void setUpRequestDto(TaskRequestDto requestDto, Long projectId) throws NotFoundException,IllegalArgumentException{
 
-        if (requestDto.getResponsibleId() != null){
-            throw new IllegalArgumentException("Responsible id shouldn't be defined manually!");
+        if (requestDto.getCreationTime() != null){
+            throw new IllegalArgumentException("Creation time shouldn't be defined manually!");
         }
-
+        if (requestDto.getStartTime() != null){
+            throw new IllegalArgumentException("Start time shouldn't be defined manually!");
+        }
+        if (requestDto.getEndTime() != null){
+            throw new IllegalArgumentException("End time shouldn't be defined manually!");
+        }
+        if (requestDto.getReleaseVersion() == null){
+            throw new IllegalArgumentException("Define the release!");
+        }
+        if (requestDto.getName() == null){
+            throw new IllegalArgumentException("Enter the name of the task!");
+        }
+        if (requestDto.getType() == null){
+            throw new IllegalArgumentException(String.format("Define the type of the task! Possible types: %s",Arrays.toString(Type.values())));
+        }
         if (requestDto.getResponsibleUsername() == null) {
             throw new IllegalArgumentException("Enter the username of the responsible person!");
         }
@@ -113,17 +119,21 @@ public class TaskServiceImpl implements TaskService {
             requestDto.setResponsibleId(userService.findByUsername(requestDto.getResponsibleUsername()).getId());
         }
 
+        requestDto.setCreationTime(DateFormatter.formatterWithTime.format(Calendar.getInstance().getTime()));
+
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
 
         requestDto.setAuthorId(currentSessionUser.getId());
 
-        requestDto.setProjectId(id);
-
-        requestDto.setVersions(List.of(new TaskVersionEntity("1.0", DateFormatter.formatter.format(new GregorianCalendar().getTime()))));
+        requestDto.setProjectId(projectId);
 
         requestDto.setStatus(Status.BACKLOG);
+
+        ReleaseEntity currentRelease = releaseService.findByVersionAndProjectId(requestDto.getReleaseVersion(), projectId);
+
+        requestDto.setRelease(currentRelease);
     }
 
     @Override
@@ -163,32 +173,23 @@ public class TaskServiceImpl implements TaskService {
         if (filterDto.getDescription() != null){
             result = result.stream().filter(task -> task.getDescription().contains(filterDto.getDescription())).collect(Collectors.toList());
         }
-
-        if (filterDto.getVersionForSearch() != null){
+        if (filterDto.getReleaseVersion() != null){
+            System.out.println("Not null");
             result = result.stream().filter(
-                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList()) // finds last version of the task (equal to condition endTime != null)
-                            .get(0).getVersion().contains(filterDto.getVersionForSearch()) //checks if it contains versionForSearchString
-            ).collect(Collectors.toList());
+                    task -> task.getRelease().getVersion().contains(filterDto.getReleaseVersion())).collect(Collectors.toList());
         }
-
-        if (filterDto.getStartTimeForSearch() != null){
+        if (filterDto.getStartTime() != null){
             result = result.stream().filter(
-                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList())
-                            .get(0).getStartTime().contains(filterDto.getStartTimeForSearch())
-            ).collect(Collectors.toList());
+                    task -> task.getStartTime().contains(filterDto.getStartTime())).collect(Collectors.toList());
         }
-        if (filterDto.getEndTimeForSearch() != null){
+        if (filterDto.getCreationTime() != null){
             result = result.stream().filter(
-                    task -> task.getVersions().stream().filter(version -> version.getEndTime() == null).collect(Collectors.toList())
-                            .get(0).getEndTime().contains(filterDto.getEndTimeForSearch())
-            ).collect(Collectors.toList());
+                    task -> task.getCreationTime().contains(filterDto.getCreationTime())).collect(Collectors.toList());
         }
-
-
-
-
-
-
+        if (filterDto.getEndTime() != null){
+            result = result.stream().filter(
+                    task -> task.getEndTime().contains(filterDto.getEndTime())).collect(Collectors.toList());
+        }
 
         return result;
     }

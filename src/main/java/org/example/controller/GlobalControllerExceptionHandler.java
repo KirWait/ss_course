@@ -2,6 +2,7 @@ package org.example.controller;
 
 
 import javassist.NotFoundException;
+import org.example.exception.InvalidDateFormatException;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.InvalidVersionException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -75,5 +76,11 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidDateFormatException.class)
+    public ResponseEntity<String> handleInvalidDateFormatException(InvalidDateFormatException exception) {
+
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
 }

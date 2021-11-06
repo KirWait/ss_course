@@ -53,11 +53,10 @@ public class UserServiceMockitoTest {
        assertThat(user.getUsername()).isEqualTo(USER_EXIST_NAME);
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void findByUsernameShouldReturnNull() throws NotFoundException {
 
-        assertThat(userService.findByUsername(USER_NON_EXIST_NAME)).isNull();
-
+        userService.findByUsername(USER_NON_EXIST_NAME);
     }
 
     @Test

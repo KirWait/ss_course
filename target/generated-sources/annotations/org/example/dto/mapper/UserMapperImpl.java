@@ -7,7 +7,7 @@ import org.example.entity.UserEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-06T01:17:41+0400",
+    date = "2021-11-06T18:41:54+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class UserMapperImpl implements UserMapper {

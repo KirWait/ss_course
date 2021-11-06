@@ -9,11 +9,17 @@ import org.example.entity.ProjectEntity;
 import java.util.List;
 
 public interface ProjectService{
+
     void save(ProjectEntity projectEntity);
+
     void changeStatus(Long id) throws InvalidStatusException, NotFoundException;
+
     List<ProjectEntity> getAll();
+
     ProjectEntity findById(Long id) throws NotFoundException;
+
     void delete(Long id);
+
     boolean isProjectAvailableToChangeTaskStatus(Long id) throws NotFoundException, InvalidStatusException;
 
     ProjectEntity findByProjectName(String name) throws NotFoundException;

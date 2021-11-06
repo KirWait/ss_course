@@ -23,7 +23,7 @@ public class ProjectMapperTest {
         project.setStatus(Status.BACKLOG);
 
 
-        ProjectResponseDto dto = mapper.projectEntityToProjectResponseDTO(project);
+        ProjectResponseDto dto = mapper.projectEntityToProjectResponseDto(project);
         assertThat(dto.getId()).isEqualTo(project.getId());
         assertThat(dto.getCustomerId()).isEqualTo(project.getCustomerId());
         assertThat(dto.getName()).isEqualTo(project.getName());
@@ -41,7 +41,7 @@ public class ProjectMapperTest {
         requestDto.setStatus(Status.BACKLOG);
 
 
-        ProjectEntity project = mapper.projectRequestDTOToProjectEntity(requestDto);
+        ProjectEntity project = mapper.projectRequestDtoToProjectEntity(requestDto);
         assertThat(requestDto.getId()).isEqualTo(project.getId());
         assertThat(requestDto.getCustomerId()).isEqualTo(project.getCustomerId());
         assertThat(requestDto.getName()).isEqualTo(project.getName());

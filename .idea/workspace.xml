@@ -4,78 +4,70 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="cleaned up code, added dto mappers via mapstruct">
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/DateFormatter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/filterSearch/FilterSearchTest.java" afterDir="false" />
+    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="added filterTaskSearch without endTime">
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReleaseEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/InvalidDateFormatException.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/ReleaseRepository.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReleaseService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/mapper/ProjectMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/ProjectMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/mapper/TaskMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/TaskMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/UserMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/mapper/VersionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/VersionMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/project/ProjectRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/project/ProjectResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/task/TaskRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/task/TaskResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/user/UserRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/user/UserRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/user/UserResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/user/UserResponseDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/version/VersionRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/version/VersionRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/DTO/version/VersionResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/version/VersionResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/configuration/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/configuration/SecurityConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AuthenticationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GlobalControllerExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GlobalControllerExceptionHandler.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/ProjectMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/ProjectMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/VersionMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/mapper/ReleaseMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/version/VersionRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/version/ReleaseRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/version/VersionResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/version/ReleaseResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskVersionEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskVersionEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskVersionEntity.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/enumeration/Roles.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/enumeration/Roles.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/TaskVersionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/DateFormatter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/DateFormatter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ProjectService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TaskVersionService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/TaskVersionService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TaskVersionService.java" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskVersionServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskVersionServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskVersionServiceImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/filterSearch/FilterSearchTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/filterSearch/FilterSearchTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/mapper/ProjectMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/mapper/ProjectMapperTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/org/example/mapper/TaskMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/mapper/TaskMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/mapper/UserMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/mapper/UserMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/mapper/VersionMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/mapper/VersionMapperTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/Task2MapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskEntityMapperImpl.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/mapper/VersionMapperTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/mapper/ReleaseMapperTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapperImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapper.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectRequestDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskRequestDto.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskResponseDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserRequestDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserResponseDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionRequestDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionResponseDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionRequestDto.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/VersionResponseDto.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/AdminController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/TaskEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/TaskEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/TaskVersionEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/TaskVersionEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/ProjectService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/ProjectService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TaskVersionService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/TaskVersionService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/TaskVersionEntity.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/TaskVersionRepository.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/DateFormatter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/DateFormatter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TaskVersionService.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskVersionServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskVersionServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/UserServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/DTO/mapper/ProjectMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/DTO/mapper/TaskMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/DTO/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/DTO/mapper/VersionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/VersionMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ProjectMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ProjectMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskVersionServiceImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/VersionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ReleaseMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/filterSearch/FilterSearchTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/filterSearch/FilterSearchTest.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/TaskMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/TaskMapperTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/UserMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/UserMapperTest.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/VersionMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/VersionMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/VersionMapperTest.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -206,7 +198,22 @@
       <recent name="org.example.repositories" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.App">
+  <component name="RunManager" selected="JUnit.UserServiceMockitoTest">
+    <configuration name="ProjectServiceJUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="practice" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="org.example.service.ProjectServiceTests.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="org.example.service.ProjectServiceTests" />
+      <option name="MAIN_CLASS_NAME" value="org.example.service.ProjectServiceTests.ProjectServiceJUnitTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="ProjectServiceMockitoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
@@ -237,22 +244,22 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserServiceJUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserMapperTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.UserServiceTests.*" />
+          <option name="PATTERN" value="org.example.mapper.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.service.UserServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.UserServiceTests.UserServiceJUnitTest" />
+      <option name="PACKAGE_NAME" value="org.example.mapper" />
+      <option name="MAIN_CLASS_NAME" value="org.example.mapper.UserMapperTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserServiceJUnitTest.registerAndDeleteShouldSaveAndDeleteUser" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="UserServiceMockitoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
@@ -261,33 +268,19 @@
         </pattern>
       </extension>
       <option name="PACKAGE_NAME" value="org.example.service.UserServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.UserServiceTests.UserServiceJUnitTest" />
-      <option name="METHOD_NAME" value="registerAndDeleteShouldSaveAndDeleteUser" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="App" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <module name="practice" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="org.example.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="SPRING_BOOT_MAIN_CLASS" value="org.example.App" />
+      <option name="MAIN_CLASS_NAME" value="org.example.service.UserServiceTests.UserServiceMockitoTest" />
+      <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.App" />
-        <item itemvalue="JUnit.UserServiceJUnitTest.registerAndDeleteShouldSaveAndDeleteUser" />
-        <item itemvalue="JUnit.UserServiceJUnitTest" />
+        <item itemvalue="JUnit.UserServiceMockitoTest" />
         <item itemvalue="JUnit.TaskServiceJUnitTest" />
         <item itemvalue="JUnit.ProjectServiceMockitoTest" />
+        <item itemvalue="JUnit.ProjectServiceJUnitTest" />
+        <item itemvalue="JUnit.UserMapperTest" />
       </list>
     </recent_temporary>
   </component>
@@ -307,7 +300,7 @@
       <workItem from="1636056009221" duration="2527000" />
       <workItem from="1636058570722" duration="172000" />
       <workItem from="1636058759215" duration="295000" />
-      <workItem from="1636059071337" duration="37801000" />
+      <workItem from="1636059071337" duration="60465000" />
     </task>
     <task id="LOCAL-00001" summary="added security">
       <created>1635622961563</created>
@@ -435,7 +428,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636117342014</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="added filterTaskSearch without endTime">
+      <created>1636148368525</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1636148368525</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -479,7 +479,8 @@
     <MESSAGE value="added some new exceptions handling" />
     <MESSAGE value="added JUnit and Mockito tests for ProjectService and UserService" />
     <MESSAGE value="cleaned up code, added dto mappers via mapstruct" />
-    <option name="LAST_COMMIT_MESSAGE" value="cleaned up code, added dto mappers via mapstruct" />
+    <MESSAGE value="added filterTaskSearch without endTime" />
+    <option name="LAST_COMMIT_MESSAGE" value="added filterTaskSearch without endTime" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

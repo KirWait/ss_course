@@ -10,15 +10,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "users")
 public class UserEntity {
-    public UserEntity(String username, String password) {
-
-        this.username = username;
-        this.password = password;
-    }
-
-    public UserEntity(String username) {
-        this.username = username;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,10 +30,6 @@ public class UserEntity {
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
     private Active active;
-
-    public UserEntity() {
-
-    }
 
     public Long getId() {
         return id;
@@ -83,6 +70,17 @@ public class UserEntity {
     public void setActive(Active status) {
         this.active = status;
     }
+
+    public UserEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    public UserEntity(String username) {
+        this.username = username;
+    }
+
+    public UserEntity() {}
 
     @Override
     public boolean equals(Object o) {

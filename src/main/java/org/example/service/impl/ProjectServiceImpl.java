@@ -33,23 +33,26 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void save(ProjectEntity projectEntity) {
         projectRepository.save(projectEntity);
-
     }
 
     @Override
     public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
-        ProjectEntity pe = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("No such projects"));
-        if (pe.getStatus() == Status.DONE) {
+
+        ProjectEntity projectEntity = projectRepository.findById(id).orElseThrow(() -> new NotFoundException("No such projects"));
+
+        Status projectEntityStatus = projectEntity.getStatus();
+
+        if (projectEntityStatus == Status.DONE) {
             throw new InvalidStatusException("The project has already been done!");
         }
-        if (pe.getStatus() == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(pe.getId())) {
-            pe.setStatus(Status.DONE);
+        if (projectEntityStatus == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
+            projectEntity.setStatus(Status.DONE);
         }
-        if (pe.getStatus() == Status.BACKLOG) {
-            pe.setStatus(Status.IN_PROGRESS);
+        if (projectEntityStatus == Status.BACKLOG) {
+            projectEntity.setStatus(Status.IN_PROGRESS);
         }
 
-        projectRepository.save(pe);
+        projectRepository.save(projectEntity);
     }
 
     @Override
@@ -67,7 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectEntity project = projectRepository.findByName(name);
 
-        if (project == null) throw new NotFoundException("No such project with name: " + name + "!");
+        if (project == null) throw new NotFoundException(String.format("No such project with name: %s!", name));
 
         return project;
     }
@@ -75,7 +78,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
 
-        if (requestDto.getCustomerId() != null) {throw new IllegalArgumentException("Customer id shouldn't be defined manually!");}
+        if (requestDto.getCustomerId() != null) {
+            throw new IllegalArgumentException("Customer id shouldn't be defined manually!");
+        }
+
         if (requestDto.getCustomerName() == null){
 
             String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -102,9 +108,12 @@ public class ProjectServiceImpl implements ProjectService {
 
         if ((status == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
                 || (status == Status.BACKLOG)
-                || (status == Status.DONE)) { changeStatus(id);}
-
-        else throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
+                || (status == Status.DONE)) {
+            changeStatus(id);
+        }
+        else {
+            throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
+        }
     }
 
     @Override
@@ -116,11 +125,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectEntity findById(Long id) throws NotFoundException{
 
-        ProjectEntity project = projectRepository.findById(id).orElse(null);
-
-        if (project == null) throw new NotFoundException("No such project with id: "+id +"!");
-
-        return project;
+        return projectRepository.findById(id).orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
     }
 
     @Override

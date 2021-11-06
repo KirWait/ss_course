@@ -39,12 +39,6 @@ public class ProjectEntity {
 
     }
 
-    public ProjectEntity(String name, Long customerId, Status status) {
-        this.name = name;
-        this.customerId = customerId;
-        this.status = status;
-    }
-
     public ProjectEntity(Long id, String name, Long customerId, Status status) {
         this.id = id;
         this.name = name;

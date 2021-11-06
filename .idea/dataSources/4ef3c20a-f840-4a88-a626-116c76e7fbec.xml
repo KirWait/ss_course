@@ -784,7 +784,7 @@ false YEKT
 false Z
 false Zulu
 </TimeZones>
-      <IntrospectionStateNumber>1289</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1454</IntrospectionStateNumber>
       <StartupTime>1635767091</StartupTime>
     </root>
     <database id="2" parent="1" name="postgres">
@@ -805,12 +805,12 @@ false Zulu
 13158||-9223372036854775808|U|G
 13158||10|U|G</Grants>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1290</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1455</IntrospectionStateNumber>
       <Current>1</Current>
       <Relations>sequence|table|16518|16520|1
 sequence|table|16496|16498|1
 sequence|table|16504|16506|1
-sequence|table|16628|16630|5
+sequence|table|16628|16630|6
 </Relations>
     </database>
     <database id="4" parent="1" name="ss_practice2">
@@ -879,7 +879,7 @@ sequence|table|16628|16630|5
       <Comment>standard public schema</Comment>
       <StateNumber>287</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1290</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1455</IntrospectionStateNumber>
       <Current>1</Current>
     </schema>
     <extension id="19" parent="3" name="plpgsql">
@@ -1022,22 +1022,22 @@ sequence|table|16628|16630|5
       <StateNumber>739</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="38" parent="18" name="tasks">
-      <ObjectId>16520</ObjectId>
+    <table id="38" parent="18" name="release">
+      <ObjectId>16630</ObjectId>
       <Owner>postgres</Owner>
-      <StateNumber>794</StateNumber>
+      <StateNumber>1407</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
-    <table id="39" parent="18" name="users">
+    <table id="39" parent="18" name="tasks">
+      <ObjectId>16520</ObjectId>
+      <Owner>postgres</Owner>
+      <StateNumber>1452</StateNumber>
+      <AccessMethodId>2</AccessMethodId>
+    </table>
+    <table id="40" parent="18" name="users">
       <ObjectId>16506</ObjectId>
       <Owner>postgres</Owner>
       <StateNumber>684</StateNumber>
-      <AccessMethodId>2</AccessMethodId>
-    </table>
-    <table id="40" parent="18" name="versions">
-      <ObjectId>16630</ObjectId>
-      <Owner>postgres</Owner>
-      <StateNumber>1287</StateNumber>
       <AccessMethodId>2</AccessMethodId>
     </table>
     <column id="41" parent="35" name="id">
@@ -1220,16 +1220,92 @@ sequence|table|16628|16630|5
       <UnderlyingIndexName>Project_pk</UnderlyingIndexName>
     </key>
     <foreign-key id="67" parent="37" name="Project_fk0">
-      <ObjectId>16529</ObjectId>
-      <StateNumber>566</StateNumber>
+      <ObjectId>24658</ObjectId>
+      <StateNumber>1372</StateNumber>
       <ColNames>customer_id</ColNames>
       <RefTableId>16506</RefTableId>
       <RefColPositions>1</RefColPositions>
       <RefTableName>users</RefTableName>
       <RefKeyName>Users_pk</RefKeyName>
       <RefColNames>user_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="68" parent="38" name="task_id">
+    <column id="68" parent="38" name="version">
+      <Position>2</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>822</StateNumber>
+      <DefaultExpression>&apos;1.0&apos;::character varying</DefaultExpression>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="69" parent="38" name="creation_time">
+      <Position>3</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1425</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="70" parent="38" name="end_time">
+      <Position>4</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>1287</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="71" parent="38" name="release_id">
+      <Position>5</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1411</StateNumber>
+      <DefaultExpression>nextval(&apos;versions_task_version_id_seq&apos;::regclass)</DefaultExpression>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="72" parent="38" name="project_id">
+      <Position>6</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1391</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <index id="73" parent="38" name="versions_pk">
+      <ObjectId>16636</ObjectId>
+      <StateNumber>1287</StateNumber>
+      <ColNames>release_id</ColNames>
+      <Unique>1</Unique>
+      <Primary>1</Primary>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <index id="74" parent="38" name="versions_task_version_id_uindex">
+      <ObjectId>16643</ObjectId>
+      <StateNumber>1287</StateNumber>
+      <ColNames>release_id</ColNames>
+      <Unique>1</Unique>
+      <CollationIds>0</CollationIds>
+      <ClassIds>1978</ClassIds>
+      <AccessMethodId>403</AccessMethodId>
+    </index>
+    <key id="75" parent="38" name="versions_pk">
+      <ObjectId>16637</ObjectId>
+      <StateNumber>822</StateNumber>
+      <ColNames>release_id</ColNames>
+      <Primary>1</Primary>
+      <UnderlyingIndexName>versions_pk</UnderlyingIndexName>
+    </key>
+    <foreign-key id="76" parent="38" name="versions_project_project_id_fk">
+      <ObjectId>24668</ObjectId>
+      <StateNumber>1402</StateNumber>
+      <ColNames>project_id</ColNames>
+      <RefTableId>16498</RefTableId>
+      <RefColPositions>1</RefColPositions>
+      <RefTableName>project</RefTableName>
+      <RefKeyName>Project_pk</RefKeyName>
+      <RefColNames>project_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="77" parent="39" name="task_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1237,14 +1313,14 @@ sequence|table|16628|16630|5
       <DefaultExpression>nextval(&apos;&quot;Tasks_TaskID_seq&quot;&apos;::regclass)</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <column id="69" parent="38" name="project_id">
+    <column id="78" parent="39" name="project_id">
       <Position>2</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>631</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="70" parent="38" name="status">
+    <column id="79" parent="39" name="status">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
@@ -1252,42 +1328,67 @@ sequence|table|16628|16630|5
       <DefaultExpression>&apos;BACKLOG&apos;::character varying</DefaultExpression>
       <TypeId>1043</TypeId>
     </column>
-    <column id="71" parent="38" name="name">
+    <column id="80" parent="39" name="name">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>623</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="72" parent="38" name="description">
+    <column id="81" parent="39" name="description">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
       <StateNumber>619</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="73" parent="38" name="author_id">
+    <column id="82" parent="39" name="author_id">
       <Position>6</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>615</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="74" parent="38" name="responsible_id">
+    <column id="83" parent="39" name="responsible_id">
       <Position>7</Position>
       <DataType>integer|0s</DataType>
       <StateNumber>611</StateNumber>
       <TypeId>23</TypeId>
     </column>
-    <column id="75" parent="38" name="type">
+    <column id="84" parent="39" name="type">
       <Position>9</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>639</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <index id="76" parent="38" name="Tasks_pk">
+    <column id="85" parent="39" name="release_id">
+      <Position>10</Position>
+      <DataType>integer|0s</DataType>
+      <NotNull>1</NotNull>
+      <StateNumber>1331</StateNumber>
+      <TypeId>23</TypeId>
+    </column>
+    <column id="86" parent="39" name="creation_time">
+      <Position>11</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>1444</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="87" parent="39" name="start_time">
+      <Position>12</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>1448</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <column id="88" parent="39" name="end_time">
+      <Position>13</Position>
+      <DataType>varchar(255)|0s</DataType>
+      <StateNumber>1452</StateNumber>
+      <TypeId>1043</TypeId>
+    </column>
+    <index id="89" parent="39" name="Tasks_pk">
       <ObjectId>16527</ObjectId>
-      <StateNumber>794</StateNumber>
+      <StateNumber>1331</StateNumber>
       <ColNames>task_id</ColNames>
       <Unique>1</Unique>
       <Primary>1</Primary>
@@ -1295,14 +1396,14 @@ sequence|table|16628|16630|5
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="77" parent="38" name="Tasks_pk">
+    <key id="90" parent="39" name="Tasks_pk">
       <ObjectId>16528</ObjectId>
       <StateNumber>566</StateNumber>
       <ColNames>task_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>Tasks_pk</UnderlyingIndexName>
     </key>
-    <foreign-key id="78" parent="38" name="tasks___fk ">
+    <foreign-key id="91" parent="39" name="tasks___fk ">
       <ObjectId>16609</ObjectId>
       <StateNumber>789</StateNumber>
       <ColNames>project_id</ColNames>
@@ -1314,7 +1415,7 @@ sequence|table|16628|16630|5
       <OnDelete>cascade</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <foreign-key id="79" parent="38" name="Tasks_fk1">
+    <foreign-key id="92" parent="39" name="Tasks_fk1">
       <ObjectId>16599</ObjectId>
       <StateNumber>786</StateNumber>
       <ColNames>author_id</ColNames>
@@ -1326,7 +1427,7 @@ sequence|table|16628|16630|5
       <OnDelete>cascade</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <foreign-key id="80" parent="38" name="Tasks_fk2">
+    <foreign-key id="93" parent="39" name="Tasks_fk2">
       <ObjectId>16604</ObjectId>
       <StateNumber>788</StateNumber>
       <ColNames>responsible_id</ColNames>
@@ -1338,7 +1439,19 @@ sequence|table|16628|16630|5
       <OnDelete>cascade</OnDelete>
       <OnUpdate>cascade</OnUpdate>
     </foreign-key>
-    <column id="81" parent="39" name="user_id">
+    <foreign-key id="94" parent="39" name="tasks___fk3">
+      <ObjectId>24648</ObjectId>
+      <StateNumber>1341</StateNumber>
+      <ColNames>release_id</ColNames>
+      <RefTableId>16630</RefTableId>
+      <RefColPositions>5</RefColPositions>
+      <RefTableName>release</RefTableName>
+      <RefKeyName>versions_pk</RefKeyName>
+      <RefColNames>release_id</RefColNames>
+      <OnDelete>cascade</OnDelete>
+      <OnUpdate>cascade</OnUpdate>
+    </foreign-key>
+    <column id="95" parent="40" name="user_id">
       <Position>1</Position>
       <DataType>integer|0s</DataType>
       <NotNull>1</NotNull>
@@ -1346,35 +1459,35 @@ sequence|table|16628|16630|5
       <DefaultExpression>nextval(&apos;&quot;Users_UserID_seq&quot;&apos;::regclass)</DefaultExpression>
       <TypeId>23</TypeId>
     </column>
-    <column id="82" parent="39" name="user_name">
+    <column id="96" parent="40" name="user_name">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>664</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="83" parent="39" name="password">
+    <column id="97" parent="40" name="password">
       <Position>3</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>668</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="84" parent="39" name="roles">
+    <column id="98" parent="40" name="roles">
       <Position>4</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
       <StateNumber>672</StateNumber>
       <TypeId>1043</TypeId>
     </column>
-    <column id="85" parent="39" name="status">
+    <column id="99" parent="40" name="status">
       <Position>5</Position>
       <DataType>varchar(255)|0s</DataType>
       <StateNumber>684</StateNumber>
       <DefaultExpression>&apos;ACTIVE&apos;::character varying</DefaultExpression>
       <TypeId>1043</TypeId>
     </column>
-    <index id="86" parent="39" name="Users_pk">
+    <index id="100" parent="40" name="Users_pk">
       <ObjectId>16513</ObjectId>
       <StateNumber>566</StateNumber>
       <ColNames>user_id</ColNames>
@@ -1384,84 +1497,12 @@ sequence|table|16628|16630|5
       <ClassIds>1978</ClassIds>
       <AccessMethodId>403</AccessMethodId>
     </index>
-    <key id="87" parent="39" name="Users_pk">
+    <key id="101" parent="40" name="Users_pk">
       <ObjectId>16514</ObjectId>
       <StateNumber>566</StateNumber>
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
       <UnderlyingIndexName>Users_pk</UnderlyingIndexName>
     </key>
-    <column id="88" parent="40" name="task_id">
-      <Position>1</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>822</StateNumber>
-      <TypeId>23</TypeId>
-    </column>
-    <column id="89" parent="40" name="version">
-      <Position>2</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>822</StateNumber>
-      <DefaultExpression>&apos;1.0&apos;::character varying</DefaultExpression>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="90" parent="40" name="start_time">
-      <Position>3</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>1283</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="91" parent="40" name="end_time">
-      <Position>4</Position>
-      <DataType>varchar(255)|0s</DataType>
-      <StateNumber>1287</StateNumber>
-      <TypeId>1043</TypeId>
-    </column>
-    <column id="92" parent="40" name="task_version_id">
-      <Position>5</Position>
-      <DataType>integer|0s</DataType>
-      <NotNull>1</NotNull>
-      <StateNumber>822</StateNumber>
-      <DefaultExpression>nextval(&apos;versions_task_version_id_seq&apos;::regclass)</DefaultExpression>
-      <TypeId>23</TypeId>
-    </column>
-    <index id="93" parent="40" name="versions_pk">
-      <ObjectId>16636</ObjectId>
-      <StateNumber>1287</StateNumber>
-      <ColNames>task_version_id</ColNames>
-      <Unique>1</Unique>
-      <Primary>1</Primary>
-      <CollationIds>0</CollationIds>
-      <ClassIds>1978</ClassIds>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <index id="94" parent="40" name="versions_task_version_id_uindex">
-      <ObjectId>16643</ObjectId>
-      <StateNumber>1287</StateNumber>
-      <ColNames>task_version_id</ColNames>
-      <Unique>1</Unique>
-      <CollationIds>0</CollationIds>
-      <ClassIds>1978</ClassIds>
-      <AccessMethodId>403</AccessMethodId>
-    </index>
-    <key id="95" parent="40" name="versions_pk">
-      <ObjectId>16637</ObjectId>
-      <StateNumber>822</StateNumber>
-      <ColNames>task_version_id</ColNames>
-      <Primary>1</Primary>
-      <UnderlyingIndexName>versions_pk</UnderlyingIndexName>
-    </key>
-    <foreign-key id="96" parent="40" name="Versions_fk0">
-      <ObjectId>16638</ObjectId>
-      <StateNumber>822</StateNumber>
-      <ColNames>task_id</ColNames>
-      <RefTableId>16520</RefTableId>
-      <RefColPositions>1</RefColPositions>
-      <RefTableName>tasks</RefTableName>
-      <RefKeyName>Tasks_pk</RefKeyName>
-      <RefColNames>task_id</RefColNames>
-    </foreign-key>
   </database-model>
 </dataSource>

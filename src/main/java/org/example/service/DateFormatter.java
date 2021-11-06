@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 
 public interface DateFormatter {
 
-    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+    SimpleDateFormat formatterWithTime = new SimpleDateFormat("yyyy-MM-dd 'at' HH:mm:ss");
+    SimpleDateFormat formatterWithoutTime = new SimpleDateFormat("yyyy-MM-dd");
 
 }

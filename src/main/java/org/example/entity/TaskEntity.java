@@ -1,10 +1,9 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import javax.persistence.*;
-import java.util.List;
-import java.util.Objects;
 
 
 @Entity
@@ -36,61 +35,29 @@ public class TaskEntity {
     @Column(name = "responsible_id")
     private Long responsibleId;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "task")
-    private List<TaskVersionEntity> versions;
-
+    @JsonIgnore
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "release_id")
+    private ReleaseEntity release;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private Type type;
 
-    public TaskEntity() {
-    }
+    @Column(name = "creation_time")
+    private String creationTime;
 
-    public TaskEntity(Long id,
-                      Long projectId,
-                      Status status,
-                      String name,
-                      String description,
-                      Long authorId,
-                      Long responsibleId,
-                      List<TaskVersionEntity> versions,
-                      Type type) {
-        this.id = id;
-        this.projectId = projectId;
-        this.status = status;
-        this.name = name;
-        this.description = description;
-        this.authorId = authorId;
-        this.responsibleId = responsibleId;
-        this.versions = versions;
-        this.type = type;
+    @Column(name = "start_time")
+    private String startTime;
+
+    @Column(name = "end_time")
+    private String endTime;
+
+    public TaskEntity() {
     }
 
     public TaskEntity(String name) {
         this.name = name;
-    }
-
-    public TaskEntity(Long id) {
-        this.id = id;
-    }
-
-    public TaskEntity(Long id, Status status) {
-        this.id = id;
-        this.status = status;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TaskEntity entity = (TaskEntity) o;
-        return Objects.equals(id, entity.id) && Objects.equals(projectId, entity.projectId) && status == entity.status && Objects.equals(name, entity.name) && Objects.equals(description, entity.description) && Objects.equals(authorId, entity.authorId) && Objects.equals(responsibleId, entity.responsibleId) && Objects.equals(versions, entity.versions) && type == entity.type;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, projectId, status, name, description, authorId, responsibleId, versions, type);
     }
 
     @Override
@@ -103,22 +70,41 @@ public class TaskEntity {
                 ", description='" + description + '\'' +
                 ", authorId=" + authorId +
                 ", responsibleId=" + responsibleId +
-                ", versions=" + versions +
+                ", release=" + release +
                 ", type=" + type +
                 '}';
     }
 
-    public void setVersions(List<TaskVersionEntity> versions) {
-
-        if (versions != null) {
-            versions.forEach(a -> a.setTask(this));
-
-        }
-        this.versions = versions;
+    public String getCreationTime() {
+        return creationTime;
     }
 
-    public List<TaskVersionEntity> getVersions() {
-        return versions;
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    public ReleaseEntity getRelease() {
+        return release;
+    }
+
+    public void setRelease(ReleaseEntity release) {
+        this.release = release;
     }
 
     public Long getId() { return id; }

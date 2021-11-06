@@ -12,9 +12,6 @@ public class ProjectResponseDto {
 
     private Status status;
 
-    public ProjectResponseDto() {
-    }
-
     public Long getId() { return id; }
 
     public void setId(Long project_id) {

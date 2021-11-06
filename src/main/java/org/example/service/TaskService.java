@@ -24,5 +24,6 @@ public interface TaskService {
     boolean checkForTasksInProgressAndBacklog(Long projectId);
 
     void setUpRequestDto(TaskRequestDto requestDto, Long id) throws NotFoundException;
+
     List<TaskEntity> searchByFilter(TaskRequestDto task) throws NotFoundException;
 }

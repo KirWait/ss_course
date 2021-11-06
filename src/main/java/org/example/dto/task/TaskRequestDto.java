@@ -1,54 +1,14 @@
 package org.example.dto.task;
 
-import com.google.gson.annotations.SerializedName;
-import org.example.entity.TaskVersionEntity;
+import org.example.entity.ReleaseEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
-
-import java.util.List;
 
 
 public class TaskRequestDto {
 
-    public TaskRequestDto() {
-    }
-
-    @SerializedName("version")
-    private String versionForSearch;
-
-    @SerializedName("startTime")//change!!
-    private String startTimeForSearch;
-
-    @SerializedName("endTime")
-    private String endTimeForSearch;
-
-    public TaskRequestDto(String versionForSearch) {
-
-        this.versionForSearch = versionForSearch;
-    }
-
-    public TaskRequestDto(String startTimeForSearch, String endTimeForSearch) {
-        this.startTimeForSearch = startTimeForSearch;
-        this.endTimeForSearch = endTimeForSearch;
-    }
-
-    public String getVersionForSearch() {
-        return versionForSearch;
-    }
-
-    public String getStartTimeForSearch() {
-        return startTimeForSearch;
-    }
-
-    public String getEndTimeForSearch() {
-        return endTimeForSearch;
-    }
-
-    public String getAuthorUsername() {
-        return authorUsername;
-    }
-
     private String authorUsername;
+
     private String responsibleUsername;
 
     private Long id;
@@ -65,9 +25,41 @@ public class TaskRequestDto {
 
     private Long responsibleId;
 
-    private List<TaskVersionEntity> versions;
+    private ReleaseEntity release;
 
     private Type type;
+
+    private String releaseVersion;
+
+    private String startTime;
+
+    private String endTime;
+
+    private String creationTime;
+
+    public String getCreationTime() {
+        return creationTime;
+    }
+
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public String getReleaseVersion() {
+        return releaseVersion;
+    }
+
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
 
     public Long getId() {return id; }
 
@@ -121,12 +113,12 @@ public class TaskRequestDto {
         this.responsibleId = responsibleId;
     }
 
-    public List<TaskVersionEntity> getVersions() {
-        return versions;
+    public ReleaseEntity getRelease() {
+        return release;
     }
 
-    public void setVersions(List<TaskVersionEntity> versions) {
-        this.versions = versions;
+    public void setRelease(ReleaseEntity release) {
+        this.release = release;
     }
 
     public Type getType() {

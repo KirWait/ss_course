@@ -1,39 +1,47 @@
 package org.example.dto.version;
 
-
+import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.entity.TaskEntity;
 
-public class VersionResponseDto {
-    public VersionResponseDto() {
-    }
+public class ReleaseResponseDto {
 
     @Override
     public String toString() {
-        return "VersionResponseDto{" +
+        return "ReleaseResponseDto{" +
                 ", version='" + version + '\'' +
                 ", endTime='" + endTime + '\'' +
-                ", startTime='" + startTime + '\'' +
+                ", startTime='" + creationTime + '\'' +
                 ", id=" + id +
                 '}';
     }
     @JsonIgnore
-    private TaskEntity task;
+    private List<TaskEntity> tasks;
 
     private String version;
 
     private String endTime;
 
-    private String startTime;
+    private String creationTime;
 
     private Long id;
 
-    public TaskEntity getTask() {
-        return task;
+    private Long projectId;
+
+    public Long getProjectId() {
+        return projectId;
     }
 
-    public void setTask(TaskEntity task) {
-        this.task = task;
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
+    public List<TaskEntity> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<TaskEntity> tasks) {
+        this.tasks = tasks;
     }
 
     public String getVersion() {
@@ -52,12 +60,12 @@ public class VersionResponseDto {
         this.endTime = endTime;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getCreationTime() {
+        return creationTime;
     }
 
-    public void setStartTime(String start_time) {
-        this.startTime = start_time;
+    public void setCreationTime(String start_time) {
+        this.creationTime = start_time;
     }
 
     public Long getId() {

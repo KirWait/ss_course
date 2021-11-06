@@ -1,16 +1,13 @@
 package org.example.dto.mapper;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.annotation.processing.Generated;
 import org.example.dto.task.TaskRequestDto;
 import org.example.dto.task.TaskResponseDto;
 import org.example.entity.TaskEntity;
-import org.example.entity.TaskVersionEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-06T01:17:41+0400",
+    date = "2021-11-06T18:41:54+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class TaskMapperImpl implements TaskMapper {
@@ -23,10 +20,10 @@ public class TaskMapperImpl implements TaskMapper {
 
         TaskEntity taskEntity = new TaskEntity();
 
-        List<TaskVersionEntity> list = requestDto.getVersions();
-        if ( list != null ) {
-            taskEntity.setVersions( new ArrayList<TaskVersionEntity>( list ) );
-        }
+        taskEntity.setCreationTime( requestDto.getCreationTime() );
+        taskEntity.setStartTime( requestDto.getStartTime() );
+        taskEntity.setEndTime( requestDto.getEndTime() );
+        taskEntity.setRelease( requestDto.getRelease() );
         taskEntity.setId( requestDto.getId() );
         taskEntity.setProjectId( requestDto.getProjectId() );
         taskEntity.setStatus( requestDto.getStatus() );
@@ -47,6 +44,9 @@ public class TaskMapperImpl implements TaskMapper {
 
         TaskResponseDto taskResponseDto = new TaskResponseDto();
 
+        taskResponseDto.setStartTime( entity.getStartTime() );
+        taskResponseDto.setEndTime( entity.getEndTime() );
+        taskResponseDto.setCreationTime( entity.getCreationTime() );
         taskResponseDto.setId( entity.getId() );
         taskResponseDto.setProjectId( entity.getProjectId() );
         taskResponseDto.setStatus( entity.getStatus() );
@@ -54,10 +54,7 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponseDto.setDescription( entity.getDescription() );
         taskResponseDto.setAuthorId( entity.getAuthorId() );
         taskResponseDto.setResponsibleId( entity.getResponsibleId() );
-        List<TaskVersionEntity> list = entity.getVersions();
-        if ( list != null ) {
-            taskResponseDto.setVersions( new ArrayList<TaskVersionEntity>( list ) );
-        }
+        taskResponseDto.setRelease( entity.getRelease() );
         taskResponseDto.setType( entity.getType() );
 
         return taskResponseDto;

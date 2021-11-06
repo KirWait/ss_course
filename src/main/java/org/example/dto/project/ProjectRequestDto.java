@@ -4,7 +4,6 @@ import org.example.enumeration.Status;
 
 public class ProjectRequestDto {
 
-
     private String customerName;
 
     private String name;

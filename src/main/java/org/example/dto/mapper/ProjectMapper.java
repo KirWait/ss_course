@@ -7,6 +7,6 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface ProjectMapper {
-    ProjectResponseDto projectEntityToProjectResponseDTO(ProjectEntity project);
-    ProjectEntity projectRequestDTOToProjectEntity(ProjectRequestDto projectRequestDto);
+    ProjectResponseDto projectEntityToProjectResponseDto(ProjectEntity project);
+    ProjectEntity projectRequestDtoToProjectEntity(ProjectRequestDto projectRequestDto);
 }
