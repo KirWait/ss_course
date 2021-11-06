@@ -26,4 +26,6 @@ public interface TaskService {
     void setUpRequestDto(TaskRequestDto requestDto, Long id) throws NotFoundException;
 
     List<TaskEntity> searchByFilter(TaskRequestDto task) throws NotFoundException;
+
+    List<TaskEntity> findUnfinishedTasksByReleaseVersion(Long projectId, String releaseVersion);
 }

@@ -194,5 +194,11 @@ public class TaskServiceImpl implements TaskService {
         return result;
     }
 
+    @Override
+    public List<TaskEntity> findUnfinishedTasksByReleaseVersion(Long projectId, String releaseVersion) {
+
+        return taskRepository.findAllByProjectId(projectId).stream().filter(task -> task.getRelease().getVersion().equals(releaseVersion)).filter(task -> task.getEndTime() == null).collect(Collectors.toList());
+    }
+
 
 }

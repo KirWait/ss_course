@@ -15,7 +15,6 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,6 +88,17 @@ public class UserController {
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
       }
+
+    @Operation(summary = "Counts unfinished tasks by release version")
+    @GetMapping("/project/{projectId}/tasks/")
+    public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) {
+
+        List<TaskEntity> taskEntityList = taskService.findUnfinishedTasksByReleaseVersion(projectId, releaseVersion);
+
+        List<TaskResponseDto> resultResponseDto = taskEntityList.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+
+        return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
+    }
 }
 
 

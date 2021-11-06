@@ -1,5 +1,6 @@
 package org.example.service.impl;
 
+import javassist.NotFoundException;
 import org.example.dto.version.ReleaseRequestDto;
 import org.example.entity.ReleaseEntity;
 import org.example.exception.InvalidDateFormatException;
@@ -25,8 +26,13 @@ public class ReleaseServiceImpl implements ReleaseService {
     }
 
     @Override
-    public ReleaseEntity findByVersionAndProjectId(String version, Long projectId) {
-        return releaseRepository.findByVersionAndProjectId(version, projectId);
+    public ReleaseEntity findByVersionAndProjectId(String version, Long projectId) throws NotFoundException {
+
+        ReleaseEntity release = releaseRepository.findByVersionAndProjectId(version, projectId);
+        if (release == null){
+            throw new NotFoundException(String.format("No such release with version: %s, and project id: %d!", version, projectId));
+        }
+        return release;
     }
 
     @Override
