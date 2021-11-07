@@ -1,5 +1,6 @@
 package org.example.dto.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.example.entity.ReleaseEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
@@ -24,21 +25,11 @@ public class TaskResponseDto {
 
     private Type type;
 
-    private String releaseVersion;
-
     private String startTime;
 
     private String endTime;
 
     private String creationTime;
-
-    public String getReleaseVersion() {
-        return releaseVersion;
-    }
-
-    public void setReleaseVersion(String releaseVersion) {
-        this.releaseVersion = releaseVersion;
-    }
 
     public String getStartTime() {
         return startTime;

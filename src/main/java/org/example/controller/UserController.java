@@ -93,7 +93,7 @@ public class UserController {
     @GetMapping("/project/{projectId}/tasks/")
     public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) {
 
-        List<TaskEntity> taskEntityList = taskService.findUnfinishedTasksByReleaseVersion(projectId, releaseVersion);
+        List<TaskEntity> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
 
         List<TaskResponseDto> resultResponseDto = taskEntityList.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 

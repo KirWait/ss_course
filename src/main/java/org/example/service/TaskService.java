@@ -27,5 +27,5 @@ public interface TaskService {
 
     List<TaskEntity> searchByFilter(TaskRequestDto task) throws NotFoundException;
 
-    List<TaskEntity> findUnfinishedTasksByReleaseVersion(Long projectId, String releaseVersion);
+    List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion);
 }
