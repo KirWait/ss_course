@@ -16,8 +16,10 @@ import org.example.service.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -195,10 +197,24 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskEntity> findUnfinishedTasksByReleaseVersion(Long projectId, String releaseVersion) {
+    public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) {
 
-        return taskRepository.findAllByProjectId(projectId).stream().filter(task -> task.getRelease().getVersion().equals(releaseVersion)).filter(task -> task.getEndTime() == null).collect(Collectors.toList());
+        List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectId(projectId).stream().
+                filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
+
+        List<TaskEntity> unfinishedTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() == null).collect(Collectors.toList());
+
+        List<TaskEntity> expiredTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() != null).filter(task -> {
+            try {
+                 return DateFormatter.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime() < DateFormatter.formatterWithTime.parse(task.getEndTime()).getTime();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }).collect(Collectors.toList());
+
+        return Stream.concat(unfinishedTasks.stream(), expiredTasks.stream())
+                .collect(Collectors.toList());
     }
-
-
 }

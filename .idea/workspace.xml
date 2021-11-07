@@ -4,21 +4,27 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="deleted versions, added releases; added taskFilterSearch">
+    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="added unfinished task search">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/changelog/db.changelog-master.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/db/changelog/migrations/changelog.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ReleaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReleaseService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/ReleaseService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/ReleaseService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapperImpl.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ReleaseMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ReleaseMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -138,6 +144,9 @@
     <key name="CreateTestDialog.Recents.Supers">
       <recent name="" />
     </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\kir_d\Desktop\practice\src\main\resources\db\changelog\migrations" />
+    </key>
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="org.example" />
       <recent name="org.example.services" />
@@ -249,7 +258,9 @@
       <workItem from="1636056009221" duration="2527000" />
       <workItem from="1636058570722" duration="172000" />
       <workItem from="1636058759215" duration="295000" />
-      <workItem from="1636059071337" duration="64161000" />
+      <workItem from="1636059071337" duration="65392000" />
+      <workItem from="1636233220154" duration="1420000" />
+      <workItem from="1636236348313" duration="4141000" />
     </task>
     <task id="LOCAL-00001" summary="added security">
       <created>1635622961563</created>
@@ -391,7 +402,14 @@
       <option name="project" value="LOCAL" />
       <updated>1636210925609</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="added unfinished task search">
+      <created>1636217920822</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1636217920822</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -437,7 +455,8 @@
     <MESSAGE value="cleaned up code, added dto mappers via mapstruct" />
     <MESSAGE value="added filterTaskSearch without endTime" />
     <MESSAGE value="deleted versions, added releases; added taskFilterSearch" />
-    <option name="LAST_COMMIT_MESSAGE" value="deleted versions, added releases; added taskFilterSearch" />
+    <MESSAGE value="added unfinished task search" />
+    <option name="LAST_COMMIT_MESSAGE" value="added unfinished task search" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
