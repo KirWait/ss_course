@@ -10,7 +10,9 @@ public interface ReleaseService {
 
     ReleaseEntity findByVersionAndProjectId(String version, Long projectId) throws NotFoundException;
 
+    void delete(Long id);
+
     void save(ReleaseEntity version);
 
-    void setUpRequestDto(ReleaseRequestDto version, Long projectId) throws ParseException;
+    void setUpRequestDto(ReleaseRequestDto version, Long projectId) throws ParseException, NotFoundException;
 }

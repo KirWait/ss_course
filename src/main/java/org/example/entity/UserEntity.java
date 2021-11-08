@@ -31,6 +31,14 @@ public class UserEntity {
     @Enumerated(value = EnumType.STRING)
     private Active active;
 
+    public UserEntity(Long id) {
+        this.id = id;
+    }
+
+    public UserEntity(String username) {
+    this.username = username;
+    }
+
     public Long getId() {
         return id;
     }
@@ -76,8 +84,12 @@ public class UserEntity {
         this.password = password;
     }
 
-    public UserEntity(String username) {
+    public UserEntity(String username, String password, Roles roles, Active active) {
+
         this.username = username;
+        this.password = password;
+        this.roles = roles;
+        this.active = active;
     }
 
     public UserEntity() {}

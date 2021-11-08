@@ -59,7 +59,7 @@ public class UserController {
       @GetMapping("/projects/{id}/tasks")
         public ResponseEntity<List<TaskResponseDto>> getProjectTasks(@PathVariable Long id){
 
-          List<TaskResponseDto> responseDtoList = taskService.getAllByProjectId(id).stream()
+          List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);

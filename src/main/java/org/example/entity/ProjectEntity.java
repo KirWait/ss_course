@@ -25,18 +25,7 @@ public class ProjectEntity {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
-    public ProjectEntity(String name) {
-        this.name = name;
-    }
-
     public ProjectEntity() {
-    }
-
-    public ProjectEntity(String name, Long customerId) {
-        this.name = name;
-        this.customerId = customerId;
-        this.status = Status.BACKLOG;
-
     }
 
     public ProjectEntity(Long id, String name, Long customerId, Status status) {
@@ -44,7 +33,15 @@ public class ProjectEntity {
         this.name = name;
         this.customerId = customerId;
         this.status = status;
+    }
 
+    public ProjectEntity(String name, Status status) {
+        this.name = name;
+        this.status = status;
+    }
+
+    public ProjectEntity(String name) {
+        this.name = name;
     }
 
     @Override
@@ -58,6 +55,16 @@ public class ProjectEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, customerId, status);
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", customerId=" + customerId +
+                ", status=" + status +
+                '}';
     }
 
     public Status getStatus() {

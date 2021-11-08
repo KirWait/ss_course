@@ -60,7 +60,9 @@ public class ProjectServiceImpl implements ProjectService {
 
         ProjectEntity project = projectRepository.findById(id).orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
 
-        if (project.getStatus() == Status.BACKLOG) throw new InvalidStatusException("The project is only in BACKLOG stage");
+        if (project.getStatus() == Status.BACKLOG) {
+            throw new InvalidStatusException("The project is only in BACKLOG stage");
+        }
 
         return true;
     }
@@ -98,13 +100,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void ifProjectAvailableToCreateTaskOrThrowException(Status status) {
-
+    public void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException {
+        Status status = projectRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
         if (status == Status.DONE) { throw new InvalidStatusException("The project has already been done!"); }
     }
 
     @Override
-    public void projectChangeStatusOrThrowException(Status status, Long id) throws NotFoundException, InvalidStatusException {
+    public void projectChangeStatusOrThrowException(Long id) throws NotFoundException, InvalidStatusException {
+
+        Status status = projectRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
 
         if ((status == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
                 || (status == Status.BACKLOG)
@@ -114,6 +118,15 @@ public class ProjectServiceImpl implements ProjectService {
         else {
             throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
         }
+    }
+
+    @Override
+    public boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException {
+        if (projectRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)))
+                .getStatus() != Status.DONE) {
+            return true;
+        }
+        else throw new InvalidStatusException("Can't create release: the project has already been done!");
     }
 
     @Override

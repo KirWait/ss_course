@@ -56,6 +56,17 @@ public class TaskEntity {
     public TaskEntity() {
     }
 
+    public TaskEntity(Status status, String name, String description, ReleaseEntity release,
+                      Type type, String creationTime) {
+
+        this.status = status;
+        this.name = name;
+        this.description = description;
+        this.release = release;
+        this.type = type;
+        this.creationTime = creationTime;
+    }
+
     public TaskEntity(String name) {
         this.name = name;
     }

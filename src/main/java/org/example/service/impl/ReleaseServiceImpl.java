@@ -14,7 +14,6 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 
-
 @Service
 @Transactional
 public class ReleaseServiceImpl implements ReleaseService {
@@ -33,6 +32,11 @@ public class ReleaseServiceImpl implements ReleaseService {
             throw new NotFoundException(String.format("No such release with version: %s, and project id: %d!", version, projectId));
         }
         return release;
+    }
+
+    @Override
+    public void delete(Long id){
+        releaseRepository.deleteById(id);
     }
 
     @Override
@@ -75,5 +79,6 @@ public class ReleaseServiceImpl implements ReleaseService {
         releaseRequestDto.setCreationTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
 
         releaseRequestDto.setProjectId(projectId);
+
     }
 }

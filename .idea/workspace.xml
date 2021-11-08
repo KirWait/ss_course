@@ -4,27 +4,104 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="added unfinished task search">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/changelog/db.changelog-master.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/db/changelog/migrations/changelog.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/4ef3c20a-f840-4a88-a626-116c76e7fbec/storage_v2/_src_/database/ss_practice.OtBYUQ/schema/public.abK9xQ.meta" afterDir="false" />
+    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="changed some method naming">
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/AdminControllerTest/AdminControllerTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/test/java/org/example/LoginTest/LoginTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskResponseDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/project/ProjectRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/dto/task/TaskRequestDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ReleaseEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ReleaseEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/TaskEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/UserEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/UserEntity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/repository/TaskRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/repository/TaskRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ProjectService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ProjectService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/ReleaseService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/ReleaseService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/TaskService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/VersionMapperImpl.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/AppTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/AppTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/filterSearch/FilterSearchTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/ProjectServiceTests/ProjectServiceJUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/ProjectServiceTests/ProjectServiceMockitoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/service/ProjectServiceTests/ProjectServiceMockitoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/TaskServiceTests/TaskServiceJUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/TaskServiceTests/TaskServiceMockitoTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/UserServiceTests/UserServiceJUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/UserServiceTests/UserServiceMockitoTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/service/UserServiceTests/UserServiceMockitoTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/App.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ProjectMapperImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ReleaseMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ReleaseMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ReleaseMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/ReleaseMapperImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/TaskMapperImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapperImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/mapper/UserMapperImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectRequestDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/project/ProjectResponseDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskRequestDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/task/TaskResponseDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserRequestDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/user/UserResponseDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/ReleaseRequestDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/version/ReleaseRequestDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/DTO/version/ReleaseResponseDto.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/DTO/version/ReleaseResponseDto.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/configuration/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/configuration/SecurityConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/AdminController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/AdminController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/ProjectEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/ProjectEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/ReleaseEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/ReleaseEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/TaskEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/TaskEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/UserEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/UserEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/enumeration/Active.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/enumeration/Active.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/enumeration/Roles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/enumeration/Roles.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/enumeration/Status.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/enumeration/Status.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/enumeration/Type.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/enumeration/Type.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidDateFormatException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidDateFormatException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidStatusException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidStatusException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidVersionException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/exception/InvalidVersionException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/exception/JwtAuthenticationException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/exception/JwtAuthenticationException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/ProjectRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/repository/ProjectRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/ReleaseRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/repository/ReleaseRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/TaskRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/repository/TaskRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/UserRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/repository/UserRepository.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/JwtUserDetailsService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/JwtUserDetailsService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtConfigurer.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtConfigurer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtFactory.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtTokenFilter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtTokenFilter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtTokenProvider.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtTokenProvider.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/security/jwt/JwtUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/DateFormatter.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/DateFormatter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/ProjectService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/ProjectService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/ReleaseService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/ReleaseService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/TaskService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/UserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/UserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/UserServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ProjectMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ReleaseMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/ReleaseMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/TaskMapperImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/dto/mapper/UserMapperImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/AppTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/AppTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/filterSearch/FilterSearchTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ProjectMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ProjectMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ReleaseMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/ReleaseMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/TaskMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/TaskMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/mapper/UserMapperTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/mapper/UserMapperTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/ProjectServiceTests/ProjectServiceJUnitTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/service/ProjectServiceTests/ProjectServiceJUnitTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/ProjectServiceTests/ProjectServiceMockitoTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/service/ProjectServiceTests/ProjectServiceMockitoTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/TaskServiceTests/TaskServiceJUnitTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/TaskServiceTests/TaskServiceMockitoTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/service/TaskServiceTests/TaskServiceMockitoTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/UserServiceTests/UserServiceJUnitTest.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/UserServiceTests/UserServiceMockitoTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/service/UserServiceTests/UserServiceMockitoTest.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,9 +119,10 @@
         <option value="Tag Library Descriptor" />
         <option value="Enum" />
         <option value="HTML File" />
-        <option value="JUnit4 Test Class" />
         <option value="Interface" />
         <option value="Class" />
+        <option value="JUnit5 Test Class" />
+        <option value="JUnit4 Test Class" />
       </list>
     </option>
   </component>
@@ -129,6 +207,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
     <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit4" value="" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5" value="" />
     <property name="last_directory_selection" value="$PROJECT_DIR$/src/test/java/org/example/services" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
@@ -153,68 +232,73 @@
       <recent name="org.example.security" />
     </key>
     <key name="CreateTestDialog.RecentsKey">
+      <recent name="org.example" />
+      <recent name="org.example.service.impl" />
       <recent name="org.example.services.impl" />
       <recent name="org.example.services" />
       <recent name="org.example.repositories" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.App">
-    <configuration name="ProjectServiceJUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="JUnit.AppTest">
+    <configuration name="AppTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.ProjectServiceTests.*" />
+          <option name="PATTERN" value="org.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.service.ProjectServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.ProjectServiceTests.ProjectServiceJUnitTest" />
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.AppTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="ProjectServiceMockitoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.deleteSavedShouldDeleteSaved" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.ProjectServiceTests.*" />
+          <option name="PATTERN" value="org.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.service.ProjectServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.ProjectServiceTests.ProjectServiceMockitoTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.AppTest" />
+      <option name="METHOD_NAME" value="deleteSavedShouldDeleteSaved" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="TaskServiceJUnitTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.registerShouldSaveUserAndCustomer" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.TaskServiceTests.*" />
+          <option name="PATTERN" value="org.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.service.TaskServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.TaskServiceTests.TaskServiceJUnitTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.AppTest" />
+      <option name="METHOD_NAME" value="registerShouldSaveUserAndCustomer" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="UserServiceMockitoTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="AppTest.saveProjectShouldSaveProject" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.UserServiceTests.*" />
+          <option name="PATTERN" value="org.example.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.example.service.UserServiceTests" />
-      <option name="MAIN_CLASS_NAME" value="org.example.service.UserServiceTests.UserServiceMockitoTest" />
-      <option name="TEST_OBJECT" value="class" />
+      <option name="PACKAGE_NAME" value="org.example" />
+      <option name="MAIN_CLASS_NAME" value="org.example.AppTest" />
+      <option name="METHOD_NAME" value="saveProjectShouldSaveProject" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -234,11 +318,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.AppTest" />
         <item itemvalue="Spring Boot.App" />
-        <item itemvalue="JUnit.UserServiceMockitoTest" />
-        <item itemvalue="JUnit.TaskServiceJUnitTest" />
-        <item itemvalue="JUnit.ProjectServiceMockitoTest" />
-        <item itemvalue="JUnit.ProjectServiceJUnitTest" />
+        <item itemvalue="JUnit.AppTest.registerShouldSaveUserAndCustomer" />
+        <item itemvalue="JUnit.AppTest.deleteSavedShouldDeleteSaved" />
+        <item itemvalue="JUnit.AppTest.saveProjectShouldSaveProject" />
       </list>
     </recent_temporary>
   </component>
@@ -260,7 +344,7 @@
       <workItem from="1636058759215" duration="295000" />
       <workItem from="1636059071337" duration="65392000" />
       <workItem from="1636233220154" duration="1420000" />
-      <workItem from="1636236348313" duration="4141000" />
+      <workItem from="1636236348313" duration="38040000" />
     </task>
     <task id="LOCAL-00001" summary="added security">
       <created>1635622961563</created>
@@ -409,7 +493,21 @@
       <option name="project" value="LOCAL" />
       <updated>1636217920822</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="added liquibase changelogs and fixed unfinished and expired tasks finder">
+      <created>1636279508465</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1636279508465</updated>
+    </task>
+    <task id="LOCAL-00023" summary="changed some method naming">
+      <created>1636279583766</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1636279583766</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -456,7 +554,9 @@
     <MESSAGE value="added filterTaskSearch without endTime" />
     <MESSAGE value="deleted versions, added releases; added taskFilterSearch" />
     <MESSAGE value="added unfinished task search" />
-    <option name="LAST_COMMIT_MESSAGE" value="added unfinished task search" />
+    <MESSAGE value="added liquibase changelogs and fixed unfinished and expired tasks finder" />
+    <MESSAGE value="changed some method naming" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed some method naming" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

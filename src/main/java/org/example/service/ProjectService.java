@@ -2,7 +2,6 @@ package org.example.service;
 
 import javassist.NotFoundException;
 import org.example.dto.project.ProjectRequestDto;
-import org.example.enumeration.Status;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.ProjectEntity;
 
@@ -26,7 +25,9 @@ public interface ProjectService{
 
     void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException;
 
-    void ifProjectAvailableToCreateTaskOrThrowException(Status status);
+    void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException ;
 
-    void projectChangeStatusOrThrowException(Status status, Long id) throws NotFoundException;
+    void projectChangeStatusOrThrowException(Long id) throws NotFoundException;
+
+    boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException;
 }

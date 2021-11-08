@@ -47,20 +47,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void changeStatus(Long id) throws NotFoundException {
+
         TaskEntity task = taskRepository.findById(id).orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
 
-        if (task.getStatus() == Status.DONE) {
+        Status status = task.getStatus();
+
+        if (status == Status.DONE) {
 
             throw new InvalidStatusException("The task has already been done!");
         }
-        if (task.getStatus() == Status.IN_PROGRESS) {
+        if (status == Status.IN_PROGRESS) {
 
             task.setEndTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
 
             task.setStatus(Status.DONE);
 
         }
-        if (task.getStatus() == Status.BACKLOG) {
+        if (status == Status.BACKLOG) {
 
             task.setStartTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
 
@@ -71,12 +74,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<TaskEntity> getAll() {
-        return taskRepository.findAll();
+    public TaskEntity findByName(String name) throws NotFoundException {
+        TaskEntity task = taskRepository.findByName(name);
+        if (task == null) {
+            throw new NotFoundException(String.format("No suck task with %s name", name));
+        }
+        return task;
     }
 
     @Override
-    public List<TaskEntity> getAllByProjectId(Long project_id) {
+    public List<TaskEntity> findAllByProjectId(Long project_id) {
         return taskRepository.findAllByProjectId(project_id);
     }
 

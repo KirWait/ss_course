@@ -30,14 +30,20 @@ public class ReleaseEntity {
     @Column(name = "project_id")
     private Long projectId;
 
-    public ReleaseEntity(String version, String creationTime) {
-        this.version = version;
-        this.creationTime = creationTime;
-    }
+    public ReleaseEntity( String creationTime, String endTime, String version) {
 
+        this.creationTime = creationTime;
+        this.endTime = endTime;
+        this.version = version;
+    }
 
     public ReleaseEntity() {
 
+    }
+
+    public ReleaseEntity(String version, String creationTime) {
+        this.version = version;
+        this.creationTime = creationTime;
     }
 
     @Override

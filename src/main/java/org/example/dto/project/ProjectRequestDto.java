@@ -14,6 +14,15 @@ public class ProjectRequestDto {
 
     private Status status;
 
+    public ProjectRequestDto(String name, Long customerId) {
+        this.name=name;
+        this.customerId=customerId;
+    }
+
+    public ProjectRequestDto(String name) {
+        this.name=name;
+    }
+
     public String getName() {
         return name;
     }
@@ -50,4 +59,11 @@ public class ProjectRequestDto {
         return customerName;
     }
 
+    public ProjectRequestDto() {
+    }
+
+    public ProjectRequestDto(String customerName, String name) {
+        this.customerName = customerName;
+        this.name = name;
+    }
 }

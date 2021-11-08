@@ -15,9 +15,9 @@ public interface TaskService {
 
     void changeStatus(Long id) throws NotFoundException;
 
-    List<TaskEntity> getAll();
+    TaskEntity findByName(String name) throws NotFoundException;
 
-    List<TaskEntity> getAllByProjectId(Long project_id);
+    List<TaskEntity> findAllByProjectId(Long project_id);
 
     TaskEntity findById(Long id) throws NotFoundException;
 

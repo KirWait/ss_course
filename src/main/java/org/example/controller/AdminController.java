@@ -67,7 +67,7 @@ public class AdminController {
 
         ProjectEntity project = projectService.findById(projectId);
 
-        projectService.ifProjectAvailableToCreateTaskOrThrowException( project.getStatus() ); //else InvalidStatusException will be thrown
+        projectService.ifProjectAvailableToCreateTaskOrThrowException( project.getId() ); //else InvalidStatusException will be thrown
 
         taskService.setUpRequestDto(requestDto, projectId);
 
@@ -95,7 +95,7 @@ public class AdminController {
 
         ProjectEntity project = projectService.findById(projectId);
 
-        projectService.projectChangeStatusOrThrowException( project.getStatus() , project.getId());
+        projectService.projectChangeStatusOrThrowException(project.getId());
 
         return new ResponseEntity<>(String.format("The project status with id: %d and name: %s has been changed to %s successfully!",
                 projectId, project.getName(), project.getStatus().name() ), HttpStatus.OK);
@@ -103,9 +103,12 @@ public class AdminController {
 
     @PostMapping("/projects/{projectId}/release")
     @Operation(summary = "Creates new release of project")
-    public ResponseEntity<ReleaseResponseDto> createRelease(@PathVariable Long projectId, @RequestBody ReleaseRequestDto requestDto) throws ParseException {
+    public ResponseEntity<ReleaseResponseDto> createRelease(@PathVariable Long projectId, @RequestBody ReleaseRequestDto requestDto) throws ParseException, NotFoundException {
 
-        releaseService.setUpRequestDto(requestDto, projectId);
+        if (projectService.ifProjectAvailableToCreateReleaseOrThrowException(projectId)) {
+
+            releaseService.setUpRequestDto(requestDto, projectId);
+        }
 
         ReleaseEntity releaseEntity = releaseMapper.releaseRequestDtoToReleaseEntity(requestDto);
 

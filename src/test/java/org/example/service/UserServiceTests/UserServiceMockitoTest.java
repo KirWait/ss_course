@@ -82,7 +82,5 @@ public class UserServiceMockitoTest {
         assertThat(userService.findById(NON_EXISTING_ID)).isNull();
 
     }
-
-
 }
 
