@@ -1,7 +1,7 @@
 package org.example.controller;
 
 import javassist.NotFoundException;
-import org.example.dto.user.UserRequestDto;
+import org.example.dto.UserRequestDto;
 import org.example.entity.UserEntity;
 import org.example.security.jwt.JwtTokenProvider;
 import org.example.service.UserService;
@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
-
     private final JwtTokenProvider jwtTokenProvider;
-
     private final UserService userService;
 
     @Autowired

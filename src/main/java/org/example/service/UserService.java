@@ -13,7 +13,7 @@ public interface UserService {
 
     UserEntity findByUsername(String username) throws NotFoundException;
 
-    UserEntity findById(Long id);
+    UserEntity findById(Long id) throws NotFoundException;
 
     void delete(Long id);
 }

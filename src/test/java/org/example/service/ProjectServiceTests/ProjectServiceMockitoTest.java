@@ -1,7 +1,7 @@
 package org.example.service.ProjectServiceTests;
 
 import javassist.NotFoundException;
-import org.example.dto.project.ProjectRequestDto;
+import org.example.dto.ProjectRequestDto;
 import org.example.entity.UserEntity;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.ProjectEntity;
@@ -55,7 +55,7 @@ public class ProjectServiceMockitoTest {
 
     @Before
     public void setUp() throws NotFoundException {
-        given(projectRepositoryMock.findByName(PROJECT_EXIST_NAME)).willReturn(new ProjectEntity(PROJECT_EXIST_NAME));
+        given(projectRepositoryMock.findByName(PROJECT_EXIST_NAME)).willReturn(Optional.of(new ProjectEntity(PROJECT_EXIST_NAME)));
         given(projectRepositoryMock.findByName(PROJECT_NON_EXIST_NAME)).willReturn(null);
         given(projectRepositoryMock.findAll()).willReturn(EXISTING_PROJECT_LIST);
         given(projectRepositoryMock.findById(EXISTING_ID_FOR_BACKLOG_PROJECT)).willReturn(Optional.of(new ProjectEntity(EXISTING_ID_FOR_BACKLOG_PROJECT, PROJECT_EXIST_NAME, 1L, Status.BACKLOG)));

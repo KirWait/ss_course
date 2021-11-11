@@ -37,7 +37,7 @@ public class UserServiceMockitoTest {
 
     @Before
     public void setUp() {
-        given(userRepositoryMock.findByUsername(USER_EXIST_NAME)).willReturn(new UserEntity(USER_EXIST_NAME));
+        given(userRepositoryMock.findByUsername(USER_EXIST_NAME)).willReturn(Optional.of(new UserEntity(USER_EXIST_NAME)));
         given(userRepositoryMock.findByUsername(USER_NON_EXIST_NAME)).willReturn(null);
         given(userRepositoryMock.findAll()).willReturn(EXISTING_USER_LIST);
         given(userRepositoryMock.findById(EXISTING_ID)).willReturn(Optional.of(new UserEntity("USER")));
@@ -72,13 +72,13 @@ public class UserServiceMockitoTest {
 
     }
     @Test
-    public void findByIdShouldFindUser() {
+    public void findByIdShouldFindUser() throws NotFoundException {
         assertThat(userService.findById(EXISTING_ID)).isNotNull();
 
     }
 
     @Test
-    public void findByIdShouldNotFindUser() {
+    public void findByIdShouldNotFindUser() throws NotFoundException {
         assertThat(userService.findById(NON_EXISTING_ID)).isNull();
 
     }

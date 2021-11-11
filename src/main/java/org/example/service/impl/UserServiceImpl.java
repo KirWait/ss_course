@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -25,6 +24,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void register(UserEntity user) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -44,19 +44,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByUsername(String username) throws NotFoundException {
 
-        UserEntity user = userRepository.findByUsername(username);
-
-        if (user == null) {throw new NotFoundException(String.format("User with '%s' username not found!", username));}
-
-        return user;
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new NotFoundException(String.format("No such user with username: %s", username)));
     }
 
     @Override
-    public UserEntity findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public UserEntity findById(Long id) throws NotFoundException {
+        return userRepository.findById(id)
+                .orElseThrow(()->new NotFoundException(String.format("No such user with id: %d", id)));
     }
 
     @Override
+    @Transactional
     public void delete(Long id) {
     userRepository.deleteById(id);
     }

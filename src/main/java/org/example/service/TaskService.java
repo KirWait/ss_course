@@ -1,8 +1,9 @@
 package org.example.service;
 
 import javassist.NotFoundException;
-import org.example.dto.task.TaskRequestDto;
+import org.example.dto.TaskRequestDto;
 import org.example.entity.TaskEntity;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 
@@ -17,15 +18,19 @@ public interface TaskService {
 
     TaskEntity findByName(String name) throws NotFoundException;
 
-    List<TaskEntity> findAllByProjectId(Long project_id);
+    List<TaskEntity> findAllByProjectId(Long project_id) throws NotFoundException;
 
     TaskEntity findById(Long id) throws NotFoundException;
 
-    boolean checkForTasksInProgressAndBacklog(Long projectId);
+    boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException;
 
     void setUpRequestDto(TaskRequestDto requestDto, Long id) throws NotFoundException;
 
     List<TaskEntity> searchByFilter(TaskRequestDto task) throws NotFoundException;
 
-    List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion);
+    List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException;
+
+    List<TaskEntity> findAll(Specification<TaskEntity> spec);
+
+    List<TaskEntity> findAll();
 }

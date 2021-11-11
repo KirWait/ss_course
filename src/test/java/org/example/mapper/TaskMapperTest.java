@@ -2,9 +2,8 @@ package org.example.mapper;
 
 
 
-import org.example.dto.mapper.TaskMapper;
-import org.example.dto.task.TaskRequestDto;
-import org.example.dto.task.TaskResponseDto;
+import org.example.dto.TaskRequestDto;
+import org.example.dto.TaskResponseDto;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
 

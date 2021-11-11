@@ -1,7 +1,7 @@
 package org.example.service.impl;
 
 import javassist.NotFoundException;
-import org.example.dto.version.ReleaseRequestDto;
+import org.example.dto.ReleaseRequestDto;
 import org.example.entity.ReleaseEntity;
 import org.example.exception.InvalidDateFormatException;
 import org.example.service.DateFormatter;
@@ -15,8 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Transactional
 public class ReleaseServiceImpl implements ReleaseService {
+
+    private static final String CORRECT_DATE_REGEX = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
 
     private final ReleaseRepository releaseRepository;
 
@@ -27,38 +28,42 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Override
     public ReleaseEntity findByVersionAndProjectId(String version, Long projectId) throws NotFoundException {
 
-        ReleaseEntity release = releaseRepository.findByVersionAndProjectId(version, projectId);
-        if (release == null){
-            throw new NotFoundException(String.format("No such release with version: %s, and project id: %d!", version, projectId));
-        }
-        return release;
+        return releaseRepository.findByVersionAndProjectId(version, projectId)
+                .orElseThrow(() -> new NotFoundException(
+                        String.format("No such release with version: %s, and project id: %d!", version, projectId))
+                );
     }
 
     @Override
+    @Transactional
     public void delete(Long id){
         releaseRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void save(ReleaseEntity version) {
         releaseRepository.save(version);
     }
 
     @Override
-    public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId) throws ParseException {
+    public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId) throws ParseException, NotFoundException {
 
-        List<ReleaseEntity> currentProjectReleases = releaseRepository.findAllByProjectIdOrderByCreationTime(projectId);
+        List<ReleaseEntity> currentProjectReleases = releaseRepository.findAllByProjectIdOrderByCreationTime(projectId)
+                .orElseThrow(() -> new NotFoundException(String.format("Project with id = %d have no releases", projectId)));
 
         if (releaseRequestDto.getEndTime() == null){
             throw new IllegalArgumentException("Enter the end date!");
         }
-        if (!releaseRequestDto.getEndTime().matches("^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$")) {
+        if (!releaseRequestDto.getEndTime().matches(CORRECT_DATE_REGEX)) {
             throw new InvalidDateFormatException("The date should be is 'yyyy-mm-dd' format!");
         }
         if (!currentProjectReleases.isEmpty()){
-            long lastReleaseEndTimeInMillis = DateFormatter.formatterWithoutTime.parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
+            long lastReleaseEndTimeInMillis = DateFormatter.formatterWithoutTime
+                    .parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
 
-            long requestDtoEndTimeInMillis = DateFormatter.formatterWithoutTime.parse(releaseRequestDto.getEndTime()).getTime();
+            long requestDtoEndTimeInMillis = DateFormatter.formatterWithoutTime
+                    .parse(releaseRequestDto.getEndTime()).getTime();
 
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
 

@@ -1,8 +1,7 @@
 package org.example.mapper;
 
-import org.example.dto.mapper.ReleaseMapper;
-import org.example.dto.version.ReleaseRequestDto;
-import org.example.dto.version.ReleaseResponseDto;
+import org.example.dto.ReleaseRequestDto;
+import org.example.dto.ReleaseResponseDto;
 import org.example.entity.TaskEntity;
 import org.example.entity.ReleaseEntity;
 import org.junit.Test;

@@ -3,19 +3,23 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
-import org.example.dto.mapper.ProjectMapper;
-import org.example.dto.mapper.TaskMapper;
-import org.example.dto.project.ProjectResponseDto;
-import org.example.dto.task.TaskRequestDto;
-import org.example.dto.task.TaskResponseDto;
+import org.example.mapper.ProjectMapper;
+import org.example.mapper.TaskMapper;
+import org.example.dto.ProjectResponseDto;
+import org.example.dto.TaskRequestDto;
+import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
+import org.example.specification.TaskSpecificationBuilder;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 
@@ -57,7 +61,7 @@ public class UserController {
 
       @Operation(summary = "Gets tasks by project id")
       @GetMapping("/projects/{id}/tasks")
-        public ResponseEntity<List<TaskResponseDto>> getProjectTasks(@PathVariable Long id){
+        public ResponseEntity<List<TaskResponseDto>> getProjectTasks(@PathVariable Long id) throws NotFoundException {
 
           List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
@@ -80,18 +84,18 @@ public class UserController {
 
     @Operation(summary = "Finds task by filter")
     @PostMapping("/tasks/filter_search")
-    public ResponseEntity<List<TaskResponseDto>> changeTaskVersion(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
-
+    public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
           List<TaskEntity> resultEntity = taskService.searchByFilter(requestDto);
 
           List<TaskResponseDto> resultResponseDto = resultEntity.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
       }
 
     @Operation(summary = "Counts unfinished tasks by release version")
     @GetMapping("/project/{projectId}/tasks/")
-    public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) {
+    public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) throws NotFoundException {
 
         List<TaskEntity> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
 
@@ -99,6 +103,28 @@ public class UserController {
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
     }
+
+    @Operation(summary = "Finds task by filter using JPA Specifications")
+    @GetMapping("/tasks/filter_search2")
+    public ResponseEntity<List<TaskResponseDto>> filterSearch2(@RequestParam(value = "search") String search){
+
+        TaskSpecificationBuilder builder = new TaskSpecificationBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()) {
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+
+        Specification<TaskEntity> spec = builder.build();
+
+        List<TaskEntity> result = taskService.findAll(spec);
+
+        List<TaskResponseDto> resultResponseDto = result.stream()
+                .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+
+
+        return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
+      }
 }
 
 

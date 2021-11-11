@@ -1,7 +1,7 @@
 package org.example.service;
 
 import javassist.NotFoundException;
-import org.example.dto.version.ReleaseRequestDto;
+import org.example.dto.ReleaseRequestDto;
 import org.example.entity.ReleaseEntity;
 
 import java.text.ParseException;

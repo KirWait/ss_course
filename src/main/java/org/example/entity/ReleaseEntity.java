@@ -62,7 +62,6 @@ public class ReleaseEntity {
 
         if (tasks != null) {
             tasks.forEach(a -> a.setRelease(this));
-
         }
         this.tasks = tasks;
     }
