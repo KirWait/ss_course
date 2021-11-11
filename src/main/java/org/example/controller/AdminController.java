@@ -20,6 +20,8 @@ import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +41,8 @@ public class AdminController {
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
+    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService) {
         this.taskService = taskService;
         this.projectService = projectService;
@@ -51,9 +55,13 @@ public class AdminController {
 
         projectService.setUpRequestDto(requestDto);
 
+        logger.info("Successfully set up ProjectRequestDto");
+
         ProjectEntity project = projectMapper.projectRequestDtoToProjectEntity(requestDto);
 
         projectService.save(project);
+
+        logger.info("Successfully saved project to database");
 
         ProjectResponseDto responseDto = projectMapper.projectEntityToProjectResponseDto(project);
 
@@ -69,11 +77,17 @@ public class AdminController {
 
         projectService.ifProjectAvailableToCreateTaskOrThrowException( project.getId() ); //else InvalidStatusException will be thrown
 
+        logger.info(String.format("Project with id: %d is available to create task", projectId));
+
         taskService.setUpRequestDto(requestDto, projectId);
+
+        logger.info("Successfully set up TaskRequestDto");
 
         TaskEntity taskEntity = taskMapper.taskRequestDtoToTaskEntity(requestDto);
 
         taskService.save(taskEntity);
+
+        logger.info("Successfully saved task to database");
 
         TaskResponseDto responseDto = taskMapper.taskEntityToTaskResponseDto(taskEntity);
 
@@ -86,6 +100,8 @@ public class AdminController {
 
         taskService.delete(taskId);
 
+        logger.info(String.format("Successfully deleted task with id: %d from the database", taskId));
+
         return ResponseEntity.ok().body(String.format("The task with id: %d has been deleted successfully!", taskId));
     }
 
@@ -97,6 +113,8 @@ public class AdminController {
 
         projectService.projectChangeStatusOrThrowException(project.getId());
 
+        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", projectId, project.getStatus()));
+
         return new ResponseEntity<>(String.format("The project status with id: %d and name: %s has been changed to %s successfully!",
                 projectId, project.getName(), project.getStatus().name() ), HttpStatus.OK);
     }
@@ -106,13 +124,18 @@ public class AdminController {
     public ResponseEntity<ReleaseResponseDto> createRelease(@PathVariable Long projectId, @RequestBody ReleaseRequestDto requestDto) throws ParseException, NotFoundException {
 
         if (projectService.ifProjectAvailableToCreateReleaseOrThrowException(projectId)) {
+            logger.info(String.format("Project with id: %d is available to create release", projectId));
 
             releaseService.setUpRequestDto(requestDto, projectId);
+
+            logger.info("Successfully set up ReleaseRequestDto");
         }
 
         ReleaseEntity releaseEntity = releaseMapper.releaseRequestDtoToReleaseEntity(requestDto);
 
         releaseService.save(releaseEntity);
+
+        logger.info("Successfully saved release to the database");
 
         ReleaseResponseDto responseDto = releaseMapper.releaseEntityToReleaseResponseDto(releaseEntity);
 

@@ -2,13 +2,16 @@ package org.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import java.io.IOException;
+import java.util.logging.LogManager;
 
 
 @SpringBootApplication
 public class App 
 {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
+        LogManager.getLogManager().readConfiguration();
         SpringApplication.run(App.class, args);
     }
 

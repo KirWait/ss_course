@@ -13,6 +13,8 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ public class UserController {
     private final TaskService taskService;
     private final ProjectService projectService;
 
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
+
     public UserController(TaskService taskService, ProjectService projectService) {
 
         this.projectService = projectService;
@@ -47,6 +51,8 @@ public class UserController {
           List<ProjectResponseDto> responseDtoList = projectService.getAll().stream()
                   .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
 
+          logger.info("Successfully got all the projects");
+
           return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
       }
 
@@ -55,6 +61,8 @@ public class UserController {
       public ResponseEntity<ProjectResponseDto> getProject(@PathVariable Long id) throws NotFoundException {
 
           ProjectResponseDto responseDto = projectMapper.projectEntityToProjectResponseDto(projectService.findById(id));
+
+          logger.info(String.format("Successfully found project with id: %d", id));
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
       }
@@ -66,6 +74,8 @@ public class UserController {
           List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
+          logger.info(String.format("Successfully found tasks of project with id: %d", id));
+
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
       }
 
@@ -76,7 +86,9 @@ public class UserController {
              TaskEntity task = taskService.findById(id);
 
               if (projectService.isProjectAvailableToChangeTaskStatus(task.getProjectId())) {
+                  logger.info(String.format("Project with id: %d is available to change task status", id));
                   taskService.changeStatus(id);
+                  logger.info(String.format("Successfully changed status of task with id: %d, to %s", id, task.getStatus()));
               }
 
           return new ResponseEntity<>(String.format("Task(id: %d) status has been changed to %s successfully!", id, task.getStatus().name()), HttpStatus.OK);
@@ -87,8 +99,9 @@ public class UserController {
     public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
           List<TaskEntity> resultEntity = taskService.searchByFilter(requestDto);
 
-          List<TaskResponseDto> resultResponseDto = resultEntity.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
-
+          logger.info(String.format("Search by filter ended successfully with %d results found", resultEntity.size()));
+          List<TaskResponseDto> resultResponseDto = resultEntity.stream()
+                  .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
       }
@@ -98,8 +111,10 @@ public class UserController {
     public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) throws NotFoundException {
 
         List<TaskEntity> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
-
-        List<TaskResponseDto> resultResponseDto = taskEntityList.stream().map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+        logger.info(String.format("Search for unfinished and expired tasks for release: %s ended successfully with %d results found",
+                                  releaseVersion, taskEntityList.size()));
+        List<TaskResponseDto> resultResponseDto = taskEntityList.stream()
+                .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
     }
@@ -117,7 +132,11 @@ public class UserController {
 
         Specification<TaskEntity> spec = builder.build();
 
+        logger.info("Successfully built TaskEntity Specification");
+
         List<TaskEntity> result = taskService.findAll(spec);
+
+        logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
 
         List<TaskResponseDto> resultResponseDto = result.stream()
                 .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());

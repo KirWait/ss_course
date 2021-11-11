@@ -5,6 +5,8 @@ import org.example.dto.UserRequestDto;
 import org.example.entity.UserEntity;
 import org.example.security.jwt.JwtTokenProvider;
 import org.example.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ public class AuthenticationController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
+
+    private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
     @Autowired
     public AuthenticationController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserService userService) {
@@ -37,7 +41,11 @@ public class AuthenticationController {
 
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, requestDto.getPassword()));
 
+            logger.info(String.format("Successfully authenticated with %s username", username));
+
             String token = jwtTokenProvider.createToken(username, user.getRoles());
+
+            logger.info(String.format("Successfully created JWT token: %s", token));
 
             return new ResponseEntity<>(String.format("You have successfully logged in with %s! Here is your token: %s", username, token), HttpStatus.OK);
 

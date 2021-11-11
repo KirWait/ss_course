@@ -24,7 +24,7 @@ import java.util.stream.Stream;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    
+
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final ReleaseService releaseService;
@@ -84,7 +84,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
         return taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(()-> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)));
+                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)));
     }
 
     @Override
@@ -97,18 +97,17 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
-         return taskRepository.findAllByProjectId(projectId)
-                 .orElseThrow(()-> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)))
-                 .stream().allMatch(task -> (task.getStatus() == Status.DONE));
+        return taskRepository.findAllByProjectId(projectId)
+                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)))
+                .stream().allMatch(task -> (task.getStatus() == Status.DONE));
     }
 
     @Override
-    public void setUpRequestDto(TaskRequestDto requestDto, Long projectId) throws NotFoundException,IllegalArgumentException{
+    public void setUpRequestDto(TaskRequestDto requestDto, Long projectId) throws NotFoundException, IllegalArgumentException {
 
-        checkIfNull(requestDto.getCreationTime(), "Creation time shouldn't be defined manually!");
-        checkIfNull(requestDto.getStartTime(), "Start time shouldn't be defined manually!");
-
-        checkIfNull(requestDto.getEndTime(), "End time shouldn't be defined manually!");
+        checkIfNotNull(requestDto.getCreationTime(), "Creation time shouldn't be defined manually!");
+        checkIfNotNull(requestDto.getStartTime(), "Start time shouldn't be defined manually!");
+        checkIfNotNull(requestDto.getEndTime(), "End time shouldn't be defined manually!");
         checkIfNull(requestDto.getReleaseVersion(), "Define the release!");
         checkIfNull(requestDto.getName(), "Enter the name of the task!");
         checkIfNull(requestDto.getType(),
@@ -116,8 +115,7 @@ public class TaskServiceImpl implements TaskService {
 
         if (requestDto.getResponsibleUsername() == null) {
             throw new IllegalArgumentException("Enter the username of the responsible person!");
-        }
-        else {
+        } else {
             requestDto.setResponsibleId(userService.findByUsername(requestDto.getResponsibleUsername()).getId());
         }
 
@@ -148,70 +146,70 @@ public class TaskServiceImpl implements TaskService {
             result = result.stream().filter(task -> Objects.equals(task.getAuthorId(), author.getId()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getResponsibleUsername() != null  && checkIfEmpty(result)) {
+        if (filterDto.getResponsibleUsername() != null && checkIfEmpty(result)) {
             UserEntity responsible = userService.findByUsername(filterDto.getResponsibleUsername());
             result = result.stream().filter(task -> Objects.equals(task.getResponsibleId(), responsible.getId()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getId() != null && checkIfEmpty(result)){
-           result = taskRepository.findAll().stream()
-                   .filter(task -> task.getId().toString().contains(filterDto.getId().toString()))
-                   .collect(Collectors.toList());
+        if (filterDto.getId() != null && checkIfEmpty(result)) {
+            result = taskRepository.findAll().stream()
+                    .filter(task -> task.getId().toString().contains(filterDto.getId().toString()))
+                    .collect(Collectors.toList());
         }
-        if (filterDto.getStatus() != null && checkIfEmpty(result)){
+        if (filterDto.getStatus() != null && checkIfEmpty(result)) {
             result = result.stream().filter(task -> task.getStatus() == filterDto.getStatus())
                     .collect(Collectors.toList());
         }
-        if (filterDto.getType() != null && checkIfEmpty(result)){
+        if (filterDto.getType() != null && checkIfEmpty(result)) {
             result = result.stream().filter(task -> task.getType() == filterDto.getType())
                     .collect(Collectors.toList());
         }
-        if (filterDto.getAuthorId() != null && checkIfEmpty(result)){
+        if (filterDto.getAuthorId() != null && checkIfEmpty(result)) {
             result = result.stream()
                     .filter(task -> task.getAuthorId().toString().contains(filterDto.getAuthorId().toString()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getResponsibleId() != null && checkIfEmpty(result)){
+        if (filterDto.getResponsibleId() != null && checkIfEmpty(result)) {
             result = result.stream()
                     .filter(task -> task.getResponsibleId().toString().contains(filterDto.getResponsibleId().toString()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getProjectId() != null && checkIfEmpty(result)){
+        if (filterDto.getProjectId() != null && checkIfEmpty(result)) {
             result = result.stream()
                     .filter(task -> task.getProjectId().toString().contains(filterDto.getProjectId().toString()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getName() != null && checkIfEmpty(result)){
+        if (filterDto.getName() != null && checkIfEmpty(result)) {
             result = result.stream().filter(task -> task.getName().contains(filterDto.getName()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getDescription() != null && checkIfEmpty(result)){
+        if (filterDto.getDescription() != null && checkIfEmpty(result)) {
             result = result.stream().filter(task -> task.getDescription().contains(filterDto.getDescription()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getReleaseVersion() != null && checkIfEmpty(result)){
+        if (filterDto.getReleaseVersion() != null && checkIfEmpty(result)) {
             System.out.println("Not null");
             result = result.stream().filter(
-                    task -> task.getRelease().getVersion().contains(filterDto.getReleaseVersion()))
+                            task -> task.getRelease().getVersion().contains(filterDto.getReleaseVersion()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getStartTime() != null && checkIfEmpty(result)){
+        if (filterDto.getStartTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                    task -> task.getStartTime().contains(filterDto.getStartTime()))
+                            task -> task.getStartTime().contains(filterDto.getStartTime()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getCreationTime() != null  && checkIfEmpty(result)){
+        if (filterDto.getCreationTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                    task -> task.getCreationTime().contains(filterDto.getCreationTime()))
+                            task -> task.getCreationTime().contains(filterDto.getCreationTime()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getEndTime() != null && checkIfEmpty(result)){
+        if (filterDto.getEndTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                    task -> task.getEndTime().contains(filterDto.getEndTime()))
+                            task -> task.getEndTime().contains(filterDto.getEndTime()))
                     .collect(Collectors.toList());
         }
 
-        
+
         return result;
     }
 
@@ -219,8 +217,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
         List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(()-> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId))).stream()
-                        .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
+                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId))).stream()
+                .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
 
         List<TaskEntity> unfinishedTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() == null)
                 .collect(Collectors.toList());
@@ -228,15 +226,15 @@ public class TaskServiceImpl implements TaskService {
         List<TaskEntity> expiredTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() != null)
                 .filter(task -> {
 
-            try {
-                 return DateFormatter.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
-                         < DateFormatter.formatterWithTime.parse(task.getEndTime()).getTime();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
+                    try {
+                        return DateFormatter.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
+                                < DateFormatter.formatterWithTime.parse(task.getEndTime()).getTime();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
 
-            return false;
-        }).collect(Collectors.toList());
+                    return false;
+                }).collect(Collectors.toList());
 
         return Stream.concat(unfinishedTasks.stream(), expiredTasks.stream())
                 .collect(Collectors.toList());
@@ -254,14 +252,22 @@ public class TaskServiceImpl implements TaskService {
 
     public boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {
 
-        if (list.isEmpty()){
+        if (list.isEmpty()) {
             throw new NotFoundException("No tasks were found with stated filters!");
         }
 
         return true;
     }
-    public void checkIfNull(Object o, String msg){
-        if (o == null){
+
+    public void checkIfNull(Object o, String msg) {
+        if (o == null) {
+            throw new IllegalArgumentException(msg);
+        }
+
+    }
+
+    public void checkIfNotNull(Object o, String msg) {
+        if (o != null) {
             throw new IllegalArgumentException(msg);
         }
     }

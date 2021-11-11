@@ -36,7 +36,7 @@ public class TaskEntity {
     private Long responsibleId;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "release_id")
     private ReleaseEntity release;
 

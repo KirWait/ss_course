@@ -66,6 +66,10 @@ public class ProjectServiceImpl implements ProjectService {
             throw new InvalidStatusException("The project is only in BACKLOG stage");
         }
 
+        if (project.getStatus() == Status.DONE) {
+            throw new InvalidStatusException("Can't manipulate with tasks of the project which has already been done!");
+        }
+
         return true;
     }
 
