@@ -22,6 +22,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * This is the class that realising business-logic of tasks in this app.
+ * @author Kirill Zhdanov
+ *
+ */
 @Service
 public class TaskServiceImpl implements TaskService {
 
@@ -37,12 +42,23 @@ public class TaskServiceImpl implements TaskService {
         this.releaseService = releaseService;
     }
 
+    /**
+     * Finds release by version and project id
+     * @param taskEntity Entity of a task
+     *
+     */
     @Override
     public void save(TaskEntity taskEntity) {
         taskRepository.save(taskEntity);
     //    logger.info("Successfully saved task to the database");
     }
 
+
+    /**
+     * Deletes task by id
+     * @param id Task id
+     *
+     */
     @Override
     @Transactional
     public void delete(Long id) {
@@ -50,6 +66,11 @@ public class TaskServiceImpl implements TaskService {
       //  logger.info(String.format("Successfully deleted task with id: %d from the database", id));
     }
 
+    /**
+     * Changes task status by id
+     * @param id Task id
+     *
+     */
     @Override
     public void changeStatus(Long id) throws NotFoundException {
 
@@ -80,6 +101,11 @@ public class TaskServiceImpl implements TaskService {
        // logger.info(String.format("Successfully changed status of task with id: %d, to %s", id, task.getStatus()));
     }
 
+    /**
+     * Finds task by name
+     * @param name Task name
+     *
+     */
     @Override
     public TaskEntity findByName(String name) throws NotFoundException {
       //  logger.info(String.format("Successfully found task with name: %s", name));
@@ -87,6 +113,11 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new NotFoundException(String.format("No such task with name %s", name)));
     }
 
+    /**
+     * Finds all tasks by project id
+     * @param projectId Project id
+     *
+     */
     @Override
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
      //   logger.info(String.format("Successfully found tasks of project with id: %d", projectId));
@@ -96,6 +127,11 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+    /**
+     * Finds task by id
+     * @param id Task id
+     *
+     */
     @Override
     public TaskEntity findById(Long id) throws NotFoundException {
      //   logger.info(String.format("Successfully found task with id: %d", id));
@@ -103,6 +139,11 @@ public class TaskServiceImpl implements TaskService {
                 .orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
     }
 
+    /**
+     * Checks if at least one of the tasks of the project with stated id is in progress or backlog
+     * @param projectId Project id
+     *
+     */
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
@@ -113,6 +154,11 @@ public class TaskServiceImpl implements TaskService {
                 .stream().allMatch(task -> (task.getStatus() == Status.DONE));
     }
 
+    /**
+     * Initializing some fields that shouldn't be defined manually(example: creationTime)
+     * @param projectId Project id
+     * @param requestDto Json from HTTP request that mapped into request dto
+     */
     @Override
     public void setUpRequestDto(TaskRequestDto requestDto, Long projectId) throws NotFoundException, IllegalArgumentException {
 
@@ -149,6 +195,10 @@ public class TaskServiceImpl implements TaskService {
        // logger.info("Successfully set up TaskRequestDto");
     }
 
+    /**
+     * Searches for tasks that contains data from the request dto
+     * @param filterDto Json from HTTP request that mapped into request dto
+     */
     @Override
     public List<TaskEntity> searchByFilter(TaskRequestDto filterDto) throws NotFoundException {
 
@@ -226,6 +276,12 @@ public class TaskServiceImpl implements TaskService {
         return result;
     }
 
+    /**
+     * Searches for unfinished or expired(ended after release end) tasks of a project with stated id by version
+     * @param projectId Project id
+     * @param releaseVersion Release version
+     *
+     */
     @Override
     public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
@@ -256,19 +312,27 @@ public class TaskServiceImpl implements TaskService {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Searches for unfinished or expired(ended after release end) tasks of a project with stated id by release version
+     * @param spec Specification of TaskEntity using Spring Data JPA
+     *
+     */
     @Override
     public List<TaskEntity> findAll(Specification<TaskEntity> spec) {
         //   logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
         return taskRepository.findAll(spec);
     }
 
+    /**
+     * Finds all the tasks of all projects
+     */
     @Override
     public List<TaskEntity> findAll() {
       //  logger.info("Successfully got all the tasks of all projects");
         return taskRepository.findAll();
     }
 
-    public boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {
+    private boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {
 
         if (list.isEmpty()) {
             throw new NotFoundException("No tasks were found with stated filters!");
@@ -277,14 +341,14 @@ public class TaskServiceImpl implements TaskService {
         return true;
     }
 
-    public void checkIfNull(Object o, String msg) {
+    private void checkIfNull(Object o, String msg) {
         if (o == null) {
             throw new IllegalArgumentException(msg);
         }
 
     }
 
-    public void checkIfNotNull(Object o, String msg) {
+    private void checkIfNotNull(Object o, String msg) {
         if (o != null) {
             throw new IllegalArgumentException(msg);
         }

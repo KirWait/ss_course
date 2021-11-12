@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * This is the class that realising business-logic of users in this app.
+ * @author Kirill Zhdanov
+ *
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -23,6 +28,11 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Saves user to the database using Spring Data JPA
+     * @param user Entity of a user
+     *
+     */
     @Override
     @Transactional
     public void register(UserEntity user) {
@@ -36,11 +46,19 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    /**
+     * Gets all the users from the database
+     */
     @Override
     public List<UserEntity> getAll() {
         return userRepository.findAll();
     }
 
+    /**
+     * Finds a user by username
+     * @param username User username
+     *
+     */
     @Override
     public UserEntity findByUsername(String username) throws NotFoundException {
 
@@ -48,12 +66,22 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new NotFoundException(String.format("No such user with username: %s", username)));
     }
 
+    /**
+     * Finds a user by id
+     * @param id User id
+     *
+     */
     @Override
     public UserEntity findById(Long id) throws NotFoundException {
         return userRepository.findById(id)
                 .orElseThrow(()->new NotFoundException(String.format("No such user with id: %d", id)));
     }
 
+    /**
+     * Deletes user by id
+     * @param id User id
+     *
+     */
     @Override
     @Transactional
     public void delete(Long id) {

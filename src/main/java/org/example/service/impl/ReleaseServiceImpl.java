@@ -14,6 +14,11 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ *
+ * This is the class that realising business-logic of releases in this app.
+ * @author Kirill Zhdanov
+ */
 @Service
 public class ReleaseServiceImpl implements ReleaseService {
 
@@ -27,6 +32,13 @@ public class ReleaseServiceImpl implements ReleaseService {
         this.releaseRepository = releaseRepository;
     }
 
+
+    /**
+     * Finds release by version and project id
+     * @param version Version of the release
+     * @param projectId Project id
+     *
+     */
     @Override
     public ReleaseEntity findByVersionAndProjectId(String version, Long projectId) throws NotFoundException {
 
@@ -36,6 +48,11 @@ public class ReleaseServiceImpl implements ReleaseService {
                 );
     }
 
+
+    /**
+     * Deletes release by id
+     * @param id Release id
+     */
     @Override
     @Transactional
     public void delete(Long id){
@@ -43,13 +60,23 @@ public class ReleaseServiceImpl implements ReleaseService {
 //        logger.info(String.format("Successfully deleted release with id: %d to the database", id));
     }
 
+
+    /**
+     * Saves release using JPA Repository
+     * @param releaseEntity Entity of release
+     */
     @Override
     @Transactional
-    public void save(ReleaseEntity version) {
-        releaseRepository.save(version);
+    public void save(ReleaseEntity releaseEntity) {
+        releaseRepository.save(releaseEntity);
 //        logger.info("Successfully saved release to the database");
     }
 
+    /**
+     * Initializing some fields that shouldn't be defined manually(example: creationTime)
+     * @param projectId Project id
+     * @param releaseRequestDto Json from HTTP request that mapped into request dto
+     */
     @Override
     public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId) throws ParseException, NotFoundException {
 

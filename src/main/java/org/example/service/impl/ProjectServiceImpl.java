@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.List;
 
+/**
+ * This is the class that realising business-logic of projects in this app.
+ * @author Kirill Zhdanov
+*/
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
@@ -31,6 +35,10 @@ public class ProjectServiceImpl implements ProjectService {
         this.userService = userService;
     }
 
+    /**
+     * Saves task to the database using Spring JPA Repository
+     * @param projectEntity Entity of a project to save
+     */
     @Override
     @Transactional
     public void save(ProjectEntity projectEntity) {
@@ -38,6 +46,10 @@ public class ProjectServiceImpl implements ProjectService {
 //        logger.info("Successfully saved project to database");
     }
 
+    /**
+     * Changes task status of project and saving it in database
+     * @param id Project id
+     */
     @Override
     public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
 
@@ -60,6 +72,10 @@ public class ProjectServiceImpl implements ProjectService {
 //        logger.info(String.format("Project with id: %d is available to change task status", id));
     }
 
+    /**
+     * Checks availability of changing task status
+     * @param id Project id
+     */
     @Override
     public boolean isProjectAvailableToChangeTaskStatus(Long id) throws NotFoundException {
 
@@ -77,6 +93,11 @@ public class ProjectServiceImpl implements ProjectService {
         return true;
     }
 
+
+    /**
+     * Finds project by name
+     * @param name Project name
+     */
     @Override
     public ProjectEntity findByProjectName(String name) throws NotFoundException {
 
@@ -85,6 +106,11 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new NotFoundException(String.format("No such project with name: %s!", name)));
     }
 
+
+    /**
+     * Initializing some fields that shouldn't be defined manually(example: creationTime)
+     * @param requestDto Json from HTTP request that mapped into request dto
+     */
     @Override
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
 
@@ -108,7 +134,10 @@ public class ProjectServiceImpl implements ProjectService {
 
 //        logger.info("Successfully set up ProjectRequestDto");
     }
-
+    /**
+     * Checks availability to create task in project with stated id
+     * @param id Project id
+     */
     @Override
     public void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException {
         Status status = projectRepository.findById(id)
@@ -120,6 +149,11 @@ public class ProjectServiceImpl implements ProjectService {
 //        logger.info(String.format("Project with id: %d is available to create task", id));
     }
 
+
+    /**
+     * Checks availability to change project status
+     * @param id Project id
+     */
     @Override
     public void projectChangeStatusOrThrowException(Long id) throws NotFoundException, InvalidStatusException {
 
@@ -138,6 +172,11 @@ public class ProjectServiceImpl implements ProjectService {
 //        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", id, status));
     }
 
+
+    /**
+     * Checks availability to create release of project with stated id
+     * @param id Project id
+     */
     @Override
     public boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException {
         ProjectEntity project = projectRepository.findById(id)
@@ -151,12 +190,19 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
+    /**
+     * Gets all the projects
+     */
     @Override
     public List<ProjectEntity> getAll() {
 //        logger.info("Successfully got all the projects");
         return projectRepository.findAll();
     }
 
+    /**
+     * Finds a project by id
+     * @param id Project id
+     */
     @Override
     public ProjectEntity findById(Long id) throws NotFoundException{
 
@@ -166,6 +212,10 @@ public class ProjectServiceImpl implements ProjectService {
                 .orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
     }
 
+    /**
+     * Deletes a project by id
+     * @param id Project id
+     */
     @Override
     @Transactional
     public void delete(Long id) {

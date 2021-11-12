@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes","u":"allclasses-index.html"},{"p":"org.example.service.impl","l":"ProjectServiceImpl"},{"p":"org.example.service.impl","l":"ReleaseServiceImpl"},{"p":"org.example.service.impl","l":"TaskServiceImpl"},{"p":"org.example.service.impl","l":"UserServiceImpl"}];updateSearchResults();
