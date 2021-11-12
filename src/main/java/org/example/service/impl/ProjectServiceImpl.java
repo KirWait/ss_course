@@ -23,6 +23,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskService taskService;
     private final UserService userService;
 
+//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
@@ -33,6 +35,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void save(ProjectEntity projectEntity) {
         projectRepository.save(projectEntity);
+//        logger.info("Successfully saved project to database");
     }
 
     @Override
@@ -54,6 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         projectRepository.save(projectEntity);
+//        logger.info(String.format("Project with id: %d is available to change task status", id));
     }
 
     @Override
@@ -69,13 +73,14 @@ public class ProjectServiceImpl implements ProjectService {
         if (project.getStatus() == Status.DONE) {
             throw new InvalidStatusException("Can't manipulate with tasks of the project which has already been done!");
         }
-
+//        logger.info(String.format("Project with id: %d is available to change task status", id));
         return true;
     }
 
     @Override
     public ProjectEntity findByProjectName(String name) throws NotFoundException {
 
+//        logger.info(String.format("Successfully found project with name: %s", name));
         return projectRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException(String.format("No such project with name: %s!", name)));
     }
@@ -100,6 +105,8 @@ public class ProjectServiceImpl implements ProjectService {
         }
 
         requestDto.setStatus(Status.BACKLOG);
+
+//        logger.info("Successfully set up ProjectRequestDto");
     }
 
     @Override
@@ -109,6 +116,8 @@ public class ProjectServiceImpl implements ProjectService {
         if (status == Status.DONE) {
             throw new InvalidStatusException("The project has already been done!");
         }
+
+//        logger.info(String.format("Project with id: %d is available to create task", id));
     }
 
     @Override
@@ -125,6 +134,8 @@ public class ProjectServiceImpl implements ProjectService {
         else {
             throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
         }
+
+//        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", id, status));
     }
 
     @Override
@@ -132,6 +143,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity project = projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)));
         if (project.getStatus() != Status.DONE) {
+//            logger.info(String.format("Project with id: %d is available to create release", id));
             return true;
         }
         else {
@@ -141,12 +153,14 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public List<ProjectEntity> getAll() {
-
+//        logger.info("Successfully got all the projects");
         return projectRepository.findAll();
     }
 
     @Override
     public ProjectEntity findById(Long id) throws NotFoundException{
+
+//        logger.info(String.format("Successfully found project with id: %d", id));
 
         return projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
@@ -156,6 +170,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void delete(Long id) {
 
+//        logger.info(String.format("Successfully deleted project with id: %d", id));
         projectRepository.deleteById(id);
     }
 

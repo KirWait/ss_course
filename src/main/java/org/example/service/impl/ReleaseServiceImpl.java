@@ -21,6 +21,8 @@ public class ReleaseServiceImpl implements ReleaseService {
 
     private final ReleaseRepository releaseRepository;
 
+//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     public ReleaseServiceImpl(ReleaseRepository releaseRepository) {
         this.releaseRepository = releaseRepository;
     }
@@ -38,12 +40,14 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Transactional
     public void delete(Long id){
         releaseRepository.deleteById(id);
+//        logger.info(String.format("Successfully deleted release with id: %d to the database", id));
     }
 
     @Override
     @Transactional
     public void save(ReleaseEntity version) {
         releaseRepository.save(version);
+//        logger.info("Successfully saved release to the database");
     }
 
     @Override
@@ -84,6 +88,8 @@ public class ReleaseServiceImpl implements ReleaseService {
         releaseRequestDto.setCreationTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
 
         releaseRequestDto.setProjectId(projectId);
+
+//        logger.info("Successfully set up ReleaseRequestDto");
 
     }
 }

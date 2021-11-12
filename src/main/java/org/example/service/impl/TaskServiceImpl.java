@@ -29,6 +29,8 @@ public class TaskServiceImpl implements TaskService {
     private final UserService userService;
     private final ReleaseService releaseService;
 
+//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
+
     public TaskServiceImpl(TaskRepository taskRepository, UserService userService, ReleaseService releaseService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
@@ -38,12 +40,14 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void save(TaskEntity taskEntity) {
         taskRepository.save(taskEntity);
+    //    logger.info("Successfully saved task to the database");
     }
 
     @Override
     @Transactional
     public void delete(Long id) {
         taskRepository.deleteById(id);
+      //  logger.info(String.format("Successfully deleted task with id: %d from the database", id));
     }
 
     @Override
@@ -73,23 +77,28 @@ public class TaskServiceImpl implements TaskService {
         }
 
         taskRepository.save(task);
+       // logger.info(String.format("Successfully changed status of task with id: %d, to %s", id, task.getStatus()));
     }
 
     @Override
     public TaskEntity findByName(String name) throws NotFoundException {
+      //  logger.info(String.format("Successfully found task with name: %s", name));
         return taskRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException(String.format("No such task with name %s", name)));
     }
 
     @Override
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
+     //   logger.info(String.format("Successfully found tasks of project with id: %d", projectId));
         return taskRepository.findAllByProjectId(projectId)
                 .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)));
+
+
     }
 
     @Override
     public TaskEntity findById(Long id) throws NotFoundException {
-
+     //   logger.info(String.format("Successfully found task with id: %d", id));
         return taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
     }
@@ -97,6 +106,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
+        //  logger.info("The project with id: %d have tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
+        //    logger.info("The project with id: %d have no tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
         return taskRepository.findAllByProjectId(projectId)
                 .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)))
                 .stream().allMatch(task -> (task.getStatus() == Status.DONE));
@@ -134,6 +145,8 @@ public class TaskServiceImpl implements TaskService {
         ReleaseEntity currentRelease = releaseService.findByVersionAndProjectId(requestDto.getReleaseVersion(), projectId);
 
         requestDto.setRelease(currentRelease);
+
+       // logger.info("Successfully set up TaskRequestDto");
     }
 
     @Override
@@ -209,7 +222,7 @@ public class TaskServiceImpl implements TaskService {
                     .collect(Collectors.toList());
         }
 
-
+  //      logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
         return result;
     }
 
@@ -236,17 +249,22 @@ public class TaskServiceImpl implements TaskService {
                     return false;
                 }).collect(Collectors.toList());
 
+        //    logger.info(String.format("Search for unfinished and expired tasks for release: %s ended successfully with %d results found",
+     //                             releaseVersion, result.size()));
+
         return Stream.concat(unfinishedTasks.stream(), expiredTasks.stream())
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<TaskEntity> findAll(Specification<TaskEntity> spec) {
+        //   logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
         return taskRepository.findAll(spec);
     }
 
     @Override
     public List<TaskEntity> findAll() {
+      //  logger.info("Successfully got all the tasks of all projects");
         return taskRepository.findAll();
     }
 

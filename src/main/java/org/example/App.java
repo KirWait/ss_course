@@ -2,11 +2,14 @@ package org.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+
 import java.io.IOException;
 import java.util.logging.LogManager;
 
 
 @SpringBootApplication
+@EnableAspectJAutoProxy
 public class App 
 {
 

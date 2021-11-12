@@ -163,9 +163,30 @@ public class ServiceTest {
         assertThrows(NotFoundException.class, () -> releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
     }
 
+
     @Test
     @Order(4)
-    public void saveTaskShouldSaveTaskAndRelease() throws NotFoundException {
+    public void saveReleaseShouldSaveRelease() throws NotFoundException {
+
+        Long projectId = projectService.findByProjectName(PROJECT_NAME).getId();
+
+        assertThrows(NotFoundException.class, ()-> releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
+
+        RELEASE.setProjectId(projectId);
+
+        releaseService.save(RELEASE);
+
+        ReleaseEntity savedRelease = releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId);
+
+        assertThat(savedRelease).isNotNull();
+
+        assertThat(savedRelease.getVersion()).isEqualTo(RELEASE_VERSION);
+    }
+
+
+    @Test
+    @Order(5)
+    public void saveTaskShouldSaveTask() throws NotFoundException {
 
         Long projectId = projectService.findByProjectName(PROJECT_NAME).getId();
 
@@ -179,9 +200,7 @@ public class ServiceTest {
 
         TASK.setAuthorId(userId);
 
-        RELEASE.setProjectId(projectId);
-
-        TASK.setRelease(RELEASE);
+        TASK.setRelease(releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
 
         taskService.save(TASK);
 
@@ -193,13 +212,13 @@ public class ServiceTest {
     }
 
     @Test
-    @Order(5)
+    @Order(6)
     public void changeTaskStatusToInProgressShouldThrowInvalidStatusException() {
 
         assertThrows(InvalidStatusException.class, () -> projectService.isProjectAvailableToChangeTaskStatus(projectService.findByProjectName(PROJECT_NAME).getId()));
     }
     @Test
-    @Order(6)
+    @Order(7)
     public void changeProjectStatusToInProgressShouldChangeStatus() throws NotFoundException {
 
         ProjectEntity project = projectService.findByProjectName(PROJECT_NAME);
@@ -215,7 +234,7 @@ public class ServiceTest {
         assertThat(updatedProject.getStatus()).isEqualTo(Status.IN_PROGRESS);
     }
     @Test
-    @Order(7)
+    @Order(8)
     public void isProjectAvailableToChangeTaskStatusShouldReturnTrueAndTaskShouldChangeStatusToInProgressAndSetStartTime() throws NotFoundException {
 
         assertThat(projectService.isProjectAvailableToChangeTaskStatus(projectService.findByProjectName(PROJECT_NAME).getId())).isTrue();
@@ -231,13 +250,13 @@ public class ServiceTest {
     }
 
     @Test
-    @Order(8)
+    @Order(9)
     public void projectChangeStatusOrThrowExceptionShouldThrowException() {
         assertThrows(InvalidStatusException.class, () -> projectService.projectChangeStatusOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId()));
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     public void isProjectAvailableToChangeTaskStatusShouldReturnTrueAndTaskShouldChangeStatusToDoneAndSetEndTime() throws NotFoundException {
         assertThat(projectService.isProjectAvailableToChangeTaskStatus(projectService.findByProjectName(PROJECT_NAME).getId())).isTrue();
 
@@ -251,7 +270,7 @@ public class ServiceTest {
     }
 
     @Test
-    @Order(10)
+    @Order(11)
     public void projectChangeStatusOrThrowExceptionShouldChangeStatusToDone() throws NotFoundException {
 
         projectService.projectChangeStatusOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId());
@@ -263,21 +282,21 @@ public class ServiceTest {
     }
 
     @Test
-    @Order(11)
+    @Order(12)
     public void ifProjectAvailableToCreateTaskOrThrowExceptionShouldThrowInvalidStatusException() {
 
         assertThrows(InvalidStatusException.class, () -> projectService.ifProjectAvailableToCreateTaskOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId()));
     }
 
     @Test
-    @Order(12)
+    @Order(13)
     public void createReleaseShouldThrowInvalidStatusException() {
 
         assertThrows(InvalidStatusException.class, () -> projectService.ifProjectAvailableToCreateReleaseOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId()));
     }
 
     @Test
-    @Order(13)
+    @Order(14)
     public void deleteSavedShouldCascadeDeleteSaved() throws NotFoundException {
 
 
