@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * This is the class that realising business-logic of tasks in this app.
+ * This is the class that implements business-logic of tasks in this app.
  * @author Kirill Zhdanov
  *
  */

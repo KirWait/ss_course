@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * This is the class that realising business-logic of users in this app.
+ * This is the class that implements business-logic of users in this app.
  * @author Kirill Zhdanov
  *
  */

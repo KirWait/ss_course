@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "user-controller", description = "The ROLE_USER API")
-@RequestMapping("/api")
+@RequestMapping("/api/user")
 public class UserController {
 
     private final TaskService taskService;

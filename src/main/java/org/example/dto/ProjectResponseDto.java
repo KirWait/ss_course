@@ -8,6 +8,24 @@ public class ProjectResponseDto {
     private String name;
     private Long customerId;
     private Status status;
+    private boolean paid;
+    private Long price;
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
 
     public Long getId() { return id; }
 

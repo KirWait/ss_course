@@ -27,7 +27,9 @@ public interface ProjectService{
 
     void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException ;
 
-    void projectChangeStatusOrThrowException(Long id) throws NotFoundException;
+//    void projectChangeStatusOrThrowException(Long id) throws NotFoundException;
 
     boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException;
+
+    List<ProjectEntity> findAllByCustomerId(Long customerId);
 }

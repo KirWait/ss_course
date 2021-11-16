@@ -16,7 +16,7 @@ import java.util.Objects;
 
 /**
  *
- * This is the class that realising business-logic of releases in this app.
+ * This is the class that implements business-logic of releases in this app.
  * @author Kirill Zhdanov
  */
 @Service

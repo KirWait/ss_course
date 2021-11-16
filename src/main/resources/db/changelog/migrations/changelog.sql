@@ -41,6 +41,8 @@ create table project
         constraint "Project_pk"
             primary key,
     project_name varchar(255)                                                     not null,
+    price integer                                                                 not null,
+    paid boolean default False,
     customer_id  integer                                                          not null
         constraint "Project_fk0"
             references users

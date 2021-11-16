@@ -20,8 +20,6 @@ import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +29,8 @@ import java.text.ParseException;
 @RestController
 @RequestMapping("/api/admin")
 @Tag(name = "admin-controller", description = "The ROLE_ADMIN API")
-public class AdminController {
+public class
+AdminController {
 
     private final TaskService taskService;
     private final ProjectService projectService;
@@ -98,7 +97,7 @@ public class AdminController {
 
         ProjectEntity project = projectService.findById(projectId);
 
-        projectService.projectChangeStatusOrThrowException(project.getId());
+        projectService.changeStatus(project.getId());
 
 
         return new ResponseEntity<>(String.format("The project status with id: %d and name: %s has been changed to %s successfully!",

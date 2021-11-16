@@ -227,7 +227,7 @@ public class ServiceTest {
 
         assertThat(project.getStatus()).isEqualTo(Status.BACKLOG);
 
-        projectService.projectChangeStatusOrThrowException(projectId);
+        projectService.changeStatus(projectId);
 
         ProjectEntity updatedProject = projectService.findByProjectName(PROJECT_NAME);
 
@@ -252,7 +252,7 @@ public class ServiceTest {
     @Test
     @Order(9)
     public void projectChangeStatusOrThrowExceptionShouldThrowException() {
-        assertThrows(InvalidStatusException.class, () -> projectService.projectChangeStatusOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId()));
+        assertThrows(InvalidStatusException.class, () -> projectService.changeStatus(projectService.findByProjectName(PROJECT_NAME).getId()));
     }
 
     @Test
@@ -273,7 +273,7 @@ public class ServiceTest {
     @Order(11)
     public void projectChangeStatusOrThrowExceptionShouldChangeStatusToDone() throws NotFoundException {
 
-        projectService.projectChangeStatusOrThrowException(projectService.findByProjectName(PROJECT_NAME).getId());
+        projectService.changeStatus(projectService.findByProjectName(PROJECT_NAME).getId());
 
         ProjectEntity updatedProject = projectService.findByProjectName(PROJECT_NAME);
 

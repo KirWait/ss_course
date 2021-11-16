@@ -25,6 +25,13 @@ public class ProjectEntity {
     @Enumerated(value = EnumType.STRING)
     private Status status;
 
+    @Column(name = "price")
+    private Long price;
+
+    @Column(name = "paid")
+    private boolean paid;
+
+
     public ProjectEntity() {
     }
 
@@ -65,6 +72,22 @@ public class ProjectEntity {
                 ", customerId=" + customerId +
                 ", status=" + status +
                 '}';
+    }
+
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
     }
 
     public Status getStatus() {

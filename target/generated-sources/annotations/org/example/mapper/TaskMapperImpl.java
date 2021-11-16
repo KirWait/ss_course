@@ -7,7 +7,7 @@ import org.example.entity.TaskEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-12T15:58:15+0400",
+    date = "2021-11-16T16:31:52+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class TaskMapperImpl implements TaskMapper {

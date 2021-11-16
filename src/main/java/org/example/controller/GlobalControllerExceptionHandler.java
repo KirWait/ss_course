@@ -2,9 +2,7 @@ package org.example.controller;
 
 
 import javassist.NotFoundException;
-import org.example.exception.InvalidDateFormatException;
-import org.example.exception.InvalidStatusException;
-import org.example.exception.InvalidVersionException;
+import org.example.exception.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -86,6 +84,20 @@ public class GlobalControllerExceptionHandler {
     @ExceptionHandler(InvalidDateFormatException.class)
     public ResponseEntity<String> handleInvalidDateFormatException(InvalidDateFormatException exception) {
         logger.warn("An InvalidDateFormatException has thrown: "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(UnpaidException.class)
+    public ResponseEntity<String> handleUnpaidException(UnpaidException exception) {
+        logger.warn("An UnpaidException has thrown: "+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(InvalidAccessException.class)
+    public ResponseEntity<String> handleInvalidAccessException(InvalidAccessException exception) {
+        logger.warn("An InvalidAccessException has thrown: "+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

@@ -6,6 +6,8 @@ import org.example.entity.UserEntity;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.ProjectEntity;
 import org.example.enumeration.Status;
+import org.example.exception.UnpaidException;
+import org.example.feignClient.ServiceFeignClient;
 import org.example.repository.ProjectRepository;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
@@ -17,7 +19,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 /**
- * This is the class that realising business-logic of projects in this app.
+ * This is the class that implements business-logic of projects in this app.
  * @author Kirill Zhdanov
 */
 @Service
@@ -26,13 +28,16 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final TaskService taskService;
     private final UserService userService;
+    private final ServiceFeignClient feignClient;
 
 //    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService,
+                              ServiceFeignClient feignClient) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
+        this.feignClient = feignClient;
     }
 
     /**
@@ -54,19 +59,36 @@ public class ProjectServiceImpl implements ProjectService {
     public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
 
         ProjectEntity projectEntity = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("No such projects"));
+                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)));
 
         Status projectEntityStatus = projectEntity.getStatus();
 
         if (projectEntityStatus == Status.DONE) {
             throw new InvalidStatusException("The project has already been done!");
         }
-        if (projectEntityStatus == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
-            projectEntity.setStatus(Status.DONE);
+        if (projectEntityStatus == Status.IN_PROGRESS){
+            if(taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
+                projectEntity.setStatus(Status.DONE);
+            }
+            else{
+                throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
+            }
         }
         if (projectEntityStatus == Status.BACKLOG) {
-            projectEntity.setStatus(Status.IN_PROGRESS);
+            Long paidSum = feignClient.getPaidSum(id);
+
+            if(paidSum >= projectEntity.getPrice()){
+                projectEntity.setPaid(true);
+                projectRepository.save(projectEntity);
+            }
+            if (projectEntity.isPaid()) {
+                projectEntity.setStatus(Status.IN_PROGRESS);
+            }
+            else{
+                throw new UnpaidException(String.format("The project with id: %d haven't even been paid!", id));
+            }
         }
+
 
         projectRepository.save(projectEntity);
 //        logger.info(String.format("Project with id: %d is available to change task status", id));
@@ -150,27 +172,27 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
 
-    /**
-     * Checks availability to change project status
-     * @param id Project id
-     */
-    @Override
-    public void projectChangeStatusOrThrowException(Long id) throws NotFoundException, InvalidStatusException {
-
-        Status status = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
-
-        if ((status == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
-                || (status == Status.BACKLOG)
-                || (status == Status.DONE)) {
-            changeStatus(id);
-        }
-        else {
-            throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
-        }
-
-//        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", id, status));
-    }
+//    /**
+//     * Checks availability to change project status
+//     * @param id Project id
+//     */
+//    @Override
+//    public void projectChangeStatusOrThrowException(Long id) throws NotFoundException, InvalidStatusException {
+//
+//        Status status = projectRepository.findById(id)
+//                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
+//
+//        if ((status == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
+//                || (status == Status.BACKLOG)
+//                || (status == Status.DONE)) {
+//            changeStatus(id);
+//        }
+//        else {
+//            throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
+//        }
+//
+////        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", id, status));
+//    }
 
 
     /**
@@ -188,6 +210,13 @@ public class ProjectServiceImpl implements ProjectService {
         else {
             throw new InvalidStatusException("Can't create release: the project has already been done!");
         }
+    }
+    /**
+     * Gets all the projects by customer id
+     */
+    @Override
+    public List<ProjectEntity> findAllByCustomerId(Long customerId) {
+        return projectRepository.findAllByCustomerId(customerId);
     }
 
     /**
