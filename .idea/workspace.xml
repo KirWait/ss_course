@@ -8,39 +8,30 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="tehnical">
-      <change afterPath="$PROJECT_DIR$/.idea/resourceBundles.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/configuration/LocaleConfiguration.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/configuration/Translator.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/resource/Resources_ru.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/TranslationService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TranslationServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/language_en.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/language_ru.properties" afterDir="false" />
+    <list default="true" id="6e4c538c-57c4-48e6-b994-4ec3e5e26629" name="Changes" comment="added gitignore">
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/App.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/App.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/aspect/LogAspect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/aspect/LogAspect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AdminController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/AuthenticationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/AuthenticationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/CustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/CustomerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/UserController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/entity/ProjectEntity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/exception/InvalidAccessException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/exception/InvalidAccessException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/org/example/service/ServiceTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/org/example/service/ServiceTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/controller/GlobalControllerExceptionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/controller/GlobalControllerExceptionHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/TranslationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/translator/TranslationService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ProjectServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/ReleaseServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TaskServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/example/service/impl/TranslationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/example/translator/impl/TranslationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/language_ru.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/language_ru.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/language_ru.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/language_ru.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/App.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/App.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/aspect/LogAspect.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/aspect/LogAspect.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/AuthenticationController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/CustomerController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/CustomerController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/entity/ProjectEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/entity/ProjectEntity.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/enumeration/Roles.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/enumeration/Roles.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/org/example/repository/ProjectRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/repository/ProjectRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/ProjectMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/ProjectMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/ReleaseMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/ReleaseMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/TaskMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/TaskMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/org/example/mapper/UserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/test-classes/org/example/service/ServiceTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/org/example/service/ServiceTest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/controller/GlobalControllerExceptionHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/TranslationService.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ProjectServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/ReleaseServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/org/example/service/impl/TaskServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/org/example/service/impl/TranslationServiceImpl.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,7 +145,7 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="org.jetbrains.plugins.github.ui.GithubSettingsConfigurable" />
+    <property name="settings.editor.selected.configurable" value="File.Encoding" />
   </component>
   <component name="RecentsManager">
     <key name="CreateClassDialog.RecentsKey">
@@ -189,7 +180,7 @@
       <recent name="" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.ServiceTest">
+  <component name="RunManager" selected="Spring Boot.App">
     <configuration name="JPASpecificationsTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="practice" />
       <extension name="coverage">
@@ -209,7 +200,7 @@
       <module name="practice" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.example.service.*" />
+          <option name="PATTERN" value="org.example.translator.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -263,8 +254,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.ServiceTest" />
         <item itemvalue="Spring Boot.App" />
+        <item itemvalue="JUnit.ServiceTest" />
         <item itemvalue="JUnit.Test3" />
         <item itemvalue="JUnit.Test" />
         <item itemvalue="JUnit.JPASpecificationsTest" />
@@ -290,7 +281,7 @@
       <workItem from="1636059071337" duration="65392000" />
       <workItem from="1636233220154" duration="1420000" />
       <workItem from="1636236348313" duration="76094000" />
-      <workItem from="1636713838752" duration="45362000" />
+      <workItem from="1636713838752" duration="51003000" />
     </task>
     <task id="LOCAL-00001" summary="added security">
       <created>1635622961563</created>
@@ -502,7 +493,21 @@
       <option name="project" value="LOCAL" />
       <updated>1637082270002</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="fixed some bugs; added localization service TranslationService">
+      <created>1637133935327</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1637133935327</updated>
+    </task>
+    <task id="LOCAL-00032" summary="added gitignore">
+      <created>1637149056353</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1637149056353</updated>
+    </task>
+    <option name="localTasksCounter" value="33" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -533,8 +538,6 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="added security" />
-    <MESSAGE value="added cascade update" />
     <MESSAGE value="resolved TaskVersionEntity creation issues" />
     <MESSAGE value="resolved cascade TaskVersion creation issues" />
     <MESSAGE value="added ProjectEntity status change and  TaskEntity status change requirements" />
@@ -558,7 +561,9 @@
     <MESSAGE value="added java doc for implementation of interfaces" />
     <MESSAGE value="added feign interface to implement payment feature" />
     <MESSAGE value="tehnical" />
-    <option name="LAST_COMMIT_MESSAGE" value="tehnical" />
+    <MESSAGE value="fixed some bugs; added localization service TranslationService" />
+    <MESSAGE value="added gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="added gitignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -567,6 +572,10 @@
           <properties class="org.example.security.jwt.JwtAuthenticationException" package="org.example.security.jwt" />
           <option name="timeStamp" value="3" />
         </breakpoint>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.StackOverflowError" package="java.lang" />
+          <option name="timeStamp" value="24" />
+        </breakpoint>
       </breakpoints>
     </breakpoint-manager>
     <watches-manager>
@@ -574,5 +583,9 @@
         <watch expression="result" language="JAVA" />
       </configuration>
     </watches-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

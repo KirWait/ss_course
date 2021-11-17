@@ -12,6 +12,7 @@ import org.example.repository.ProjectRepository;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
+import org.example.translator.TranslationService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -29,15 +30,17 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskService taskService;
     private final UserService userService;
     private final ServiceFeignClient feignClient;
+    private final TranslationService translationService;
 
 //    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
     public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService,
-                              ServiceFeignClient feignClient) {
+                              ServiceFeignClient feignClient, TranslationService translationService) {
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
         this.feignClient = feignClient;
+        this.translationService = translationService;
     }
 
     /**
@@ -59,19 +62,21 @@ public class ProjectServiceImpl implements ProjectService {
     public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
 
         ProjectEntity projectEntity = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)));
+                .orElseThrow(() -> new NotFoundException(
+                        String.format(translationService.getTranslation("No such project with id: %d"), id)));
 
         Status projectEntityStatus = projectEntity.getStatus();
 
         if (projectEntityStatus == Status.DONE) {
-            throw new InvalidStatusException("The project has already been done!");
+            throw new InvalidStatusException(translationService.getTranslation("The project has already been done!"));
         }
         if (projectEntityStatus == Status.IN_PROGRESS){
             if(taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
                 projectEntity.setStatus(Status.DONE);
             }
             else{
-                throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
+                throw new InvalidStatusException(
+                        translationService.getTranslation("Can't finish the project: there are unfinished tasks!"));
             }
         }
         if (projectEntityStatus == Status.BACKLOG) {
@@ -85,7 +90,8 @@ public class ProjectServiceImpl implements ProjectService {
                 projectEntity.setStatus(Status.IN_PROGRESS);
             }
             else{
-                throw new UnpaidException(String.format("The project with id: %d haven't even been paid!", id));
+                throw new UnpaidException(String.format(
+                        translationService.getTranslation("The project with id: %d haven't even been paid!"), id));
             }
         }
 
@@ -102,14 +108,18 @@ public class ProjectServiceImpl implements ProjectService {
     public boolean isProjectAvailableToChangeTaskStatus(Long id) throws NotFoundException {
 
         ProjectEntity project = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
+                .orElseThrow(() -> new NotFoundException( String.format(
+                        translationService.getTranslation("No such project with id: %d"), id) ));
 
         if (project.getStatus() == Status.BACKLOG) {
-            throw new InvalidStatusException("The project is only in BACKLOG stage");
+            throw new InvalidStatusException(
+                    translationService.getTranslation("The project is only in BACKLOG stage"));
         }
 
         if (project.getStatus() == Status.DONE) {
-            throw new InvalidStatusException("Can't manipulate with tasks of the project which has already been done!");
+            throw new InvalidStatusException(
+                    translationService.getTranslation(
+                            "Can't manipulate with tasks of the project which has already been done!"));
         }
 //        logger.info(String.format("Project with id: %d is available to change task status", id));
         return true;
@@ -125,7 +135,8 @@ public class ProjectServiceImpl implements ProjectService {
 
 //        logger.info(String.format("Successfully found project with name: %s", name));
         return projectRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException(String.format("No such project with name: %s!", name)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("No such project with name: %s!"), name)));
     }
 
 
@@ -137,7 +148,8 @@ public class ProjectServiceImpl implements ProjectService {
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
 
         if (requestDto.getCustomerId() != null) {
-            throw new IllegalArgumentException("Customer id shouldn't be defined manually!");
+            throw new IllegalArgumentException(
+                    translationService.getTranslation("Customer id shouldn't be defined manually!"));
         }
 
         if (requestDto.getCustomerName() == null){
@@ -163,9 +175,10 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException {
         Status status = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("No such project with id: %d"), id))).getStatus();
         if (status == Status.DONE) {
-            throw new InvalidStatusException("The project has already been done!");
+            throw new InvalidStatusException(translationService.getTranslation("The project has already been done!"));
         }
 
 //        logger.info(String.format("Project with id: %d is available to create task", id));
@@ -208,7 +221,8 @@ public class ProjectServiceImpl implements ProjectService {
             return true;
         }
         else {
-            throw new InvalidStatusException("Can't create release: the project has already been done!");
+            throw new InvalidStatusException(
+                    String.format(translationService.getTranslation("Can't create release: the project with id: %d has already been done!"), id));
         }
     }
     /**
@@ -238,7 +252,8 @@ public class ProjectServiceImpl implements ProjectService {
 //        logger.info(String.format("Successfully found project with id: %d", id));
 
         return projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException( String.format("No such project with id: %d!", id) ));
+                .orElseThrow(() -> new NotFoundException( String.format(
+                        translationService.getTranslation("No such project with id: %d"), id)));
     }
 
     /**

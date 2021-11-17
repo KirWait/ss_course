@@ -19,6 +19,7 @@ import org.example.exception.InvalidStatusException;
 import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
+import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,15 +36,18 @@ AdminController {
     private final TaskService taskService;
     private final ProjectService projectService;
     private final ReleaseService releaseService;
+    private final TranslationService translationService;
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
-    public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService) {
+    public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService,
+    TranslationService translationService) {
         this.taskService = taskService;
         this.projectService = projectService;
         this.releaseService = releaseService;
+        this.translationService = translationService;
     }
 
     @PostMapping("/projects")
@@ -88,7 +92,8 @@ AdminController {
         taskService.delete(taskId);
 
 
-        return ResponseEntity.ok().body(String.format("The task with id: %d has been deleted successfully!", taskId));
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The task with id: %d has been deleted successfully!"), taskId));
     }
 
     @PostMapping("/projects/{projectId}/change")
@@ -100,7 +105,9 @@ AdminController {
         projectService.changeStatus(project.getId());
 
 
-        return new ResponseEntity<>(String.format("The project status with id: %d and name: %s has been changed to %s successfully!",
+        return new ResponseEntity<>(String.format(
+                translationService.getTranslation(
+                        "The project status with id: %d and name: %s has been changed to %s successfully!"),
                 projectId, project.getName(), project.getStatus().name() ), HttpStatus.OK);
     }
 

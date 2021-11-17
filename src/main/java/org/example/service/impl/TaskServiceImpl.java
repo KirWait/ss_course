@@ -13,6 +13,7 @@ import org.example.service.DateFormatter;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
+import org.example.translator.TranslationService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -33,13 +34,15 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final ReleaseService releaseService;
+    private final TranslationService translationService;
 
 //    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, ReleaseService releaseService) {
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, ReleaseService releaseService, TranslationService translationService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.releaseService = releaseService;
+        this.translationService = translationService;
     }
 
     /**
@@ -75,13 +78,14 @@ public class TaskServiceImpl implements TaskService {
     public void changeStatus(Long id) throws NotFoundException {
 
         TaskEntity task = taskRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("No such task with id: %d!"), id)));
 
         Status status = task.getStatus();
 
         if (status == Status.DONE) {
 
-            throw new InvalidStatusException("The task has already been done!");
+            throw new InvalidStatusException(translationService.getTranslation("The task has already been done!"));
         }
         if (status == Status.IN_PROGRESS) {
 
@@ -110,7 +114,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskEntity findByName(String name) throws NotFoundException {
       //  logger.info(String.format("Successfully found task with name: %s", name));
         return taskRepository.findByName(name)
-                .orElseThrow(() -> new NotFoundException(String.format("No such task with name %s", name)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("No such task with name %s"), name)));
     }
 
     /**
@@ -122,7 +127,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
      //   logger.info(String.format("Successfully found tasks of project with id: %d", projectId));
         return taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId)));
 
 
     }
@@ -136,7 +142,8 @@ public class TaskServiceImpl implements TaskService {
     public TaskEntity findById(Long id) throws NotFoundException {
      //   logger.info(String.format("Successfully found task with id: %d", id));
         return taskRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such task with id: %d!", id)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("No such task with id: %d!"), id)));
     }
 
     /**
@@ -150,7 +157,8 @@ public class TaskServiceImpl implements TaskService {
         //  logger.info("The project with id: %d have tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
         //    logger.info("The project with id: %d have no tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
         return taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId)))
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId)))
                 .stream().allMatch(task -> (task.getStatus() == Status.DONE));
     }
 
@@ -162,16 +170,23 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void setUpRequestDto(TaskRequestDto requestDto, Long projectId) throws NotFoundException, IllegalArgumentException {
 
-        checkIfNotNull(requestDto.getCreationTime(), "Creation time shouldn't be defined manually!");
-        checkIfNotNull(requestDto.getStartTime(), "Start time shouldn't be defined manually!");
-        checkIfNotNull(requestDto.getEndTime(), "End time shouldn't be defined manually!");
-        checkIfNull(requestDto.getReleaseVersion(), "Define the release!");
-        checkIfNull(requestDto.getName(), "Enter the name of the task!");
+        checkIfNotNull(requestDto.getCreationTime(),
+                       translationService.getTranslation("Creation time shouldn't be defined manually!"));
+        checkIfNotNull(requestDto.getStartTime(),
+                       translationService.getTranslation("Start time shouldn't be defined manually!"));
+        checkIfNotNull(requestDto.getEndTime(),
+                       translationService.getTranslation("End time shouldn't be defined manually!"));
+        checkIfNull(requestDto.getReleaseVersion(),
+                    translationService.getTranslation("Define the release!"));
+        checkIfNull(requestDto.getName(),
+                    translationService.getTranslation("Enter the name of the task!"));
         checkIfNull(requestDto.getType(),
-                    String.format("Define the type of the task! Possible types: %s", Arrays.toString(Type.values())));
+                    String.format(translationService.getTranslation(
+                            "Define the type of the task! Possible types: %s"), Arrays.toString(Type.values())));
 
         if (requestDto.getResponsibleUsername() == null) {
-            throw new IllegalArgumentException("Enter the username of the responsible person!");
+            throw new IllegalArgumentException(
+                    translationService.getTranslation("Enter the username of the responsible person!"));
         } else {
             requestDto.setResponsibleId(userService.findByUsername(requestDto.getResponsibleUsername()).getId());
         }
@@ -251,7 +266,6 @@ public class TaskServiceImpl implements TaskService {
                     .collect(Collectors.toList());
         }
         if (filterDto.getReleaseVersion() != null && checkIfEmpty(result)) {
-            System.out.println("Not null");
             result = result.stream().filter(
                             task -> task.getRelease().getVersion().contains(filterDto.getReleaseVersion()))
                     .collect(Collectors.toList());
@@ -286,7 +300,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
         List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(() -> new NotFoundException(String.format("Project with id: %d have no tasks!", projectId))).stream()
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId))).stream()
                 .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
 
         List<TaskEntity> unfinishedTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() == null)
@@ -335,7 +350,8 @@ public class TaskServiceImpl implements TaskService {
     private boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {
 
         if (list.isEmpty()) {
-            throw new NotFoundException("No tasks were found with stated filters!");
+            throw new NotFoundException(
+                    translationService.getTranslation("No tasks were found with stated filters!"));
         }
 
         return true;

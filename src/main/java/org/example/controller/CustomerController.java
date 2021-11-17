@@ -16,6 +16,7 @@ import org.example.mapper.TaskMapper;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
+import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,16 +36,19 @@ public class CustomerController {
     private final UserService userService;
     private final TaskService taskService;
     private final ServiceFeignClient feignClient;
+    private final TranslationService translationService;
 
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
     public CustomerController(ProjectService projectService, UserService userService,
-                              TaskService taskService, ServiceFeignClient feignClient) {
+                              TaskService taskService, ServiceFeignClient feignClient,
+                              TranslationService translationService) {
         this.projectService = projectService;
         this.userService = userService;
         this.taskService = taskService;
         this.feignClient = feignClient;
+        this.translationService = translationService;
     }
 
     @GetMapping("/projects")
@@ -83,7 +87,8 @@ public class CustomerController {
             return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
         }
         else {
-            throw new InvalidAccessException(String.format("You are not a customer of a project with id: %d", projectId));
+            throw new InvalidAccessException(String.format(
+                    translationService.getTranslation("You are not a customer of a project with id: %d"), projectId));
         }
     }
 

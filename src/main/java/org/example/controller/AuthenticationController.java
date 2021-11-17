@@ -4,7 +4,7 @@ import javassist.NotFoundException;
 import org.example.dto.UserRequestDto;
 import org.example.entity.UserEntity;
 import org.example.security.jwt.JwtTokenProvider;
-import org.example.service.TranslationService;
+import org.example.translator.TranslationService;
 import org.example.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,8 @@ public class AuthenticationController {
 
 
 
-            return new ResponseEntity<>(String.format(("You have successfully logged in with %s! Here is your token %s"), username, token), HttpStatus.OK);
+            return new ResponseEntity<>(String.format(translationService.getTranslation(
+                    "You have successfully logged in with %s! Here is your token %s"), username, token), HttpStatus.OK);
 
     }
 

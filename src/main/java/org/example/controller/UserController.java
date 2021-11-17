@@ -12,6 +12,7 @@ import org.example.entity.TaskEntity;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
+import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -30,13 +31,15 @@ public class UserController {
 
     private final TaskService taskService;
     private final ProjectService projectService;
+    private final TranslationService translationService;
 
 
 
-    public UserController(TaskService taskService, ProjectService projectService) {
+    public UserController(TaskService taskService, ProjectService projectService, TranslationService translationService) {
 
         this.projectService = projectService;
         this.taskService = taskService;
+        this.translationService = translationService;
     }
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
@@ -83,7 +86,10 @@ public class UserController {
 
               }
 
-          return new ResponseEntity<>(String.format("Task(id: %d) status has been changed to %s successfully!", id, task.getStatus().name()), HttpStatus.OK);
+          return new ResponseEntity<>(String.format(
+                  translationService.getTranslation(
+                          "Task with id: %d status has been changed to %s successfully!"
+                  ), id, task.getStatus().name()), HttpStatus.OK);
       }
 
     @Operation(summary = "Finds task by filter")

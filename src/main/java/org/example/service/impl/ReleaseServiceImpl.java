@@ -7,6 +7,7 @@ import org.example.exception.InvalidDateFormatException;
 import org.example.service.DateFormatter;
 import org.example.repository.ReleaseRepository;
 import org.example.service.ReleaseService;
+import org.example.translator.TranslationService;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -25,11 +26,13 @@ public class ReleaseServiceImpl implements ReleaseService {
     private static final String CORRECT_DATE_REGEX = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
 
     private final ReleaseRepository releaseRepository;
+    private final TranslationService translationService;
 
 //    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public ReleaseServiceImpl(ReleaseRepository releaseRepository) {
+    public ReleaseServiceImpl(ReleaseRepository releaseRepository, TranslationService translationService) {
         this.releaseRepository = releaseRepository;
+        this.translationService = translationService;
     }
 
 
@@ -44,7 +47,8 @@ public class ReleaseServiceImpl implements ReleaseService {
 
         return releaseRepository.findByVersionAndProjectId(version, projectId)
                 .orElseThrow(() -> new NotFoundException(
-                        String.format("No such release with version: %s, and project id: %d!", version, projectId))
+                        String.format(translationService.getTranslation(
+                                "No such release with version: %s, and project id: %d!"), version, projectId))
                 );
     }
 
@@ -81,13 +85,16 @@ public class ReleaseServiceImpl implements ReleaseService {
     public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId) throws ParseException, NotFoundException {
 
         List<ReleaseEntity> currentProjectReleases = releaseRepository.findAllByProjectIdOrderByCreationTime(projectId)
-                .orElseThrow(() -> new NotFoundException(String.format("Project with id = %d have no releases", projectId)));
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("Project with id: %d have no releases"), projectId)));
 
         if (releaseRequestDto.getEndTime() == null){
-            throw new IllegalArgumentException("Enter the end date!");
+            throw new IllegalArgumentException(
+                    translationService.getTranslation("Enter the end date!"));
         }
         if (!releaseRequestDto.getEndTime().matches(CORRECT_DATE_REGEX)) {
-            throw new InvalidDateFormatException("The date should be is 'yyyy-mm-dd' format!");
+            throw new InvalidDateFormatException(
+                    translationService.getTranslation("The date should be in 'yyyy-mm-dd' format!"));
         }
         if (!currentProjectReleases.isEmpty()){
             long lastReleaseEndTimeInMillis = DateFormatter.formatterWithoutTime
@@ -99,7 +106,8 @@ public class ReleaseServiceImpl implements ReleaseService {
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
 
             if (!(lastReleaseEndTimeInMillis < requestDtoStartTimeInMillis && requestDtoStartTimeInMillis < requestDtoEndTimeInMillis)){
-                throw new IllegalArgumentException("You shouldn't enter past dates or current release haven't finished! ");
+                throw new IllegalArgumentException(
+                        translationService.getTranslation("You shouldn't enter past dates or current release haven't finished!"));
             }
         }
         if (releaseRequestDto.getVersion() == null){
@@ -109,7 +117,8 @@ public class ReleaseServiceImpl implements ReleaseService {
         String releaseRequestDtoVersion = releaseRequestDto.getVersion();
 
         if (currentProjectReleases.stream().anyMatch(entity -> Objects.equals(entity.getVersion(), releaseRequestDtoVersion))){
-            throw new IllegalArgumentException(String.format("Project with id: %d already have %s version!", projectId, releaseRequestDtoVersion));
+            throw new IllegalArgumentException(String.format(translationService.getTranslation(
+                            "Project with id: %d already have %s version!"), projectId, releaseRequestDtoVersion));
         }
 
         releaseRequestDto.setCreationTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));

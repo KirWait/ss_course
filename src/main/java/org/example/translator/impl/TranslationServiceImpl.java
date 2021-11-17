@@ -1,6 +1,6 @@
-package org.example.service.impl;
+package org.example.translator.impl;
 
-import org.example.service.TranslationService;
+import org.example.translator.TranslationService;
 import org.springframework.stereotype.Service;
 
 import static org.example.configuration.Translator.toLocale;
