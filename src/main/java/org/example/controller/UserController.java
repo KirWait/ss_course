@@ -13,8 +13,6 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
 import org.mapstruct.factory.Mappers;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

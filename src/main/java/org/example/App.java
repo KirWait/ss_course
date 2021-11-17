@@ -6,6 +6,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 import java.io.IOException;
+import java.util.ResourceBundle;
 import java.util.logging.LogManager;
 
 @EnableFeignClients
@@ -16,6 +17,8 @@ public class App
 
     public static void main(String[] args) throws IOException {
         LogManager.getLogManager().readConfiguration();
+
+
         SpringApplication.run(App.class, args);
     }
 

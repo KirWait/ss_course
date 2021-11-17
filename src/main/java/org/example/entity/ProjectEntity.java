@@ -51,6 +51,13 @@ public class ProjectEntity {
         this.name = name;
     }
 
+    public ProjectEntity(String name, Long price, boolean paid, Status status) {
+        this.name = name;
+        this.price = price;
+        this.paid = paid;
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

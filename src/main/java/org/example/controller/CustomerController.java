@@ -105,7 +105,6 @@ public class CustomerController {
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
         Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
 
-
         return feignClient.getTransactionHistory(currentSessionUserId);
     }
 
