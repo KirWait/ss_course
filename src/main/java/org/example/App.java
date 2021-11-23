@@ -11,17 +11,11 @@ import java.util.logging.LogManager;
 @EnableFeignClients
 @SpringBootApplication
 @EnableAspectJAutoProxy
-public class App 
-{
-
-
+public class App {
     public static void main(String[] args) throws IOException {
-
 
         LogManager.getLogManager().readConfiguration();
 
-
         SpringApplication.run(App.class, args);
     }
-
 }
