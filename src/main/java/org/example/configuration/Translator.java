@@ -10,13 +10,14 @@ import java.util.Locale;
 
 @Component
 public class Translator {
-private static ResourceBundleMessageSource messageSource;
+private final ResourceBundleMessageSource messageSource;
+
 
     public Translator(@Qualifier("language") ResourceBundleMessageSource messageSource) {
         this.messageSource = messageSource;
     }
 
-    public static String toLocale(String code){
+    public String toLocale(String code){
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(code, null, locale);
     }

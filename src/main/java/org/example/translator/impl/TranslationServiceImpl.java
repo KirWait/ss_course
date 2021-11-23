@@ -1,14 +1,21 @@
 package org.example.translator.impl;
 
+import org.example.configuration.Translator;
 import org.example.translator.TranslationService;
 import org.springframework.stereotype.Service;
 
-import static org.example.configuration.Translator.toLocale;
 
 @Service
 public class TranslationServiceImpl implements TranslationService {
+
+    private final Translator translator;
+
+    public TranslationServiceImpl(Translator translator) {
+        this.translator = translator;
+    }
+
     @Override
     public String getTranslation(String string) {
-        return toLocale(string);
+        return translator.toLocale(string);
     }
 }

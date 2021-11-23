@@ -54,12 +54,10 @@ public class CustomerController {
     @GetMapping("/projects")
     @Operation(summary = "Gets all projects where author is current session user")
     public ResponseEntity<List<ProjectResponseDto>> getCustomerProjects() throws NotFoundException {
+
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
-
         List<ProjectEntity> customerProjects = projectService.findAllByCustomerId(currentSessionUserId);
-
         List<ProjectResponseDto> responseDto = customerProjects.stream()
                 .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
 
@@ -71,13 +69,9 @@ public class CustomerController {
     public ResponseEntity<List<TaskResponseDto>> getCustomerProjects(@PathVariable Long projectId) throws NotFoundException, InvalidAccessException {
 
         projectService.findById(projectId);
-
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
         Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
-
         List<ProjectEntity> customerProjects = projectService.findAllByCustomerId(currentSessionUserId);
-
         boolean isCustomer = customerProjects.stream().anyMatch(project -> Objects.equals(project.getId(), projectId));
 
         if (isCustomer){

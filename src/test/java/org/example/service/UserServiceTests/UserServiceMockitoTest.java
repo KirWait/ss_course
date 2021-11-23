@@ -11,11 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +40,6 @@ public class UserServiceMockitoTest {
         given(userRepositoryMock.findByUsername(USER_NON_EXIST_NAME)).willReturn(null);
         given(userRepositoryMock.findAll()).willReturn(EXISTING_USER_LIST);
         given(userRepositoryMock.findById(EXISTING_ID)).willReturn(Optional.of(new UserEntity("USER")));
-      //  given(userRepositoryMock.findById(NON_EXISTING_ID)).willReturn(null);
     }
 
     @Test
@@ -51,12 +49,6 @@ public class UserServiceMockitoTest {
 
        assertThat(user).isNotNull();
        assertThat(user.getUsername()).isEqualTo(USER_EXIST_NAME);
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void findByUsernameShouldReturnNull() throws NotFoundException {
-
-        userService.findByUsername(USER_NON_EXIST_NAME);
     }
 
     @Test
@@ -78,8 +70,8 @@ public class UserServiceMockitoTest {
     }
 
     @Test
-    public void findByIdShouldNotFindUser() throws NotFoundException {
-        assertThat(userService.findById(NON_EXISTING_ID)).isNull();
+    public void findByIdShouldThrowException() {
+        assertThrows(NotFoundException.class, ()-> userService.findById(NON_EXISTING_ID));
 
     }
 }

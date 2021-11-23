@@ -30,8 +30,7 @@ import java.text.ParseException;
 @RestController
 @RequestMapping("/api/admin")
 @Tag(name = "admin-controller", description = "The ROLE_ADMIN API")
-public class
-AdminController {
+public class AdminController {
 
     private final TaskService taskService;
     private final ProjectService projectService;
@@ -55,11 +54,8 @@ AdminController {
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto requestDto) throws NotFoundException {
 
         projectService.setUpRequestDto(requestDto);
-
         ProjectEntity project = projectMapper.projectRequestDtoToProjectEntity(requestDto);
-
         projectService.save(project);
-
         ProjectResponseDto responseDto = projectMapper.projectEntityToProjectResponseDto(project);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -71,15 +67,10 @@ AdminController {
     public ResponseEntity<TaskResponseDto> createTaskInProject(@PathVariable Long projectId, @RequestBody TaskRequestDto requestDto) throws NotFoundException {
 
         ProjectEntity project = projectService.findById(projectId);
-
         projectService.ifProjectAvailableToCreateTaskOrThrowException( project.getId() ); //else InvalidStatusException will be thrown
-
         taskService.setUpRequestDto(requestDto, projectId);
-
         TaskEntity taskEntity = taskMapper.taskRequestDtoToTaskEntity(requestDto);
-
         taskService.save(taskEntity);
-
         TaskResponseDto responseDto = taskMapper.taskEntityToTaskResponseDto(taskEntity);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
@@ -91,7 +82,6 @@ AdminController {
 
         taskService.delete(taskId);
 
-
         return ResponseEntity.ok().body(String.format(
                 translationService.getTranslation("The task with id: %d has been deleted successfully!"), taskId));
     }
@@ -101,9 +91,7 @@ AdminController {
     public ResponseEntity<String> changeProjectStatus(@PathVariable Long projectId) throws NotFoundException, InvalidStatusException {
 
         ProjectEntity project = projectService.findById(projectId);
-
         projectService.changeStatus(project.getId());
-
 
         return new ResponseEntity<>(String.format(
                 translationService.getTranslation(
@@ -116,14 +104,10 @@ AdminController {
     public ResponseEntity<ReleaseResponseDto> createRelease(@PathVariable Long projectId, @RequestBody ReleaseRequestDto requestDto) throws ParseException, NotFoundException {
 
         if (projectService.ifProjectAvailableToCreateReleaseOrThrowException(projectId)) {
-
             releaseService.setUpRequestDto(requestDto, projectId);
         }
-
         ReleaseEntity releaseEntity = releaseMapper.releaseRequestDtoToReleaseEntity(requestDto);
-
         releaseService.save(releaseEntity);
-
         ReleaseResponseDto responseDto = releaseMapper.releaseEntityToReleaseResponseDto(releaseEntity);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);

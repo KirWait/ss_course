@@ -1,34 +1,49 @@
 package org.example.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
+import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 
+@Schema(description = "DTO for showing json of task entity")
 public class TaskResponseDto {
 
+    @Schema(description = "Field that stores id of the task")
     private Long id;
 
-    private Long projectId;
+    @Schema(description = "Field that stores project of the task")
+    private ProjectEntity project;
 
+    @Schema(description = "Field that stores status of the task")
     private Status status;
 
+    @Schema(description = "Field that stores name of the task")
     private String name;
 
+    @Schema(description = "Field that stores description of the task")
     private String description;
 
-    private Long authorId;
+    @Schema(description = "Field that stores author of the task")
+    private UserEntity author;
 
-    private Long responsibleId;
+    @Schema(description = "Field that stores responsible of the task")
+    private UserEntity responsible;
 
+    @Schema(description = "Field that stores release of the task")
     private ReleaseEntity release;
 
+    @Schema(description = "Field that stores type of the task")
     private Type type;
 
+    @Schema(description = "Field that stores start time of the task")
     private String startTime;
 
+    @Schema(description = "Field that stores end time of the task")
     private String endTime;
 
+    @Schema(description = "Field that stores creation time of the task")
     private String creationTime;
 
     public String getStartTime() {
@@ -63,12 +78,12 @@ public class TaskResponseDto {
         this.id = id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public ProjectEntity getProject() {
+        return project;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 
     public Status getStatus() {
@@ -95,20 +110,20 @@ public class TaskResponseDto {
         this.description = description;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public UserEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(UserEntity author) {
+        this.author = author;
     }
 
-    public Long getResponsibleId() {
-        return responsibleId;
+    public UserEntity getResponsible() {
+        return responsible;
     }
 
-    public void setResponsibleId(Long responsibleId) {
-        this.responsibleId = responsibleId;
+    public void setResponsible(UserEntity responsible) {
+        this.responsible = responsible;
     }
 
     public ReleaseEntity getRelease() {

@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import java.util.List;
 
-@FeignClient(name = "TransactionService", url = "http://localhost:8075")
+@FeignClient(name = "TransactionService", url = "${feign.url}")
 public interface ServiceFeignClient {
 
     @PostMapping("/pay/{projectId}")
-    public ResponseEntity<TransactionResponseDto> payForProject(@PathVariable(value = "projectId") Long projectId,
+    ResponseEntity<TransactionResponseDto> payForProject(@PathVariable(value = "projectId") Long projectId,
                                                                 @RequestBody TransactionRequestDto requestDto);
 
     @GetMapping("/user_history/{userId}")
-    public ResponseEntity<List<TransactionResponseDto>> getTransactionHistory(@PathVariable(value = "userId") Long userId);
+    ResponseEntity<List<TransactionResponseDto>> getTransactionHistory(@PathVariable(value = "userId") Long userId);
 
     @GetMapping("/project_history/{projectId}")
-    public Long getPaidSum(@PathVariable(value = "projectId") Long project_id);
+    Long getPaidSum(@PathVariable(value = "projectId") Long project_id);
+
 }

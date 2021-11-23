@@ -27,8 +27,10 @@ public class ReleaseEntity {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "release")
     private List<TaskEntity> tasks;
 
-    @Column(name = "project_id")
-    private Long projectId;
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
 
     public ReleaseEntity( String creationTime, String endTime, String version) {
 
@@ -70,12 +72,12 @@ public class ReleaseEntity {
         return tasks;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public ProjectEntity getProject() {
+        return project;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProject(ProjectEntity project) {
+        this.project = project;
     }
 
     public Long getId() {

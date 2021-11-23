@@ -3,11 +3,11 @@ package org.example.mapper;
 import org.example.dto.ProjectRequestDto;
 import org.example.dto.ProjectResponseDto;
 import org.example.entity.ProjectEntity;
+import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class ProjectMapperTest {
     private final ProjectMapper mapper = Mappers.getMapper(ProjectMapper.class);
@@ -18,15 +18,15 @@ public class ProjectMapperTest {
         ProjectEntity project = new ProjectEntity();
         project.setId(1L);
         project.setName("NAME");
-        project.setCustomerId(2L);
+        project.setCustomer(new UserEntity(2L));
         project.setStatus(Status.BACKLOG);
 
 
         ProjectResponseDto dto = mapper.projectEntityToProjectResponseDto(project);
-        assertThat(dto.getId()).isEqualTo(project.getId());
-        assertThat(dto.getCustomerId()).isEqualTo(project.getCustomerId());
-        assertThat(dto.getName()).isEqualTo(project.getName());
-        assertThat(dto.getStatus()).isEqualTo(project.getStatus());
+        assertEquals(dto.getId(), project.getId());
+        assertEquals(dto.getCustomer(), project.getCustomer());
+        assertEquals(dto.getName(), project.getName());
+        assertEquals(dto.getStatus(), project.getStatus());
 
 
 }
@@ -36,15 +36,15 @@ public class ProjectMapperTest {
         ProjectRequestDto requestDto = new ProjectRequestDto();
         requestDto.setId(1L);
         requestDto.setName("NAME");
-        requestDto.setCustomerId(2L);
+        requestDto.setCustomer(new UserEntity(2L));
         requestDto.setStatus(Status.BACKLOG);
 
 
         ProjectEntity project = mapper.projectRequestDtoToProjectEntity(requestDto);
-        assertThat(requestDto.getId()).isEqualTo(project.getId());
-        assertThat(requestDto.getCustomerId()).isEqualTo(project.getCustomerId());
-        assertThat(requestDto.getName()).isEqualTo(project.getName());
-        assertThat(requestDto.getStatus()).isEqualTo(project.getStatus());
+        assertEquals(requestDto.getId(), project.getId());
+        assertEquals(requestDto.getCustomer(), project.getCustomer());
+        assertEquals(requestDto.getName(), project.getName());
+        assertEquals(requestDto.getStatus(), project.getStatus());
 
 
     }

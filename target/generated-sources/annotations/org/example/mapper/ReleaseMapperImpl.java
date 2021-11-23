@@ -10,7 +10,7 @@ import org.example.entity.TaskEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-16T21:32:43+0400",
+    date = "2021-11-22T20:00:55+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class ReleaseMapperImpl implements ReleaseMapper {
@@ -27,7 +27,7 @@ public class ReleaseMapperImpl implements ReleaseMapper {
         if ( list != null ) {
             releaseEntity.setTasks( new ArrayList<TaskEntity>( list ) );
         }
-        releaseEntity.setProjectId( requestDto.getProjectId() );
+        releaseEntity.setProject( requestDto.getProject() );
         releaseEntity.setId( requestDto.getId() );
         releaseEntity.setCreationTime( requestDto.getCreationTime() );
         releaseEntity.setEndTime( requestDto.getEndTime() );
@@ -44,7 +44,7 @@ public class ReleaseMapperImpl implements ReleaseMapper {
 
         ReleaseResponseDto releaseResponseDto = new ReleaseResponseDto();
 
-        releaseResponseDto.setProjectId( versionEntity.getProjectId() );
+        releaseResponseDto.setProject( versionEntity.getProject() );
         List<TaskEntity> list = versionEntity.getTasks();
         if ( list != null ) {
             releaseResponseDto.setTasks( new ArrayList<TaskEntity>( list ) );

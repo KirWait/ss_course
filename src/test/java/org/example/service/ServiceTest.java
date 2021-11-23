@@ -74,7 +74,7 @@ public class ServiceTest {
     private final Long PROJECT_PRICE = 100000L;
 
     //RELEASE DETAILS
-    private final String RELEASE_CREATION_TIME = DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime());
+    private final String RELEASE_CREATION_TIME = Constants.formatterWithTime.format(new GregorianCalendar().getTime());
     private final String RELEASE_END_TIME = "2022-12-31";
     private final String RELEASE_VERSION = "1.0.0";
 
@@ -83,7 +83,7 @@ public class ServiceTest {
     private final String TASK_NAME = "TASK_NAME";
     private final String TASK_DESCRIPTION = "DESCRIPTION";
     private final Type TASK_TYPE = Type.BUG;
-    private final String TASK_CREATION_TIME = DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime());
+    private final String TASK_CREATION_TIME = Constants.formatterWithTime.format(new GregorianCalendar().getTime());
 
     //ENTITIES
     private final UserEntity USER = new UserEntity(USER_USERNAME, USER_PASSWORD, USER_ROLES, USER_ACTIVE);
@@ -128,9 +128,9 @@ public class ServiceTest {
 
         assertThrows(NotFoundException.class, () -> projectService.findByProjectName(PROJECT_NAME));
 
-        Long customerId = userService.findByUsername(CUSTOMER_USERNAME).getId();
+        UserEntity customer = userService.findByUsername(CUSTOMER_USERNAME);
 
-        PROJECT.setCustomerId(customerId);
+        PROJECT.setCustomer(customer);
 
         projectService.save(PROJECT);
 
@@ -146,15 +146,15 @@ public class ServiceTest {
     @Order(3)
     public void saveAndReleaseShouldSaveReleaseAndDelete() throws NotFoundException {
 
-        Long projectId = projectService.findByProjectName(PROJECT_NAME).getId();
+        ProjectEntity project = projectService.findByProjectName(PROJECT_NAME);
 
-        assertThrows(NotFoundException.class, () -> releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
+        assertThrows(NotFoundException.class, () -> releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId()));
 
-        RELEASE.setProjectId(projectId);
+        RELEASE.setProject(project);
 
         releaseService.save(RELEASE);
 
-        ReleaseEntity savedRelease = releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId);
+        ReleaseEntity savedRelease = releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId());
 
         assertThat(savedRelease).isNotNull();
 
@@ -162,7 +162,7 @@ public class ServiceTest {
 
         releaseService.delete(savedRelease.getId());
 
-        assertThrows(NotFoundException.class, () -> releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
+        assertThrows(NotFoundException.class, () -> releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId()));
     }
 
 
@@ -170,15 +170,15 @@ public class ServiceTest {
     @Order(4)
     public void saveReleaseShouldSaveRelease() throws NotFoundException {
 
-        Long projectId = projectService.findByProjectName(PROJECT_NAME).getId();
+        ProjectEntity project = projectService.findByProjectName(PROJECT_NAME);
 
-        assertThrows(NotFoundException.class, ()-> releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
+        assertThrows(NotFoundException.class, ()-> releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId()));
 
-        RELEASE.setProjectId(projectId);
+        RELEASE.setProject(project);
 
         releaseService.save(RELEASE);
 
-        ReleaseEntity savedRelease = releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId);
+        ReleaseEntity savedRelease = releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId());
 
         assertThat(savedRelease).isNotNull();
 
@@ -190,19 +190,19 @@ public class ServiceTest {
     @Order(5)
     public void saveTaskShouldSaveTask() throws NotFoundException {
 
-        Long projectId = projectService.findByProjectName(PROJECT_NAME).getId();
+        ProjectEntity project = projectService.findByProjectName(PROJECT_NAME);
 
         Long userId = userService.findByUsername(USER_USERNAME).getId();
 
         assertThrows(NotFoundException.class, () -> taskService.findByName(TASK_NAME));
 
-        TASK.setProjectId(projectId);
+        TASK.setProject(project);
 
-        TASK.setResponsibleId(userId);
+        TASK.setResponsible(new UserEntity(userId));
 
-        TASK.setAuthorId(userId);
+        TASK.setAuthor(new UserEntity(userId));
 
-        TASK.setRelease(releaseService.findByVersionAndProjectId(RELEASE_VERSION, projectId));
+        TASK.setRelease(releaseService.findByVersionAndProjectId(RELEASE_VERSION, project.getId()));
 
         taskService.save(TASK);
 

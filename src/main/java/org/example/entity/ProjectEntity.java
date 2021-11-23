@@ -1,9 +1,12 @@
 package org.example.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.example.enumeration.Status;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,8 +21,10 @@ public class ProjectEntity {
     @Column(name = "project_name")
     private String name;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+    private UserEntity customer;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
@@ -29,17 +34,22 @@ public class ProjectEntity {
     private Long price;
 
     @Column(name = "paid")
-    private boolean paid;
+    private boolean isPaid;
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.DETACH)
+    List<TaskEntity> tasks;
 
     public ProjectEntity() {
     }
 
-    public ProjectEntity(Long id, String name, Long customerId, Status status) {
+    public ProjectEntity(Long id, String name, UserEntity customer, Status status, boolean isPaid, Long price) {
         this.id = id;
         this.name = name;
-        this.customerId = customerId;
+        this.customer = customer;
         this.status = status;
+        this.isPaid = isPaid;
+        this.price = price;
     }
 
     public ProjectEntity(String name, Status status) {
@@ -51,11 +61,15 @@ public class ProjectEntity {
         this.name = name;
     }
 
-    public ProjectEntity(String name, Long price, boolean paid, Status status) {
+    public ProjectEntity(String name, Long price, boolean IsPaid, Status status) {
         this.name = name;
         this.price = price;
-        this.paid = paid;
+        this.isPaid = IsPaid;
         this.status = status;
+    }
+
+    public ProjectEntity(Long id) {
+        this.id = id;
     }
 
     @Override
@@ -63,12 +77,12 @@ public class ProjectEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ProjectEntity project = (ProjectEntity) o;
-        return Objects.equals(id, project.id) && Objects.equals(name, project.name) && Objects.equals(customerId, project.customerId) && status == project.status;
+        return Objects.equals(id, project.id) && Objects.equals(name, project.name) && Objects.equals(customer, project.customer) && status == project.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, customerId, status);
+        return Objects.hash(id, name, customer, status);
     }
 
     @Override
@@ -76,17 +90,17 @@ public class ProjectEntity {
         return "ProjectEntity{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", customerId=" + customerId +
+                ", customerId=" + customer +
                 ", status=" + status +
                 '}';
     }
 
     public boolean isPaid() {
-        return paid;
+        return isPaid;
     }
 
     public void setPaid(boolean paid) {
-        this.paid = paid;
+        this.isPaid = paid;
     }
 
     public Long getPrice() {
@@ -121,11 +135,11 @@ public class ProjectEntity {
         this.name = projectName;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public UserEntity getCustomer() {
+        return customer;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setCustomer(UserEntity customerId) {
+        this.customer = customerId;
     }
 }

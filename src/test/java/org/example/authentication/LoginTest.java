@@ -36,7 +36,7 @@ public class LoginTest {
             }
             """)).andExpect(status().isOk()).andReturn();
         String resultString = result.getResponse().getContentAsString();
-        System.out.println(resultString.substring(resultString.indexOf(": ") + 2));
+        //System.out.println(resultString.substring(resultString.indexOf(": ") + 2));
     }
 
     @Test()

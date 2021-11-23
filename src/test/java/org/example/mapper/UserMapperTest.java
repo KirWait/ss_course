@@ -7,8 +7,7 @@ import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class UserMapperTest {
     private final UserMapper mapper = Mappers.getMapper(UserMapper.class);
@@ -25,11 +24,11 @@ public class UserMapperTest {
 
 
         UserResponseDto dto = mapper.userEntityToUserResponseDTO(userEntity);
-        assertThat(dto.getId()).isEqualTo(userEntity.getId());
-        assertThat(dto.getUsername()).isEqualTo(userEntity.getUsername());
-        assertThat(dto.getPassword()).isEqualTo(userEntity.getPassword());
-        assertThat(dto.getActive()).isEqualTo(userEntity.getActive());
-        assertThat(dto.getRoles()).isEqualTo(userEntity.getRoles());
+        assertEquals(dto.getId(), userEntity.getId());
+        assertEquals(dto.getUsername(), userEntity.getUsername());
+        assertEquals(dto.getPassword(), userEntity.getPassword());
+        assertEquals(dto.getActive(), userEntity.getActive());
+        assertEquals(dto.getRoles(), userEntity.getRoles());
 
 
     }
@@ -45,11 +44,11 @@ public class UserMapperTest {
 
 
         UserEntity entity = mapper.userRequestDTOToUserEntity(requestDto);
-        assertThat(entity.getId()).isEqualTo(requestDto.getId());
-        assertThat(entity.getUsername()).isEqualTo(requestDto.getUsername());
-        assertThat(entity.getPassword()).isEqualTo(requestDto.getPassword());
-        assertThat(entity.getActive()).isEqualTo(requestDto.getActive());
-        assertThat(entity.getRoles()).isEqualTo(requestDto.getRoles());
+        assertEquals(entity.getId(), requestDto.getId());
+        assertEquals(entity.getUsername(), requestDto.getUsername());
+        assertEquals(entity.getPassword(), requestDto.getPassword());
+        assertEquals(entity.getActive(), requestDto.getActive());
+        assertEquals(entity.getRoles(), requestDto.getRoles());
 
 
     }

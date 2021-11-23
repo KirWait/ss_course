@@ -6,11 +6,8 @@ import org.example.entity.TaskEntity;
 import org.example.entity.ReleaseEntity;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-
-
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 public class ReleaseMapperTest {
 
@@ -27,12 +24,12 @@ public class ReleaseMapperTest {
 
         ReleaseResponseDto responseDto = mapper.releaseEntityToReleaseResponseDto(entity);
 
-        assertThat(entity.getId()).isEqualTo(responseDto.getId());
-        assertThat(entity.getVersion()).isEqualTo(responseDto.getVersion());
-        assertThat(entity.getCreationTime()).isEqualTo(responseDto.getCreationTime());
-        assertThat(entity.getEndTime()).isEqualTo(responseDto.getEndTime());
-        assertThat(entity.getTasks().size()).isEqualTo(responseDto.getTasks().size());
-        assertThat(entity.getTasks().get(0).getName()).isEqualTo(responseDto.getTasks().get(0).getName());
+        assertEquals(entity.getId(), responseDto.getId());
+        assertEquals(entity.getVersion(), responseDto.getVersion());
+        assertEquals(entity.getCreationTime(), responseDto.getCreationTime());
+        assertEquals(entity.getEndTime() ,responseDto.getEndTime());
+        assertEquals(entity.getTasks().size(), responseDto.getTasks().size());
+        assertEquals(entity.getTasks().get(0).getName(), responseDto.getTasks().get(0).getName());
 
 
     }
@@ -48,13 +45,12 @@ public class ReleaseMapperTest {
 
         ReleaseEntity entity = mapper.releaseRequestDtoToReleaseEntity(requestDto);
 
-        assertThat(entity.getId()).isEqualTo(requestDto.getId());
-        assertThat(entity.getVersion()).isEqualTo(requestDto.getVersion());
-        assertThat(entity.getCreationTime()).isEqualTo(requestDto.getCreationTime());
-        assertThat(entity.getEndTime()).isEqualTo(requestDto.getEndTime());
-        assertThat(entity.getTasks().size()).isEqualTo(requestDto.getTasks().size());
-        assertThat(entity.getTasks().get(0).getName()).isEqualTo(requestDto.getTasks().get(0).getName());
-
+        assertEquals(entity.getId(), requestDto.getId());
+        assertEquals(entity.getVersion(), requestDto.getVersion());
+        assertEquals(entity.getCreationTime(), requestDto.getCreationTime());
+        assertEquals(entity.getEndTime(), requestDto.getEndTime());
+        assertEquals(entity.getTasks().size(), requestDto.getTasks().size());
+        assertEquals(entity.getTasks().get(0).getName(),requestDto.getTasks().get(0).getName());
 
     }
 

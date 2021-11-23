@@ -23,7 +23,6 @@ public class UserEntity {
     private String password;
 
     @Column(name = "roles")
-
     @Enumerated(value = EnumType.STRING)
     private Roles roles;
 

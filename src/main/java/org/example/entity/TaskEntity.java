@@ -16,8 +16,10 @@ public class TaskEntity {
     @Column(name = "task_id")
     private Long id;
 
-    @Column(name = "project_id")
-    private Long projectId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private ProjectEntity project;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -29,11 +31,13 @@ public class TaskEntity {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "author_id")
-    private Long authorId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private UserEntity author;
 
-    @Column(name = "responsible_id")
-    private Long responsibleId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "responsible_id")
+    private UserEntity responsible;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.DETACH)
@@ -75,12 +79,12 @@ public class TaskEntity {
     public String toString() {
         return "TaskEntity{" +
                 "id=" + id +
-                ", projectId=" + projectId +
+                ", projectId=" + project +
                 ", status=" + status +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", authorId=" + authorId +
-                ", responsibleId=" + responsibleId +
+                ", authorId=" + author +
+                ", responsibleId=" + responsible +
                 ", release=" + release +
                 ", type=" + type +
                 '}';
@@ -124,12 +128,12 @@ public class TaskEntity {
         this.id = id;
     }
 
-    public Long getProjectId() {
-        return projectId;
+    public ProjectEntity getProject() {
+        return project;
     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
+    public void setProject(ProjectEntity projectId) {
+        this.project = projectId;
     }
 
     public Status getStatus() {
@@ -156,20 +160,20 @@ public class TaskEntity {
         this.description = description;
     }
 
-    public Long getAuthorId() {
-        return authorId;
+    public UserEntity getAuthor() {
+        return author;
     }
 
-    public void setAuthorId(Long authorId) {
-        this.authorId = authorId;
+    public void setAuthor(UserEntity author) {
+        this.author = author;
     }
 
-    public Long getResponsibleId() {
-        return responsibleId;
+    public UserEntity getResponsible() {
+        return responsible;
     }
 
-    public void setResponsibleId(Long responsibleId) {
-        this.responsibleId = responsibleId;
+    public void setResponsible(UserEntity responsible) {
+        this.responsible = responsible;
     }
 
     public Type getType() {

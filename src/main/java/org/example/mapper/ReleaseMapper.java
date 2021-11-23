@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 
 @Mapper
 public interface ReleaseMapper {
-ReleaseEntity releaseRequestDtoToReleaseEntity(ReleaseRequestDto requestDto);
-ReleaseResponseDto releaseEntityToReleaseResponseDto(ReleaseEntity versionEntity);
+    ReleaseEntity releaseRequestDtoToReleaseEntity(ReleaseRequestDto requestDto);
+    ReleaseResponseDto releaseEntityToReleaseResponseDto(ReleaseEntity versionEntity);
 
 }

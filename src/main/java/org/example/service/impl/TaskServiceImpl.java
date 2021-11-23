@@ -2,17 +2,16 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.TaskRequestDto;
+import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Type;
 import org.example.exception.InvalidStatusException;
 import org.example.entity.TaskEntity;
 import org.example.enumeration.Status;
+import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
-import org.example.service.DateFormatter;
-import org.example.service.ReleaseService;
-import org.example.service.TaskService;
-import org.example.service.UserService;
+import org.example.service.*;
 import org.example.translator.TranslationService;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,15 +33,19 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final ReleaseService releaseService;
+    private final ProjectRepository projectService;
     private final TranslationService translationService;
 
-//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService, ReleaseService releaseService, TranslationService translationService) {
+
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService,
+                           ReleaseService releaseService, TranslationService translationService,
+                           ProjectRepository projectService) {
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.releaseService = releaseService;
         this.translationService = translationService;
+        this.projectService = projectService;
     }
 
     /**
@@ -53,7 +56,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void save(TaskEntity taskEntity) {
         taskRepository.save(taskEntity);
-    //    logger.info("Successfully saved task to the database");
     }
 
 
@@ -66,7 +68,6 @@ public class TaskServiceImpl implements TaskService {
     @Transactional
     public void delete(Long id) {
         taskRepository.deleteById(id);
-      //  logger.info(String.format("Successfully deleted task with id: %d from the database", id));
     }
 
     /**
@@ -89,20 +90,19 @@ public class TaskServiceImpl implements TaskService {
         }
         if (status == Status.IN_PROGRESS) {
 
-            task.setEndTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setEndTime(Constants.formatterWithTime.format(new GregorianCalendar().getTime()));
 
             task.setStatus(Status.DONE);
 
         }
         if (status == Status.BACKLOG) {
 
-            task.setStartTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setStartTime(Constants.formatterWithTime.format(new GregorianCalendar().getTime()));
 
             task.setStatus(Status.IN_PROGRESS);
         }
 
         taskRepository.save(task);
-       // logger.info(String.format("Successfully changed status of task with id: %d, to %s", id, task.getStatus()));
     }
 
     /**
@@ -112,7 +112,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskEntity findByName(String name) throws NotFoundException {
-      //  logger.info(String.format("Successfully found task with name: %s", name));
+
         return taskRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such task with name %s"), name)));
@@ -125,7 +125,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
-     //   logger.info(String.format("Successfully found tasks of project with id: %d", projectId));
+
         return taskRepository.findAllByProjectId(projectId)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no tasks!"), projectId)));
@@ -140,7 +140,6 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskEntity findById(Long id) throws NotFoundException {
-     //   logger.info(String.format("Successfully found task with id: %d", id));
         return taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such task with id: %d!"), id)));
@@ -154,8 +153,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
-        //  logger.info("The project with id: %d have tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
-        //    logger.info("The project with id: %d have no tasks with statuses: 'IN_PROGRESS', 'BACKLOG'");
         return taskRepository.findAllByProjectId(projectId)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no tasks!"), projectId)))
@@ -188,26 +185,26 @@ public class TaskServiceImpl implements TaskService {
             throw new IllegalArgumentException(
                     translationService.getTranslation("Enter the username of the responsible person!"));
         } else {
-            requestDto.setResponsibleId(userService.findByUsername(requestDto.getResponsibleUsername()).getId());
+            requestDto.setResponsible(userService.findByUsername(requestDto.getResponsibleUsername()));
         }
 
-        requestDto.setCreationTime(DateFormatter.formatterWithTime.format(Calendar.getInstance().getTime()));
+        requestDto.setCreationTime(Constants.formatterWithTime.format(Calendar.getInstance().getTime()));
 
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
         UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
 
-        requestDto.setAuthorId(currentSessionUser.getId());
+        requestDto.setAuthor(currentSessionUser);
 
-        requestDto.setProjectId(projectId);
+        ProjectEntity project = projectService.findById(projectId).orElseThrow(() -> new NotFoundException("No such project with id: %d"));
+
+        requestDto.setProject(project);
 
         requestDto.setStatus(Status.BACKLOG);
 
         ReleaseEntity currentRelease = releaseService.findByVersionAndProjectId(requestDto.getReleaseVersion(), projectId);
 
         requestDto.setRelease(currentRelease);
-
-       // logger.info("Successfully set up TaskRequestDto");
     }
 
     /**
@@ -221,12 +218,12 @@ public class TaskServiceImpl implements TaskService {
 
         if (filterDto.getAuthorUsername() != null && checkIfEmpty(result)) {
             UserEntity author = userService.findByUsername(filterDto.getAuthorUsername());
-            result = result.stream().filter(task -> Objects.equals(task.getAuthorId(), author.getId()))
+            result = result.stream().filter(task -> Objects.equals(task.getAuthor().getId(), author.getId()))
                     .collect(Collectors.toList());
         }
         if (filterDto.getResponsibleUsername() != null && checkIfEmpty(result)) {
             UserEntity responsible = userService.findByUsername(filterDto.getResponsibleUsername());
-            result = result.stream().filter(task -> Objects.equals(task.getResponsibleId(), responsible.getId()))
+            result = result.stream().filter(task -> Objects.equals(task.getResponsible().getId(), responsible.getId()))
                     .collect(Collectors.toList());
         }
         if (filterDto.getId() != null && checkIfEmpty(result)) {
@@ -242,19 +239,19 @@ public class TaskServiceImpl implements TaskService {
             result = result.stream().filter(task -> task.getType() == filterDto.getType())
                     .collect(Collectors.toList());
         }
-        if (filterDto.getAuthorId() != null && checkIfEmpty(result)) {
+        if (filterDto.getAuthor() != null && checkIfEmpty(result)) {
             result = result.stream()
-                    .filter(task -> task.getAuthorId().toString().contains(filterDto.getAuthorId().toString()))
+                    .filter(task -> task.getAuthor().toString().contains(filterDto.getAuthor().toString()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getResponsibleId() != null && checkIfEmpty(result)) {
+        if (filterDto.getResponsible() != null && checkIfEmpty(result)) {
             result = result.stream()
-                    .filter(task -> task.getResponsibleId().toString().contains(filterDto.getResponsibleId().toString()))
+                    .filter(task -> task.getResponsible().toString().contains(filterDto.getResponsible().toString()))
                     .collect(Collectors.toList());
         }
-        if (filterDto.getProjectId() != null && checkIfEmpty(result)) {
+        if (filterDto.getProject() != null && checkIfEmpty(result)) {
             result = result.stream()
-                    .filter(task -> task.getProjectId().toString().contains(filterDto.getProjectId().toString()))
+                    .filter(task -> task.getProject().toString().contains(filterDto.getProject().toString()))
                     .collect(Collectors.toList());
         }
         if (filterDto.getName() != null && checkIfEmpty(result)) {
@@ -286,7 +283,6 @@ public class TaskServiceImpl implements TaskService {
                     .collect(Collectors.toList());
         }
 
-  //      logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
         return result;
     }
 
@@ -311,17 +307,14 @@ public class TaskServiceImpl implements TaskService {
                 .filter(task -> {
 
                     try {
-                        return DateFormatter.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
-                                < DateFormatter.formatterWithTime.parse(task.getEndTime()).getTime();
+                        return Constants.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
+                                < Constants.formatterWithTime.parse(task.getEndTime()).getTime();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
 
                     return false;
                 }).collect(Collectors.toList());
-
-        //    logger.info(String.format("Search for unfinished and expired tasks for release: %s ended successfully with %d results found",
-     //                             releaseVersion, result.size()));
 
         return Stream.concat(unfinishedTasks.stream(), expiredTasks.stream())
                 .collect(Collectors.toList());
@@ -334,7 +327,7 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskEntity> findAll(Specification<TaskEntity> spec) {
-        //   logger.info(String.format("Search by filter ended successfully with %d results found", result.size()));
+
         return taskRepository.findAll(spec);
     }
 
@@ -343,7 +336,6 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public List<TaskEntity> findAll() {
-      //  logger.info("Successfully got all the tasks of all projects");
         return taskRepository.findAll();
     }
 

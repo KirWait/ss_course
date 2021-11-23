@@ -7,7 +7,7 @@ import org.example.entity.TaskEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-16T21:32:43+0400",
+    date = "2021-11-22T19:25:30+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class TaskMapperImpl implements TaskMapper {
@@ -25,12 +25,12 @@ public class TaskMapperImpl implements TaskMapper {
         taskEntity.setEndTime( requestDto.getEndTime() );
         taskEntity.setRelease( requestDto.getRelease() );
         taskEntity.setId( requestDto.getId() );
-        taskEntity.setProjectId( requestDto.getProjectId() );
+        taskEntity.setProject( requestDto.getProject() );
         taskEntity.setStatus( requestDto.getStatus() );
         taskEntity.setName( requestDto.getName() );
         taskEntity.setDescription( requestDto.getDescription() );
-        taskEntity.setAuthorId( requestDto.getAuthorId() );
-        taskEntity.setResponsibleId( requestDto.getResponsibleId() );
+        taskEntity.setAuthor( requestDto.getAuthor() );
+        taskEntity.setResponsible( requestDto.getResponsible() );
         taskEntity.setType( requestDto.getType() );
 
         return taskEntity;
@@ -48,12 +48,12 @@ public class TaskMapperImpl implements TaskMapper {
         taskResponseDto.setEndTime( entity.getEndTime() );
         taskResponseDto.setCreationTime( entity.getCreationTime() );
         taskResponseDto.setId( entity.getId() );
-        taskResponseDto.setProjectId( entity.getProjectId() );
+        taskResponseDto.setProject( entity.getProject() );
         taskResponseDto.setStatus( entity.getStatus() );
         taskResponseDto.setName( entity.getName() );
         taskResponseDto.setDescription( entity.getDescription() );
-        taskResponseDto.setAuthorId( entity.getAuthorId() );
-        taskResponseDto.setResponsibleId( entity.getResponsibleId() );
+        taskResponseDto.setAuthor( entity.getAuthor() );
+        taskResponseDto.setResponsible( entity.getResponsible() );
         taskResponseDto.setRelease( entity.getRelease() );
         taskResponseDto.setType( entity.getType() );
 

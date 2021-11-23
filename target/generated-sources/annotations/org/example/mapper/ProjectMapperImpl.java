@@ -7,7 +7,7 @@ import org.example.entity.ProjectEntity;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2021-11-16T21:32:43+0400",
+    date = "2021-11-22T18:37:43+0400",
     comments = "version: 1.4.2.Final, compiler: javac, environment: Java 16.0.2 (Oracle Corporation)"
 )
 public class ProjectMapperImpl implements ProjectMapper {
@@ -24,7 +24,7 @@ public class ProjectMapperImpl implements ProjectMapper {
         projectResponseDto.setPrice( project.getPrice() );
         projectResponseDto.setId( project.getId() );
         projectResponseDto.setName( project.getName() );
-        projectResponseDto.setCustomerId( project.getCustomerId() );
+        projectResponseDto.setCustomer( project.getCustomer() );
         projectResponseDto.setStatus( project.getStatus() );
 
         return projectResponseDto;
@@ -43,7 +43,7 @@ public class ProjectMapperImpl implements ProjectMapper {
         projectEntity.setStatus( projectRequestDto.getStatus() );
         projectEntity.setId( projectRequestDto.getId() );
         projectEntity.setName( projectRequestDto.getName() );
-        projectEntity.setCustomerId( projectRequestDto.getCustomerId() );
+        projectEntity.setCustomer( projectRequestDto.getCustomer() );
 
         return projectEntity;
     }

@@ -2,9 +2,11 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.ReleaseRequestDto;
+import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.exception.InvalidDateFormatException;
-import org.example.service.DateFormatter;
+import org.example.repository.ProjectRepository;
+import org.example.service.Constants;
 import org.example.repository.ReleaseRepository;
 import org.example.service.ReleaseService;
 import org.example.translator.TranslationService;
@@ -27,12 +29,14 @@ public class ReleaseServiceImpl implements ReleaseService {
 
     private final ReleaseRepository releaseRepository;
     private final TranslationService translationService;
+    private final ProjectRepository projectService;
 
-//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
 
-    public ReleaseServiceImpl(ReleaseRepository releaseRepository, TranslationService translationService) {
+    public ReleaseServiceImpl(ReleaseRepository releaseRepository, TranslationService translationService,
+                              ProjectRepository projectService) {
         this.releaseRepository = releaseRepository;
         this.translationService = translationService;
+        this.projectService = projectService;
     }
 
 
@@ -97,10 +101,10 @@ public class ReleaseServiceImpl implements ReleaseService {
                     translationService.getTranslation("The date should be in 'yyyy-mm-dd' format!"));
         }
         if (!currentProjectReleases.isEmpty()){
-            long lastReleaseEndTimeInMillis = DateFormatter.formatterWithoutTime
+            long lastReleaseEndTimeInMillis = Constants.formatterWithoutTime
                     .parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
 
-            long requestDtoEndTimeInMillis = DateFormatter.formatterWithoutTime
+            long requestDtoEndTimeInMillis = Constants.formatterWithoutTime
                     .parse(releaseRequestDto.getEndTime()).getTime();
 
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
@@ -121,11 +125,9 @@ public class ReleaseServiceImpl implements ReleaseService {
                             "Project with id: %d already have %s version!"), projectId, releaseRequestDtoVersion));
         }
 
-        releaseRequestDto.setCreationTime(DateFormatter.formatterWithTime.format(new GregorianCalendar().getTime()));
-
-        releaseRequestDto.setProjectId(projectId);
-
-//        logger.info("Successfully set up ReleaseRequestDto");
+        releaseRequestDto.setCreationTime(Constants.formatterWithTime.format(new GregorianCalendar().getTime()));
+        ProjectEntity project = projectService.findById(projectId).orElseThrow(() -> new NotFoundException("No such project with id: %d"));
+        releaseRequestDto.setProject(project);
 
     }
 }

@@ -32,8 +32,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final ServiceFeignClient feignClient;
     private final TranslationService translationService;
 
-//    private final Logger logger = LoggerFactory.getLogger(AdminController.class);
-
     public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService,
                               ServiceFeignClient feignClient, TranslationService translationService) {
         this.projectRepository = projectRepository;
@@ -51,7 +49,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void save(ProjectEntity projectEntity) {
         projectRepository.save(projectEntity);
-//        logger.info("Successfully saved project to database");
     }
 
     /**
@@ -94,10 +91,8 @@ public class ProjectServiceImpl implements ProjectService {
                         translationService.getTranslation("The project with id: %d haven't even been paid!"), id));
             }
         }
-
-
         projectRepository.save(projectEntity);
-//        logger.info(String.format("Project with id: %d is available to change task status", id));
+
     }
 
     /**
@@ -121,7 +116,7 @@ public class ProjectServiceImpl implements ProjectService {
                     translationService.getTranslation(
                             "Can't manipulate with tasks of the project which has already been done!"));
         }
-//        logger.info(String.format("Project with id: %d is available to change task status", id));
+
         return true;
     }
 
@@ -133,7 +128,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectEntity findByProjectName(String name) throws NotFoundException {
 
-//        logger.info(String.format("Successfully found project with name: %s", name));
         return projectRepository.findByName(name)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such project with name: %s!"), name)));
@@ -147,7 +141,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
 
-        if (requestDto.getCustomerId() != null) {
+        if (requestDto.getCustomer() != null) {
             throw new IllegalArgumentException(
                     translationService.getTranslation("Customer id shouldn't be defined manually!"));
         }
@@ -158,15 +152,14 @@ public class ProjectServiceImpl implements ProjectService {
 
             UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
 
-            requestDto.setCustomerId(currentSessionUser.getId());
+            requestDto.setCustomer(currentSessionUser);
         }
         else {
-            requestDto.setCustomerId(userService.findByUsername(requestDto.getCustomerName()).getId());
+            requestDto.setCustomer(userService.findByUsername(requestDto.getCustomerName()));
         }
 
         requestDto.setStatus(Status.BACKLOG);
 
-//        logger.info("Successfully set up ProjectRequestDto");
     }
     /**
      * Checks availability to create task in project with stated id
@@ -181,31 +174,7 @@ public class ProjectServiceImpl implements ProjectService {
             throw new InvalidStatusException(translationService.getTranslation("The project has already been done!"));
         }
 
-//        logger.info(String.format("Project with id: %d is available to create task", id));
     }
-
-
-//    /**
-//     * Checks availability to change project status
-//     * @param id Project id
-//     */
-//    @Override
-//    public void projectChangeStatusOrThrowException(Long id) throws NotFoundException, InvalidStatusException {
-//
-//        Status status = projectRepository.findById(id)
-//                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id))).getStatus();
-//
-//        if ((status == Status.IN_PROGRESS && taskService.checkForTasksInProgressAndBacklog(id))
-//                || (status == Status.BACKLOG)
-//                || (status == Status.DONE)) {
-//            changeStatus(id);
-//        }
-//        else {
-//            throw new InvalidStatusException("Can't finish the project: there are unfinished tasks!");
-//        }
-//
-////        logger.info(String.format("Successfully changed status of the project with id: %d, to %s", id, status));
-//    }
 
 
     /**
@@ -217,7 +186,7 @@ public class ProjectServiceImpl implements ProjectService {
         ProjectEntity project = projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)));
         if (project.getStatus() != Status.DONE) {
-//            logger.info(String.format("Project with id: %d is available to create release", id));
+
             return true;
         }
         else {
@@ -238,7 +207,7 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public List<ProjectEntity> getAll() {
-//        logger.info("Successfully got all the projects");
+
         return projectRepository.findAll();
     }
 
@@ -248,8 +217,6 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public ProjectEntity findById(Long id) throws NotFoundException{
-
-//        logger.info(String.format("Successfully found project with id: %d", id));
 
         return projectRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException( String.format(
@@ -264,7 +231,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional
     public void delete(Long id) {
 
-//        logger.info(String.format("Successfully deleted project with id: %d", id));
         projectRepository.deleteById(id);
     }
 

@@ -70,7 +70,6 @@ public class UserController {
           List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
-
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
       }
 
@@ -80,10 +79,8 @@ public class UserController {
 
              TaskEntity task = taskService.findById(id);
 
-              if (projectService.isProjectAvailableToChangeTaskStatus(task.getProjectId())) {
-
+              if (projectService.isProjectAvailableToChangeTaskStatus(task.getProject().getId())) {
                   taskService.changeStatus(id);
-
               }
 
           return new ResponseEntity<>(String.format(
@@ -96,8 +93,6 @@ public class UserController {
     @PostMapping("/tasks/filter_search")
     public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
           List<TaskEntity> resultEntity = taskService.searchByFilter(requestDto);
-
-
           List<TaskResponseDto> resultResponseDto = resultEntity.stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
