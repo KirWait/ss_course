@@ -7,6 +7,8 @@ import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
+
+import static org.example.constants.Constants.*;
 import static org.junit.Assert.assertEquals;
 
 public class UserMapperTest {
@@ -15,15 +17,10 @@ public class UserMapperTest {
 
     @Test
     public void userEntityToResponseDTO() {
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(1L);
-        userEntity.setUsername("NAME");
-        userEntity.setPassword("password");
-        userEntity.setRoles(Roles.ROLE_USER);
-        userEntity.setActive(Active.ACTIVE);
-
+        UserEntity userEntity = USER;
 
         UserResponseDto dto = mapper.userEntityToUserResponseDTO(userEntity);
+
         assertEquals(dto.getId(), userEntity.getId());
         assertEquals(dto.getUsername(), userEntity.getUsername());
         assertEquals(dto.getPassword(), userEntity.getPassword());
@@ -35,13 +32,13 @@ public class UserMapperTest {
 
     @Test
     public void requestDTOToUserEntity() {
-        UserRequestDto requestDto = new UserRequestDto();
-        requestDto.setId(1L);
-        requestDto.setUsername("NAME");
-        requestDto.setPassword("password");
-        requestDto.setRoles(Roles.ROLE_USER);
-        requestDto.setActive(Active.ACTIVE);
-
+        UserRequestDto requestDto = UserRequestDto.builder()
+                .id(USER_ID)
+                .active(USER_ACTIVE)
+                .password(USER_PASSWORD)
+                .roles(USER_ROLES)
+                .username(USER_USERNAME)
+                .build();
 
         UserEntity entity = mapper.userRequestDTOToUserEntity(requestDto);
         assertEquals(entity.getId(), requestDto.getId());

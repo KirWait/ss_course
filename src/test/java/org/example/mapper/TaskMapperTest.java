@@ -4,16 +4,10 @@ package org.example.mapper;
 
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
-import org.example.entity.ProjectEntity;
-import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
-import org.example.entity.UserEntity;
-import org.example.enumeration.Status;
-import org.example.enumeration.Type;
-import org.example.service.Constants;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-import java.util.GregorianCalendar;
+import static org.example.constants.Constants.*;
 import static org.junit.Assert.assertEquals;
 
 public class TaskMapperTest {
@@ -23,17 +17,7 @@ TaskMapper mapper = Mappers.getMapper(TaskMapper.class);
     @Test
     public void taskEntityToTaskResponseDto(){
 
-        TaskEntity taskEntity = new TaskEntity();
-        taskEntity.setResponsible(new UserEntity(1L));
-        taskEntity.setStatus(Status.BACKLOG);
-        taskEntity.setAuthor(new UserEntity(2L));
-        taskEntity.setId(3L);
-        taskEntity.setName("NAME");
-        taskEntity.setDescription("NONE");
-        taskEntity.setRelease(new ReleaseEntity("2.0", Constants.formatterWithTime.format(new GregorianCalendar().getTime())));
-        taskEntity.setType(Type.BUG);
-        taskEntity.setProject(new ProjectEntity(4L));
-
+        TaskEntity taskEntity = TASK;
         TaskResponseDto responseDto = mapper.taskEntityToTaskResponseDto(taskEntity);
 
         assertEquals(responseDto.getAuthor().getId(), taskEntity.getAuthor().getId());
@@ -55,17 +39,18 @@ TaskMapper mapper = Mappers.getMapper(TaskMapper.class);
     @Test
     public void taskRequestDtoToTaskEntity() {
 
-        TaskRequestDto requestDto = new TaskRequestDto();
-        requestDto.setResponsible(new UserEntity(1L));
-        requestDto.setStatus(Status.BACKLOG);
-        requestDto.setAuthor(new UserEntity(2L));
-        requestDto.setId(3L);
-        requestDto.setName("NAME");
-        requestDto.setDescription("NONE");
-        requestDto.setRelease(new ReleaseEntity("2.0", Constants.formatterWithTime.format(new GregorianCalendar().getTime())));
-        requestDto.setType(Type.BUG);
-        requestDto.setProject(new ProjectEntity(4L));
-
+        TaskRequestDto requestDto = TaskRequestDto.builder()
+                .responsible(USER)
+                .status(TASK_STATUS)
+                .author(USER)
+                .id(TASK_ID)
+                .creationTime(TASK_CREATION_TIME)
+                .name(TASK_NAME)
+                .description(TASK_DESCRIPTION)
+                .project(PROJECT)
+                .release(RELEASE)
+                .type(TASK_TYPE)
+                .build();
 
         TaskEntity entity = mapper.taskRequestDtoToTaskEntity(requestDto);
 

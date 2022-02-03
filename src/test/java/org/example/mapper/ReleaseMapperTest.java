@@ -6,7 +6,8 @@ import org.example.entity.TaskEntity;
 import org.example.entity.ReleaseEntity;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-import java.util.List;
+
+import static org.example.constants.Constants.*;
 import static org.junit.Assert.assertEquals;
 
 public class ReleaseMapperTest {
@@ -15,12 +16,7 @@ public class ReleaseMapperTest {
 
     @Test
     public void releaseEntityToResponseDto(){
-        ReleaseEntity entity = new ReleaseEntity();
-        entity.setVersion("1.0");
-        entity.setCreationTime(null);
-        entity.setEndTime(null);
-        entity.setId(99999L);
-        entity.setTasks(List.of(new TaskEntity("HI")));
+        ReleaseEntity entity = RELEASE;
 
         ReleaseResponseDto responseDto = mapper.releaseEntityToReleaseResponseDto(entity);
 
@@ -29,19 +25,18 @@ public class ReleaseMapperTest {
         assertEquals(entity.getCreationTime(), responseDto.getCreationTime());
         assertEquals(entity.getEndTime() ,responseDto.getEndTime());
         assertEquals(entity.getTasks().size(), responseDto.getTasks().size());
-        assertEquals(entity.getTasks().get(0).getName(), responseDto.getTasks().get(0).getName());
-
 
     }
 
     @Test
     public void requestDtoToReleaseEntity(){
-        ReleaseRequestDto requestDto = new ReleaseRequestDto();
-        requestDto.setVersion("1.0");
-        requestDto.setCreationTime(null);
-        requestDto.setEndTime(null);
-        requestDto.setId(99999L);
-        requestDto.setTasks(List.of(new TaskEntity("HI")));
+        ReleaseRequestDto requestDto =  ReleaseRequestDto.builder()
+                .version(RELEASE_VERSION)
+                .id(RELEASE_ID)
+                .task(TaskEntity.builder()
+                        .name(TASK_NAME)
+                        .build())
+                .build();
 
         ReleaseEntity entity = mapper.releaseRequestDtoToReleaseEntity(requestDto);
 

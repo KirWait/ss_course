@@ -90,14 +90,14 @@ public class TaskServiceImpl implements TaskService {
         }
         if (status == Status.IN_PROGRESS) {
 
-            task.setEndTime(Constants.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setEndTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
 
             task.setStatus(Status.DONE);
 
         }
         if (status == Status.BACKLOG) {
 
-            task.setStartTime(Constants.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setStartTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
 
             task.setStatus(Status.IN_PROGRESS);
         }
@@ -188,7 +188,7 @@ public class TaskServiceImpl implements TaskService {
             requestDto.setResponsible(userService.findByUsername(requestDto.getResponsibleUsername()));
         }
 
-        requestDto.setCreationTime(Constants.formatterWithTime.format(Calendar.getInstance().getTime()));
+        requestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(Calendar.getInstance().getTime()));
 
         String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -307,8 +307,8 @@ public class TaskServiceImpl implements TaskService {
                 .filter(task -> {
 
                     try {
-                        return Constants.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
-                                < Constants.formatterWithTime.parse(task.getEndTime()).getTime();
+                        return DateFormatConstants.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
+                                < DateFormatConstants.formatterWithTime.parse(task.getEndTime()).getTime();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
