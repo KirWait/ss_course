@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
@@ -25,9 +26,11 @@ public class TaskResponseDto {
     @Schema(description = "Field that stores description of the task")
     private String description;
 
+    @JsonIgnore
     @Schema(description = "Field that stores author of the task")
     private UserEntity author;
 
+    @JsonIgnore
     @Schema(description = "Field that stores responsible of the task")
     private UserEntity responsible;
 

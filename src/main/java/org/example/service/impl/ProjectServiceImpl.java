@@ -141,7 +141,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
 
-        if (requestDto.getCustomer() != null) {
+        if (requestDto.getCustomer().getId() != null) {
             throw new IllegalArgumentException(
                     translationService.getTranslation("Customer id shouldn't be defined manually!"));
         }

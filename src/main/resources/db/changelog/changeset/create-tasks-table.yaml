@@ -1,0 +1,73 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-tasks
+      author: Kirill Zhdanov
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: varchar(255)
+              - column:
+                  name: status
+                  type: varchar(30)
+                  defaultValue: 'BACKLOG'
+                  constraints:
+                    nullable: false
+              - column:
+                    name: type
+                    type: varchar(30)
+                    constraints:
+                      nullable: false
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: author_task_fk
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: responsible_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: responsible_task_fk
+                    referencedTableName: users
+                    referencedColumnNames: id
+              - column:
+                  name: release_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: release_task_fk
+                    referencedTableName: releases
+                    referencedColumnNames: id
+              - column:
+                  name: creation_time
+                  type: varchar(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: varchar(40)
+              - column:
+                  name: end_time
+                  type: varchar(40)
+              - column:
+                  name: project_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: project_task_fk
+                    referencedTableName: projects
+                    referencedColumnNames: id

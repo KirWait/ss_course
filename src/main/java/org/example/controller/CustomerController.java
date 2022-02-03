@@ -3,10 +3,7 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
-import org.example.dto.ProjectResponseDto;
-import org.example.dto.TaskResponseDto;
-import org.example.dto.TransactionRequestDto;
-import org.example.dto.TransactionResponseDto;
+import org.example.dto.*;
 import org.example.entity.ProjectEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.InvalidAccessException;
@@ -40,6 +37,7 @@ public class CustomerController {
 
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
+
 
     public CustomerController(ProjectService projectService, UserService userService,
                               TaskService taskService, ServiceFeignClient feignClient,
@@ -106,5 +104,6 @@ public class CustomerController {
 
         return feignClient.getTransactionHistory(currentSessionUserId);
     }
+
 
 }

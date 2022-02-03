@@ -17,8 +17,8 @@ private final ResourceBundleMessageSource messageSource;
         this.messageSource = messageSource;
     }
 
-    public String toLocale(String code){
+    public String toLocale(String string){
         Locale locale = LocaleContextHolder.getLocale();
-        return messageSource.getMessage(code, null, locale);
+        return messageSource.getMessage(string, null, locale);
     }
 }

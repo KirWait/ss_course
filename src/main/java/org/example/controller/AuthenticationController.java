@@ -1,11 +1,15 @@
 package org.example.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import javassist.NotFoundException;
 import org.example.dto.UserRequestDto;
+import org.example.dto.UserResponseDto;
 import org.example.entity.UserEntity;
+import org.example.mapper.UserMapper;
 import org.example.security.jwt.JwtTokenProvider;
 import org.example.translator.TranslationService;
 import org.example.service.UserService;
+import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,8 @@ public class AuthenticationController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserService userService;
     private final TranslationService translationService;
+
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
@@ -56,6 +62,17 @@ public class AuthenticationController {
             return new ResponseEntity<>(String.format(translationService.getTranslation(
                     "You have successfully logged in with %s! Here is your token %s"), username, token), HttpStatus.OK);
 
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Customer registration endpoint")
+    public ResponseEntity<UserResponseDto> register(@RequestBody UserRequestDto userRequestDto) {
+
+        UserEntity userEntity = userMapper.userRequestDTOToUserEntity(userRequestDto);
+        userService.register(userEntity);
+        UserResponseDto userResponseDto = userMapper.userEntityToUserResponseDTO(userEntity);
+
+        return new ResponseEntity<>(userResponseDto, HttpStatus.OK);
     }
 
 }
