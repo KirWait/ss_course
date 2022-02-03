@@ -1,9 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: db/changelog/changeset/create-users-table.yaml
-  - include:
-      file: db/changelog/changeset/create-projects-table.yaml
-  - include:
-      file: db/changelog/changeset/create-releases-table.yaml
-  - include:
-      file: db/changelog/changeset/create-tasks-table.yaml
