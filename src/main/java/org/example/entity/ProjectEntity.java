@@ -4,7 +4,6 @@ package org.example.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.example.enumeration.Status;
 import org.hibernate.Hibernate;
 
@@ -18,7 +17,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Table(name = "projects")
 public class ProjectEntity {
@@ -26,32 +24,32 @@ public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ToString.Exclude
-    UserEntity customer;
+    private UserEntity customer;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
-    Status status;
+    private Status status;
 
     @Column(name = "price")
-    Long price;
+    private Long price;
 
     @Column(name = "paid")
-    boolean isPaid;
+    private boolean isPaid;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.DETACH)
+    @OneToMany(cascade = CascadeType.REMOVE)
     @Singular
     @ToString.Exclude
-    List<TaskEntity> tasks;
+    private List<TaskEntity> tasks;
 
     @Override
     public boolean equals(Object o) {

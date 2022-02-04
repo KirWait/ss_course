@@ -3,19 +3,14 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
+import org.example.dto.*;
+import org.example.entity.ProjectEntity;
+import org.example.entity.ReleaseEntity;
+import org.example.entity.TaskEntity;
+import org.example.exception.InvalidStatusException;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.ReleaseMapper;
 import org.example.mapper.TaskMapper;
-import org.example.dto.ProjectRequestDto;
-import org.example.dto.ProjectResponseDto;
-import org.example.dto.TaskRequestDto;
-import org.example.dto.TaskResponseDto;
-import org.example.dto.ReleaseRequestDto;
-import org.example.dto.ReleaseResponseDto;
-import org.example.entity.ReleaseEntity;
-import org.example.entity.TaskEntity;
-import org.example.entity.ProjectEntity;
-import org.example.exception.InvalidStatusException;
 import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
@@ -24,6 +19,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.text.ParseException;
 
 

@@ -16,4 +16,6 @@ public interface UserService {
     UserEntity findById(Long id) throws NotFoundException;
 
     void delete(Long id);
+
+    UserEntity getCurrentSessionUser() throws NotFoundException;
 }

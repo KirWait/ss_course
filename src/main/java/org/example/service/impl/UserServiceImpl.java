@@ -2,10 +2,11 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.entity.UserEntity;
-import org.example.enumeration.Roles;
 import org.example.enumeration.Active;
+import org.example.enumeration.Roles;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,5 +87,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void delete(Long id) {
     userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserEntity getCurrentSessionUser() throws NotFoundException {
+        return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(()-> new NotFoundException("No such user"));
     }
 }
