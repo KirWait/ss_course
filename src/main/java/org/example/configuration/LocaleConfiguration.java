@@ -12,7 +12,7 @@ import java.util.Locale;
 @Configuration
 public class LocaleConfiguration {
 
-    @Value("${base.name}")
+    @Value("${default.name}")
     private String baseName;
 
     @Value("${default.locale}")
