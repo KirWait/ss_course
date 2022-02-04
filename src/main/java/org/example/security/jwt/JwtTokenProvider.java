@@ -1,6 +1,9 @@
 package org.example.security.jwt;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.example.enumeration.Roles;
 import org.example.exception.JwtAuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;

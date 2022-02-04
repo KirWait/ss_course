@@ -2,7 +2,6 @@ package org.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import org.hibernate.Hibernate;
@@ -17,7 +16,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Table(name = "tasks")
 public class TaskEntity {
@@ -25,50 +23,50 @@ public class TaskEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     @ToString.Exclude
-    ProjectEntity project;
+    private ProjectEntity project;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    Status status;
+    private Status status;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    UserEntity author;
+    private UserEntity author;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsible_id")
     @ToString.Exclude
-    UserEntity responsible;
+    private UserEntity responsible;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "release_id")
-    ReleaseEntity release;
+    private ReleaseEntity release;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    Type type;
+    private Type type;
 
     @Column(name = "creation_time")
-    String creationTime;
+    private String creationTime;
 
     @Column(name = "start_time")
-    String startTime;
+    private String startTime;
 
     @Column(name = "end_time")
-    String endTime;
+    private String endTime;
 
     @Override
     public boolean equals(Object o) {

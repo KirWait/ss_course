@@ -2,7 +2,6 @@ package org.example.configuration;
 
 import org.example.security.jwt.JwtConfigurer;
 import org.example.security.jwt.JwtTokenProvider;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

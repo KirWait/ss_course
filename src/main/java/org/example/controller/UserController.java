@@ -3,12 +3,12 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
-import org.example.mapper.ProjectMapper;
-import org.example.mapper.TaskMapper;
 import org.example.dto.ProjectResponseDto;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
+import org.example.mapper.ProjectMapper;
+import org.example.mapper.TaskMapper;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
@@ -18,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -128,7 +129,6 @@ public class UserController {
 
         List<TaskResponseDto> resultResponseDto = result.stream()
                 .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
-
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
       }

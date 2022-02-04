@@ -1,6 +1,5 @@
 package org.example.aspect;
 
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -47,3 +46,4 @@ public class LogAspect {
                 "Execution of method: %s passed successfully"), jp.getSignature()));
     }
 }
+

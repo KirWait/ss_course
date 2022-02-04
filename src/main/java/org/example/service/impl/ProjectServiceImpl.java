@@ -2,10 +2,10 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.ProjectRequestDto;
-import org.example.entity.UserEntity;
-import org.example.exception.InvalidStatusException;
 import org.example.entity.ProjectEntity;
+import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
+import org.example.exception.InvalidStatusException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
 import org.example.repository.ProjectRepository;
@@ -13,7 +13,6 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -148,9 +147,7 @@ public class ProjectServiceImpl implements ProjectService {
 
         if (requestDto.getCustomerName() == null){
 
-            String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-            UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
+            UserEntity currentSessionUser = userService.getCurrentSessionUser();
 
             requestDto.setCustomer(currentSessionUser);
         }

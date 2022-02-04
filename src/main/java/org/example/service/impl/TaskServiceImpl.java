@@ -4,18 +4,21 @@ import javassist.NotFoundException;
 import org.example.dto.TaskRequestDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
+import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
+import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import org.example.exception.InvalidStatusException;
-import org.example.entity.TaskEntity;
-import org.example.enumeration.Status;
 import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
-import org.example.service.*;
+import org.example.service.DateFormatConstants;
+import org.example.service.ReleaseService;
+import org.example.service.TaskService;
+import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.*;
@@ -81,24 +84,16 @@ public class TaskServiceImpl implements TaskService {
         TaskEntity task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such task with id: %d!"), id)));
-
         Status status = task.getStatus();
-
         if (status == Status.DONE) {
-
             throw new InvalidStatusException(translationService.getTranslation("The task has already been done!"));
         }
         if (status == Status.IN_PROGRESS) {
-
             task.setEndTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
-
             task.setStatus(Status.DONE);
-
         }
         if (status == Status.BACKLOG) {
-
             task.setStartTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
-
             task.setStatus(Status.IN_PROGRESS);
         }
 
@@ -189,21 +184,12 @@ public class TaskServiceImpl implements TaskService {
         }
 
         requestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(Calendar.getInstance().getTime()));
-
-        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        UserEntity currentSessionUser = userService.findByUsername(currentSessionUserName);
-
+        UserEntity currentSessionUser = userService.getCurrentSessionUser();
         requestDto.setAuthor(currentSessionUser);
-
         ProjectEntity project = projectService.findById(projectId).orElseThrow(() -> new NotFoundException("No such project with id: %d"));
-
         requestDto.setProject(project);
-
         requestDto.setStatus(Status.BACKLOG);
-
         ReleaseEntity currentRelease = releaseService.findByVersionAndProjectId(requestDto.getReleaseVersion(), projectId);
-
         requestDto.setRelease(currentRelease);
     }
 

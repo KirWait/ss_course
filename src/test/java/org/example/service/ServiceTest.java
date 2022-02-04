@@ -1,14 +1,12 @@
 package org.example.service;
 
 import javassist.NotFoundException;
-import org.example.dto.TransactionRequestDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.exception.InvalidStatusException;
-import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -18,8 +16,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import static org.example.constants.Constants.*;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.example.constants.Constants.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)

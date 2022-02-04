@@ -7,8 +7,8 @@ import org.example.dto.UserResponseDto;
 import org.example.entity.UserEntity;
 import org.example.mapper.UserMapper;
 import org.example.security.jwt.JwtTokenProvider;
-import org.example.translator.TranslationService;
 import org.example.service.UserService;
+import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController

@@ -1,9 +1,10 @@
 package org.example.entity;
+
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
 import org.hibernate.Hibernate;
+
 import javax.persistence.*;
 import java.util.Objects;
 
@@ -13,7 +14,6 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
 @Table(name = "users")
 public class UserEntity {
@@ -21,21 +21,21 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @Column(name = "username")
-    String username;
+    private String username;
 
     @Column(name = "password")
-    String password;
+    private String password;
 
     @Column(name = "roles")
     @Enumerated(value = EnumType.STRING)
-    Roles roles;
+    private Roles roles;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
-    Active active;
+    private Active active;
 
     @Override
     public boolean equals(Object o) {
