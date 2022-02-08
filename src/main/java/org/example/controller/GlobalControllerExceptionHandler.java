@@ -1,7 +1,7 @@
 package org.example.controller;
 
 
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.ClaimJwtException;
 import javassist.NotFoundException;
 import org.example.exception.*;
 import org.example.translator.TranslationService;
@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import javax.servlet.ServletException;
 
 
 @RestControllerAdvice
@@ -107,10 +109,25 @@ public class GlobalControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException exception) {
+    @ExceptionHandler(ClaimJwtException.class)
+    public ResponseEntity<String> handleExpiredJwtException(ClaimJwtException exception) {
         logger.warn(translationService.getTranslation("An ExpiredJwtException has thrown: ")+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DeletedException.class)
+    public ResponseEntity<String> handleDeletedException(DeletedException exception) {
+        logger.warn(translationService.getTranslation("An DeletedException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServletException.class)
+    public ResponseEntity<String> handleServletException(ServletException exception) {
+        logger.warn(translationService.getTranslation("An ServletException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

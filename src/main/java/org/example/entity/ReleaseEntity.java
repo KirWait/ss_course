@@ -3,6 +3,10 @@ package org.example.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.List;
@@ -15,6 +19,8 @@ import java.util.Objects;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
+@FilterDef(name = "deletedReleaseFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedReleaseFilter", condition = "deleted = :isDeleted")
 @Table(name = "releases")
 public class ReleaseEntity {
 
@@ -43,6 +49,10 @@ public class ReleaseEntity {
     @JoinColumn(name = "project_id")
     @ToString.Exclude
     private ProjectEntity project;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
 
     @Override
     public boolean equals(Object o) {

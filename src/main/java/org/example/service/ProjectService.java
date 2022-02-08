@@ -13,11 +13,11 @@ public interface ProjectService{
 
     void changeStatus(Long id) throws InvalidStatusException, NotFoundException;
 
-    List<ProjectEntity> getAll();
+    List<ProjectEntity> getAll(boolean isDeleted);
 
     ProjectEntity findById(Long id) throws NotFoundException;
 
-    void delete(Long id);
+    void delete(Long id) throws NotFoundException;
 
     boolean isProjectAvailableToChangeTaskStatus(Long id) throws NotFoundException, InvalidStatusException;
 

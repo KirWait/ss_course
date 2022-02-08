@@ -1,5 +1,6 @@
 package org.example.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class ProjectResponseDto {
     @Schema(description = "Field that stores name of the project")
     private String name;
 
+    @JsonIgnore
     @Schema(description = "Field that stores customer of the project")
     private UserEntity customer;
 

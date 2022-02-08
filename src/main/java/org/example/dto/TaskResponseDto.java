@@ -23,6 +23,7 @@ public class TaskResponseDto {
     private Long id;
 
     @Schema(description = "Field that stores project of the task")
+    @JsonIgnore
     private ProjectEntity project;
 
     @Schema(description = "Field that stores status of the task")

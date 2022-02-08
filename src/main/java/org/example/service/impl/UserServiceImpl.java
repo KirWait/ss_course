@@ -4,12 +4,16 @@ import javassist.NotFoundException;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
+import org.example.exception.DeletedException;
+import org.example.repository.ProjectRepository;
 import org.example.repository.UserRepository;
 import org.example.service.UserService;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -23,10 +27,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EntityManager entityManager;
+    private final ProjectRepository projectRepository;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
+                           EntityManager entityManager, ProjectRepository projectRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.entityManager = entityManager;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -51,8 +60,13 @@ public class UserServiceImpl implements UserService {
      * Gets all the users from the database
      */
     @Override
-    public List<UserEntity> getAll() {
-        return userRepository.findAll();
+    public List<UserEntity> getAll(boolean isDeleted) {
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("deletedUserFilter");
+        filter.setParameter("isDeleted", isDeleted);
+        List<UserEntity> users = userRepository.findAll();
+        session.disableFilter("deletedUserFilter");
+        return users;
     }
 
     /**
@@ -63,7 +77,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserEntity findByUsername(String username) throws NotFoundException {
 
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameAndDeleted(username, false)
                 .orElseThrow(() -> new NotFoundException(String.format("No such user with username: %s", username)));
     }
 
@@ -74,8 +88,13 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserEntity findById(Long id) throws NotFoundException {
-        return userRepository.findById(id)
-                .orElseThrow(()->new NotFoundException(String.format("No such user with id: %d", id)));
+        UserEntity user = userRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format("No such user with id: %d", id)));
+        if (user.isDeleted()){
+            throw new DeletedException(String.format("The user with id: %d has already been deleted!", id));
+        }
+        return user;
+
     }
 
     /**
@@ -85,12 +104,16 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public void delete(Long id) {
-    userRepository.deleteById(id);
+    public void delete(Long id) throws NotFoundException {
+        findById(id);
+        userRepository.deleteById(id);
+        projectRepository.findAllByCustomerIdAndDeleted(id, false)
+                .forEach(project -> projectRepository.deleteById(project.getId()));
     }
 
     @Override
     public UserEntity getCurrentSessionUser() throws NotFoundException {
-        return userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow(()-> new NotFoundException("No such user"));
+        return userRepository.findByUsernameAndDeleted(SecurityContextHolder.getContext().getAuthentication().getName(),
+                        false).orElseThrow(()-> new NotFoundException("No such user"));
     }
 }

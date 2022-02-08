@@ -6,10 +6,16 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.example.enumeration.Status;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
+
+
 
 @Entity
 @Getter
@@ -18,6 +24,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@FilterDef(name = "deletedProjectFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedProjectFilter", condition = "deleted = :isDeleted")
 @Table(name = "projects")
 public class ProjectEntity {
 
@@ -31,25 +39,27 @@ public class ProjectEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    @ToString.Exclude
     private UserEntity customer;
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
-    private Status status;
+    private Status status = Status.BACKLOG;
 
     @Column(name = "price")
     private Long price;
 
     @Column(name = "paid")
-    private boolean isPaid;
+    private boolean isPaid = false;
 
     @JsonIgnore
     @OneToMany(cascade = CascadeType.REMOVE)
     @Singular
     @ToString.Exclude
     private List<TaskEntity> tasks;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
 
     @Override
     public boolean equals(Object o) {

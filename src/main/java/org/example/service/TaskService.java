@@ -12,7 +12,7 @@ public interface TaskService {
 
     void save(TaskEntity taskEntity);
 
-    void delete(Long id);
+    void delete(Long id) throws NotFoundException;
 
     void changeStatus(Long id) throws NotFoundException;
 
@@ -32,5 +32,5 @@ public interface TaskService {
 
     List<TaskEntity> findAll(Specification<TaskEntity> spec);
 
-    List<TaskEntity> findAll();
+    List<TaskEntity> findAll(boolean isDeleted);
 }

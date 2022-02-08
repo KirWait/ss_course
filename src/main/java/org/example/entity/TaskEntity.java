@@ -2,9 +2,14 @@ package org.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -17,6 +22,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@FilterDef(name = "deletedTaskFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedTaskFilter", condition = "deleted = :isDeleted")
 @Table(name = "tasks")
 public class TaskEntity {
 
@@ -32,7 +39,7 @@ public class TaskEntity {
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private Status status =Status.BACKLOG;
 
     @Column(name = "name")
     private String name;
@@ -67,6 +74,10 @@ public class TaskEntity {
 
     @Column(name = "end_time")
     private String endTime;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
 
     @Override
     public boolean equals(Object o) {

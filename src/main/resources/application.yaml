@@ -3,7 +3,15 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     enabled: true
   profiles:
-    active: dev
+    active: prod
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        type: debug
+
 
 feign:
   url: http://localhost:8075

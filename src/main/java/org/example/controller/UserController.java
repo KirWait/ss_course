@@ -13,7 +13,9 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
 import org.example.translator.TranslationService;
+import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,11 +50,10 @@ public class UserController {
 
       @Operation(summary = "Gets all projects")
       @GetMapping("/projects")
-      public ResponseEntity<List<ProjectResponseDto>> getAllProjects(){
+      public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam boolean isDeleted){
 
-          List<ProjectResponseDto> responseDtoList = projectService.getAll().stream()
+          List<ProjectResponseDto> responseDtoList = projectService.getAll(isDeleted).stream()
                   .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
-
           return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
       }
 
@@ -68,6 +69,7 @@ public class UserController {
       @GetMapping("/projects/{id}/tasks")
         public ResponseEntity<List<TaskResponseDto>> getProjectTasks(@PathVariable Long id) throws NotFoundException {
 
+          projectService.findById(id);
           List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 

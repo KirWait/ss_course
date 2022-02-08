@@ -1,9 +1,14 @@
 package org.example.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
+import org.hibernate.annotations.SQLDelete;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -15,6 +20,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@FilterDef(name = "deletedUserFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedUserFilter", condition = "deleted = :isDeleted")
 @Table(name = "users")
 public class UserEntity {
 
@@ -27,6 +34,7 @@ public class UserEntity {
     private String username;
 
     @Column(name = "password")
+    @JsonIgnore
     private String password;
 
     @Column(name = "roles")
@@ -35,7 +43,12 @@ public class UserEntity {
 
     @Column(name = "status")
     @Enumerated(value = EnumType.STRING)
+    @JsonIgnore
     private Active active;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
 
     @Override
     public boolean equals(Object o) {

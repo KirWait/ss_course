@@ -14,6 +14,7 @@ import org.example.mapper.TaskMapper;
 import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
+import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
@@ -37,12 +38,15 @@ public class AdminController {
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
+    private final UserService userService;
+
     public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService,
-    TranslationService translationService) {
+                           TranslationService translationService, UserService userService) {
         this.taskService = taskService;
         this.projectService = projectService;
         this.releaseService = releaseService;
         this.translationService = translationService;
+        this.userService = userService;
     }
 
     @PostMapping("/projects")
@@ -74,7 +78,7 @@ public class AdminController {
 
     @DeleteMapping("/tasks/{taskId}")
     @Operation(summary = "Deletes task by id")
-    public ResponseEntity<String> deleteTaskById(@PathVariable Long taskId){
+    public ResponseEntity<String> deleteTaskById(@PathVariable Long taskId) throws NotFoundException {
 
         taskService.delete(taskId);
 
@@ -107,5 +111,38 @@ public class AdminController {
         ReleaseResponseDto responseDto = releaseMapper.releaseEntityToReleaseResponseDto(releaseEntity);
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/projects/{projectId}")
+    @Operation(summary = "Deletes project by id")
+    public ResponseEntity<String> deleteProjectById(@PathVariable Long projectId) throws NotFoundException {
+
+        projectService.delete(projectId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The project with id: %d has been deleted successfully!"),
+                projectId));
+    }
+
+    @DeleteMapping("/users/{userId}")
+    @Operation(summary = "Deletes user by id")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long userId) throws NotFoundException {
+
+        userService.delete(userId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The user with id: %d has been deleted successfully!"),
+                userId));
+    }
+
+    @DeleteMapping("/releases/{releaseId}")
+    @Operation(summary = "Deletes release by id")
+    public ResponseEntity<String> deleteReleaseById(@PathVariable Long releaseId) throws NotFoundException {
+
+        releaseService.delete(releaseId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The release with id: %d has been deleted successfully!"),
+                releaseId));
     }
 }

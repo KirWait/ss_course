@@ -8,17 +8,17 @@ import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
+import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
-import org.example.service.DateFormatConstants;
-import org.example.service.ReleaseService;
-import org.example.service.TaskService;
-import org.example.service.UserService;
+import org.example.service.*;
 import org.example.translator.TranslationService;
+import org.hibernate.Filter;
+import org.hibernate.Session;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.*;
@@ -33,22 +33,24 @@ import java.util.stream.Stream;
 @Service
 public class TaskServiceImpl implements TaskService {
 
+    private final EntityManager entityManager;
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final ReleaseService releaseService;
-    private final ProjectRepository projectService;
+    private final ProjectRepository projectRepository;
     private final TranslationService translationService;
 
 
 
-    public TaskServiceImpl(TaskRepository taskRepository, UserService userService,
+    public TaskServiceImpl(EntityManager entityManager, TaskRepository taskRepository, UserService userService,
                            ReleaseService releaseService, TranslationService translationService,
-                           ProjectRepository projectService) {
+                           ProjectRepository projectRepository) {
+        this.entityManager = entityManager;
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.releaseService = releaseService;
         this.translationService = translationService;
-        this.projectService = projectService;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -69,7 +71,8 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws NotFoundException {
+        findById(id);
         taskRepository.deleteById(id);
     }
 
@@ -81,9 +84,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void changeStatus(Long id) throws NotFoundException {
 
-        TaskEntity task = taskRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        translationService.getTranslation("No such task with id: %d!"), id)));
+        TaskEntity task = findById(id);
         Status status = task.getStatus();
         if (status == Status.DONE) {
             throw new InvalidStatusException(translationService.getTranslation("The task has already been done!"));
@@ -108,7 +109,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskEntity findByName(String name) throws NotFoundException {
 
-        return taskRepository.findByName(name)
+        return taskRepository.findByNameAndDeleted(name, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such task with name %s"), name)));
     }
@@ -121,10 +122,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
 
-        return taskRepository.findAllByProjectId(projectId)
+        return taskRepository.findAllByProjectIdAndDeleted(projectId, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no tasks!"), projectId)));
-
 
     }
 
@@ -135,9 +135,13 @@ public class TaskServiceImpl implements TaskService {
      */
     @Override
     public TaskEntity findById(Long id) throws NotFoundException {
-        return taskRepository.findById(id)
+        TaskEntity task = taskRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such task with id: %d!"), id)));
+        if(task.isDeleted()){
+            throw new DeletedException(String.format("The task with id %d has already been deleted!", id));
+        }
+        return task;
     }
 
     /**
@@ -148,10 +152,8 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
-        return taskRepository.findAllByProjectId(projectId)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId)))
-                .stream().allMatch(task -> (task.getStatus() == Status.DONE));
+        return findAllByProjectId(projectId)
+               .stream().allMatch(task -> task.getStatus() == Status.DONE);
     }
 
     /**
@@ -186,7 +188,11 @@ public class TaskServiceImpl implements TaskService {
         requestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(Calendar.getInstance().getTime()));
         UserEntity currentSessionUser = userService.getCurrentSessionUser();
         requestDto.setAuthor(currentSessionUser);
-        ProjectEntity project = projectService.findById(projectId).orElseThrow(() -> new NotFoundException("No such project with id: %d"));
+        ProjectEntity project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", projectId)));
+        if (project.isDeleted()){
+            throw new DeletedException(String.format("The project with id: %d has already been deleted!", projectId));
+        }
         requestDto.setProject(project);
         requestDto.setStatus(Status.BACKLOG);
         ReleaseEntity currentRelease = releaseService.findByVersionAndProjectId(requestDto.getReleaseVersion(), projectId);
@@ -200,7 +206,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEntity> searchByFilter(TaskRequestDto filterDto) throws NotFoundException {
 
-        List<TaskEntity> result = taskRepository.findAll();
+        List<TaskEntity> result = findAll(false);
 
         if (filterDto.getAuthorUsername() != null && checkIfEmpty(result)) {
             UserEntity author = userService.findByUsername(filterDto.getAuthorUsername());
@@ -213,7 +219,7 @@ public class TaskServiceImpl implements TaskService {
                     .collect(Collectors.toList());
         }
         if (filterDto.getId() != null && checkIfEmpty(result)) {
-            result = taskRepository.findAll().stream()
+            result = result.stream()
                     .filter(task -> task.getId().toString().contains(filterDto.getId().toString()))
                     .collect(Collectors.toList());
         }
@@ -281,7 +287,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
-        List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectId(projectId)
+        List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectIdAndDeleted(projectId, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no tasks!"), projectId))).stream()
                 .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
@@ -314,15 +320,22 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public List<TaskEntity> findAll(Specification<TaskEntity> spec) {
 
-        return taskRepository.findAll(spec);
+        List<TaskEntity> tasks = taskRepository.findAll(spec);
+
+        return tasks.stream().filter(task -> !task.isDeleted()).collect(Collectors.toList());
     }
 
     /**
      * Finds all the tasks of all projects
      */
     @Override
-    public List<TaskEntity> findAll() {
-        return taskRepository.findAll();
+    public List<TaskEntity> findAll(boolean isDeleted) {
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("deletedTaskFilter");
+        filter.setParameter("isDeleted", isDeleted);
+        List<TaskEntity> tasks = taskRepository.findAll();
+        session.disableFilter("deletedTaskFilter");
+        return tasks;
     }
 
     private boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {

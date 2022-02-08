@@ -5,6 +5,7 @@ import org.example.dto.ProjectRequestDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
+import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
@@ -13,8 +14,12 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
+import org.hibernate.Filter;
+import org.hibernate.Session;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -25,14 +30,17 @@ import java.util.List;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
+    private final EntityManager entityManager;
     private final ProjectRepository projectRepository;
     private final TaskService taskService;
     private final UserService userService;
     private final ServiceFeignClient feignClient;
     private final TranslationService translationService;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, TaskService taskService, UserService userService,
+    public ProjectServiceImpl(EntityManager entityManager, ProjectRepository projectRepository,
+                              TaskService taskService, UserService userService,
                               ServiceFeignClient feignClient, TranslationService translationService) {
+        this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
@@ -57,9 +65,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
 
-        ProjectEntity projectEntity = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(
-                        String.format(translationService.getTranslation("No such project with id: %d"), id)));
+        ProjectEntity projectEntity = findById(id);
 
         Status projectEntityStatus = projectEntity.getStatus();
 
@@ -101,10 +107,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public boolean isProjectAvailableToChangeTaskStatus(Long id) throws NotFoundException {
 
-        ProjectEntity project = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException( String.format(
-                        translationService.getTranslation("No such project with id: %d"), id) ));
-
+        ProjectEntity project = findById(id);
         if (project.getStatus() == Status.BACKLOG) {
             throw new InvalidStatusException(
                     translationService.getTranslation("The project is only in BACKLOG stage"));
@@ -127,7 +130,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectEntity findByProjectName(String name) throws NotFoundException {
 
-        return projectRepository.findByName(name)
+        return projectRepository.findByNameAndDeleted(name, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such project with name: %s!"), name)));
     }
@@ -139,11 +142,6 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public void setUpRequestDto(ProjectRequestDto requestDto) throws NotFoundException, IllegalArgumentException{
-
-        if (requestDto.getCustomer().getId() != null) {
-            throw new IllegalArgumentException(
-                    translationService.getTranslation("Customer id shouldn't be defined manually!"));
-        }
 
         if (requestDto.getCustomerName() == null){
 
@@ -164,10 +162,8 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public void ifProjectAvailableToCreateTaskOrThrowException(Long id) throws NotFoundException {
-        Status status = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        translationService.getTranslation("No such project with id: %d"), id))).getStatus();
-        if (status == Status.DONE) {
+        ProjectEntity project = findById(id);
+        if (project.getStatus() == Status.DONE) {
             throw new InvalidStatusException(translationService.getTranslation("The project has already been done!"));
         }
 
@@ -180,10 +176,8 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException {
-        ProjectEntity project = projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(String.format("No such project with id: %d", id)));
+        ProjectEntity project = findById(id);
         if (project.getStatus() != Status.DONE) {
-
             return true;
         }
         else {
@@ -196,16 +190,20 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     public List<ProjectEntity> findAllByCustomerId(Long customerId) {
-        return projectRepository.findAllByCustomerId(customerId);
+        return projectRepository.findAllByCustomerIdAndDeleted(customerId, false);
     }
 
     /**
      * Gets all the projects
      */
     @Override
-    public List<ProjectEntity> getAll() {
-
-        return projectRepository.findAll();
+    public List<ProjectEntity> getAll(boolean isDeleted) {
+        Session session = entityManager.unwrap(Session.class);
+        Filter filter = session.enableFilter("deletedProjectFilter");
+        filter.setParameter("isDeleted", isDeleted);
+        List<ProjectEntity> projects =  projectRepository.findAll();
+        session.disableFilter("deletedProjectFilter");
+        return projects;
     }
 
     /**
@@ -215,10 +213,16 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public ProjectEntity findById(Long id) throws NotFoundException{
 
-        return projectRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException( String.format(
+        ProjectEntity project = projectRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("No such project with id: %d"), id)));
-    }
+
+        if (project.isDeleted()) {
+            throw new DeletedException(String.format("The project with id: %d has already been deleted", id));
+        }
+            return project;
+        }
+
 
     /**
      * Deletes a project by id
@@ -226,8 +230,8 @@ public class ProjectServiceImpl implements ProjectService {
      */
     @Override
     @Transactional
-    public void delete(Long id) {
-
+    public void delete(Long id) throws NotFoundException {
+        findById(id);
         projectRepository.deleteById(id);
     }
 

@@ -37,3 +37,8 @@ databaseChangeLog:
                     referencedTableName: projects
                     referencedColumnNames: id
                     deleteCascade: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  constraints:
+                    nullable: false
