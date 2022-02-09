@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 
-
 @RestController
 @RequestMapping("/api/admin")
 @Tag(name = "admin-controller", description = "The ROLE_ADMIN API")
@@ -145,4 +144,13 @@ public class AdminController {
                 translationService.getTranslation("The release with id: %d has been deleted successfully!"),
                 releaseId));
     }
+    @GetMapping("projects/{projectId}/statistics")
+    @Operation(summary = "Gets statistic of a projects")
+    public ResponseEntity<ProjectStatisticsResponseDto> getStatistics(@PathVariable Long projectId)
+            throws NotFoundException, ParseException {
+        ProjectStatisticsResponseDto responseDto = projectService.getStatistic(projectId);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }
+

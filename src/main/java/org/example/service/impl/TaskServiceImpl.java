@@ -23,7 +23,8 @@ import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static org.example.service.DateFormatConstants.formatterWithTime;
 
 /**
  * This is the class that implements business-logic of tasks in this app.
@@ -76,6 +77,7 @@ public class TaskServiceImpl implements TaskService {
         taskRepository.deleteById(id);
     }
 
+
     /**
      * Changes task status by id
      * @param id Task id
@@ -120,9 +122,9 @@ public class TaskServiceImpl implements TaskService {
      *
      */
     @Override
-    public List<TaskEntity> findAllByProjectId(Long projectId) throws NotFoundException {
+    public List<TaskEntity> findAllByProjectIdAndDeleted(Long projectId, boolean isDeleted) throws NotFoundException {
 
-        return taskRepository.findAllByProjectIdAndDeleted(projectId, false)
+        return taskRepository.findAllByProjectIdAndDeleted(projectId, isDeleted)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no tasks!"), projectId)));
 
@@ -152,7 +154,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public boolean checkForTasksInProgressAndBacklog(Long projectId) throws NotFoundException {
 
-        return findAllByProjectId(projectId)
+        return findAllByProjectIdAndDeleted(projectId, false)
                .stream().allMatch(task -> task.getStatus() == Status.DONE);
     }
 
@@ -282,10 +284,10 @@ public class TaskServiceImpl implements TaskService {
      * Searches for unfinished or expired(ended after release end) tasks of a project with stated id by version
      * @param projectId Project id
      * @param releaseVersion Release version
-     *
+     * @return Returns 2 lists: unfinished and expired tasks
      */
     @Override
-    public List<TaskEntity> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
+    public List<List<TaskEntity>> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
         List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectIdAndDeleted(projectId, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
@@ -308,8 +310,11 @@ public class TaskServiceImpl implements TaskService {
                     return false;
                 }).collect(Collectors.toList());
 
-        return Stream.concat(unfinishedTasks.stream(), expiredTasks.stream())
-                .collect(Collectors.toList());
+        List<List<TaskEntity>> list = new ArrayList<>();
+        list.add(unfinishedTasks);
+        list.add(expiredTasks);
+
+        return list;
     }
 
     /**
@@ -336,6 +341,20 @@ public class TaskServiceImpl implements TaskService {
         List<TaskEntity> tasks = taskRepository.findAll();
         session.disableFilter("deletedTaskFilter");
         return tasks;
+    }
+
+    @Override
+    public long countTaskTime(TaskEntity task) throws ParseException {
+        if (task.getStartTime() == null) {
+            return 0;
+        }
+        if (task.getEndTime() == null) {
+            return System.currentTimeMillis() - formatterWithTime.parse(task.getStartTime()).getTime();
+
+        }
+        return formatterWithTime.parse(task.getEndTime()).getTime() -
+                formatterWithTime.parse(task.getStartTime()).getTime();
+
     }
 
     private boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {

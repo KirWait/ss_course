@@ -2,9 +2,11 @@ package org.example.service;
 
 import javassist.NotFoundException;
 import org.example.dto.ProjectRequestDto;
+import org.example.dto.ProjectStatisticsResponseDto;
 import org.example.entity.ProjectEntity;
 import org.example.exception.InvalidStatusException;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface ProjectService{
@@ -30,4 +32,6 @@ public interface ProjectService{
     boolean ifProjectAvailableToCreateReleaseOrThrowException(Long id) throws NotFoundException;
 
     List<ProjectEntity> findAllByCustomerId(Long customerId);
+
+    ProjectStatisticsResponseDto getStatistic(Long projectId) throws NotFoundException, ParseException;
 }

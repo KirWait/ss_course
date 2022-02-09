@@ -74,7 +74,7 @@ public class CustomerController {
         boolean isCustomer = customerProjects.stream().anyMatch(project -> Objects.equals(project.getId(), projectId));
 
         if (isCustomer){
-            List<TaskEntity> taskEntityList = taskService.findAllByProjectId(projectId);
+            List<TaskEntity> taskEntityList = taskService.findAllByProjectIdAndDeleted(projectId, false);
             List<TaskResponseDto> responseDtoList = taskEntityList.stream().
                     map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
             return new ResponseEntity<>(responseDtoList, HttpStatus.OK);

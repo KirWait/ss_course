@@ -1,6 +1,7 @@
 package org.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
@@ -23,6 +24,7 @@ import java.util.Objects;
 @FilterDef(name = "deletedUserFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
 @Filter(name = "deletedUserFilter", condition = "deleted = :isDeleted")
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserEntity {
 
     @Id
