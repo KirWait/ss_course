@@ -2,26 +2,34 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.ProjectRequestDto;
+import org.example.dto.ProjectStatisticsResponseDto;
 import org.example.entity.ProjectEntity;
+import org.example.entity.ReleaseEntity;
+import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
+import org.example.mapper.TaskMapper;
 import org.example.repository.ProjectRepository;
+import org.example.repository.ReleaseRepository;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.hibernate.Filter;
 import org.hibernate.Session;
-import org.springframework.context.annotation.Lazy;
+import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
-
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * This is the class that implements business-logic of projects in this app.
@@ -36,16 +44,19 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserService userService;
     private final ServiceFeignClient feignClient;
     private final TranslationService translationService;
+    private final ReleaseRepository releaseRepository;
+    private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
     public ProjectServiceImpl(EntityManager entityManager, ProjectRepository projectRepository,
                               TaskService taskService, UserService userService,
-                              ServiceFeignClient feignClient, TranslationService translationService) {
+                              ServiceFeignClient feignClient, TranslationService translationService, ReleaseRepository releaseRepository) {
         this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
         this.feignClient = feignClient;
         this.translationService = translationService;
+        this.releaseRepository = releaseRepository;
     }
 
     /**
@@ -192,6 +203,100 @@ public class ProjectServiceImpl implements ProjectService {
     public List<ProjectEntity> findAllByCustomerId(Long customerId) {
         return projectRepository.findAllByCustomerIdAndDeleted(customerId, false);
     }
+
+    @Override
+    public ProjectStatisticsResponseDto getStatistic(Long projectId) throws NotFoundException, ParseException {
+
+        List<TaskEntity> deletedTasks = taskService.findAllByProjectIdAndDeleted(projectId, true);
+        for (TaskEntity deletedTask : deletedTasks) {
+            long duration = taskService.countTaskTime(deletedTask);
+            deletedTask.setTimeSpent(String.format("%02d hrs, %02d min",
+                    TimeUnit.MILLISECONDS.toHours(duration),
+                    TimeUnit.MILLISECONDS.toMinutes(duration) -
+                            TimeUnit.MILLISECONDS.toHours(duration) * 60));
+        }
+
+        ProjectStatisticsResponseDto responseDto = new ProjectStatisticsResponseDto();
+        responseDto.setDeletedTasks(deletedTasks.stream()
+                        .map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
+        responseDto.setDeletedTasksCount(deletedTasks.size());
+        long totalTimeSpent = 0;
+        int unfinishedTasksCount = 0;
+        int expiredTasksCount = 0;
+
+        UserEntity customer = findById(projectId).getCustomer();
+        responseDto.setCustomer(customer);
+
+        List<TaskEntity> undeletedTasks = taskService.findAllByProjectIdAndDeleted(projectId, false);
+        responseDto.setTasksCount(undeletedTasks.size());
+
+        List<ReleaseEntity> releases = releaseRepository.findAllByProjectIdAndDeletedOrderByCreationTime(projectId, false)
+                .orElse(
+                        new ArrayList<>() {}
+                );
+        responseDto.setReleases(releases);
+        responseDto.setReleasesCount(releases.size());
+
+
+        long totalTimeSpentByRelease;
+        for (ReleaseEntity release : releases) {
+
+            totalTimeSpentByRelease = 0;
+            for (TaskEntity task : release.getTasks()) {
+                if (!task.isDeleted()){
+                    long duration = taskService.countTaskTime(task);
+
+                    task.setTimeSpent(String.format("%02d hrs, %02d min",
+                TimeUnit.MILLISECONDS.toHours(duration),
+                TimeUnit.MILLISECONDS.toMinutes(duration) -
+                        TimeUnit.MILLISECONDS.toHours(duration) * 60));
+                    totalTimeSpentByRelease += duration;
+                }
+            }
+            List<List<TaskEntity>> unfinishedAndExpiredTasks =
+                    taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, release.getVersion());
+
+            unfinishedTasksCount += unfinishedAndExpiredTasks.get(0).size();
+            expiredTasksCount += unfinishedAndExpiredTasks.get(1).size();
+            responseDto.getUnfinishedTasks().add(unfinishedAndExpiredTasks.get(0)
+                    .stream().map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
+            responseDto.getExpiredTasks().add(unfinishedAndExpiredTasks.get(1)
+                    .stream().map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
+            totalTimeSpent += totalTimeSpentByRelease;
+            String totalTimeSpentByReleaseString = String.format("Release version: %s - %02d hrs, %02d min",
+                    release.getVersion(),
+                    TimeUnit.MILLISECONDS.toHours(totalTimeSpentByRelease),
+                    TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentByRelease) -
+                            TimeUnit.MILLISECONDS.toHours(totalTimeSpentByRelease) * 60);
+
+            responseDto.getTotalTimeSpentByRelease().add(totalTimeSpentByReleaseString);
+        }
+
+        String totalTimeSpentString = String.format("%02d hrs, %02d min",
+                TimeUnit.MILLISECONDS.toHours(totalTimeSpent),
+                TimeUnit.MILLISECONDS.toMinutes(totalTimeSpent) -
+                        TimeUnit.MILLISECONDS.toHours(totalTimeSpent) * 60
+        );
+        responseDto.setTotalTimeSpent(totalTimeSpentString);
+        long averageTimeSpentOnTask;
+        if (undeletedTasks.size() != 0) {
+            averageTimeSpentOnTask = totalTimeSpent / undeletedTasks.size();
+        } else {
+            averageTimeSpentOnTask = 0;
+        }
+        String averageTimeSpentOnTaskString = String.format("%02d hrs, %02d min",
+                    TimeUnit.MILLISECONDS.toHours(averageTimeSpentOnTask),
+                    TimeUnit.MILLISECONDS.toMinutes(averageTimeSpentOnTask) -
+                            TimeUnit.MILLISECONDS.toHours(averageTimeSpentOnTask) * 60
+            );
+        responseDto.setAverageTimeSpentOnTask(averageTimeSpentOnTaskString);
+        responseDto.setExpiredTasksCount(expiredTasksCount);
+        responseDto.setUnfinishedTasksCount(unfinishedTasksCount);
+
+        return responseDto;
+    }
+
+
 
     /**
      * Gets all the projects

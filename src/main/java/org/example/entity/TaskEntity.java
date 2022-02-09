@@ -79,6 +79,10 @@ public class TaskEntity {
     @JsonIgnore
     private boolean deleted = false;
 
+    @Transient
+    @JsonIgnore
+    private String timeSpent;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

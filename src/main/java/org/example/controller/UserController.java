@@ -13,9 +13,7 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
 import org.example.translator.TranslationService;
-import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 @RestController
@@ -50,7 +49,7 @@ public class UserController {
 
       @Operation(summary = "Gets all projects")
       @GetMapping("/projects")
-      public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam boolean isDeleted){
+      public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(defaultValue = "false") boolean isDeleted){
 
           List<ProjectResponseDto> responseDtoList = projectService.getAll(isDeleted).stream()
                   .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
@@ -70,7 +69,7 @@ public class UserController {
         public ResponseEntity<List<TaskResponseDto>> getProjectTasks(@PathVariable Long id) throws NotFoundException {
 
           projectService.findById(id);
-          List<TaskResponseDto> responseDtoList = taskService.findAllByProjectId(id).stream()
+          List<TaskResponseDto> responseDtoList = taskService.findAllByProjectIdAndDeleted(id, false).stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
@@ -106,10 +105,9 @@ public class UserController {
     @GetMapping("/project/{projectId}/tasks/")
     public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) throws NotFoundException {
 
-        List<TaskEntity> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
-
-        List<TaskResponseDto> resultResponseDto = taskEntityList.stream()
-                .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
+        List<List<TaskEntity>> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
+        Stream<TaskEntity> concatLists = Stream.concat(taskEntityList.get(0).stream(), taskEntityList.get(1).stream());
+        List<TaskResponseDto> resultResponseDto = concatLists.map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
     }
