@@ -32,7 +32,7 @@ public class TaskEntity {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     @ToString.Exclude
     private ProjectEntity project;

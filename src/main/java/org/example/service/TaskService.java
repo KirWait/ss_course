@@ -4,8 +4,6 @@ import javassist.NotFoundException;
 import org.example.dto.TaskRequestDto;
 import org.example.entity.TaskEntity;
 import org.springframework.data.jpa.domain.Specification;
-
-import java.text.ParseException;
 import java.util.List;
 
 
@@ -35,5 +33,4 @@ public interface TaskService {
 
     List<TaskEntity> findAll(boolean isDeleted);
 
-    long countTaskTime(TaskEntity task) throws ParseException;
 }

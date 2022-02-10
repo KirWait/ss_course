@@ -24,7 +24,7 @@ import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.example.service.DateFormatConstants.formatterWithTime;
+import static org.example.service.MyDateFormat.formatterWithTime;
 
 /**
  * This is the class that implements business-logic of tasks in this app.
@@ -92,11 +92,11 @@ public class TaskServiceImpl implements TaskService {
             throw new InvalidStatusException(translationService.getTranslation("The task has already been done!"));
         }
         if (status == Status.IN_PROGRESS) {
-            task.setEndTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setEndTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
             task.setStatus(Status.DONE);
         }
         if (status == Status.BACKLOG) {
-            task.setStartTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setStartTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
             task.setStatus(Status.IN_PROGRESS);
         }
 
@@ -187,7 +187,7 @@ public class TaskServiceImpl implements TaskService {
             requestDto.setResponsible(userService.findByUsername(requestDto.getResponsibleUsername()));
         }
 
-        requestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(Calendar.getInstance().getTime()));
+        requestDto.setCreationTime(MyDateFormat.formatterWithTime.format(Calendar.getInstance().getTime()));
         UserEntity currentSessionUser = userService.getCurrentSessionUser();
         requestDto.setAuthor(currentSessionUser);
         ProjectEntity project = projectRepository.findById(projectId)
@@ -301,8 +301,8 @@ public class TaskServiceImpl implements TaskService {
                 .filter(task -> {
 
                     try {
-                        return DateFormatConstants.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
-                                < DateFormatConstants.formatterWithTime.parse(task.getEndTime()).getTime();
+                        return MyDateFormat.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
+                                < MyDateFormat.formatterWithTime.parse(task.getEndTime()).getTime();
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -343,8 +343,7 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
-    @Override
-    public long countTaskTime(TaskEntity task) throws ParseException {
+    public static long countTaskTime(TaskEntity task) throws ParseException {
         if (task.getStartTime() == null) {
             return 0;
         }

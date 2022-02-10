@@ -28,8 +28,9 @@ import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+import static org.example.service.MyDateFormat.*;
+import static org.example.service.impl.TaskServiceImpl.countTaskTime;
 
 /**
  * This is the class that implements business-logic of projects in this app.
@@ -209,14 +210,12 @@ public class ProjectServiceImpl implements ProjectService {
 
         List<TaskEntity> deletedTasks = taskService.findAllByProjectIdAndDeleted(projectId, true);
         for (TaskEntity deletedTask : deletedTasks) {
-            long duration = taskService.countTaskTime(deletedTask);
-            deletedTask.setTimeSpent(String.format("%02d hrs, %02d min",
-                    TimeUnit.MILLISECONDS.toHours(duration),
-                    TimeUnit.MILLISECONDS.toMinutes(duration) -
-                            TimeUnit.MILLISECONDS.toHours(duration) * 60));
+            long duration = countTaskTime(deletedTask);
+            deletedTask.setTimeSpent(formatTaskTime(duration));
         }
 
-        ProjectStatisticsResponseDto responseDto = new ProjectStatisticsResponseDto();
+
+        ProjectStatisticsResponseDto responseDto = ProjectStatisticsResponseDto.builder().build();
         responseDto.setDeletedTasks(deletedTasks.stream()
                         .map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
         responseDto.setDeletedTasksCount(deletedTasks.size());
@@ -244,12 +243,9 @@ public class ProjectServiceImpl implements ProjectService {
             totalTimeSpentByRelease = 0;
             for (TaskEntity task : release.getTasks()) {
                 if (!task.isDeleted()){
-                    long duration = taskService.countTaskTime(task);
+                    long duration = countTaskTime(task);
 
-                    task.setTimeSpent(String.format("%02d hrs, %02d min",
-                TimeUnit.MILLISECONDS.toHours(duration),
-                TimeUnit.MILLISECONDS.toMinutes(duration) -
-                        TimeUnit.MILLISECONDS.toHours(duration) * 60));
+                    task.setTimeSpent(formatTaskTime(duration));
                     totalTimeSpentByRelease += duration;
                 }
             }
@@ -263,20 +259,13 @@ public class ProjectServiceImpl implements ProjectService {
             responseDto.getExpiredTasks().add(unfinishedAndExpiredTasks.get(1)
                     .stream().map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
             totalTimeSpent += totalTimeSpentByRelease;
-            String totalTimeSpentByReleaseString = String.format("Release version: %s - %02d hrs, %02d min",
-                    release.getVersion(),
-                    TimeUnit.MILLISECONDS.toHours(totalTimeSpentByRelease),
-                    TimeUnit.MILLISECONDS.toMinutes(totalTimeSpentByRelease) -
-                            TimeUnit.MILLISECONDS.toHours(totalTimeSpentByRelease) * 60);
+            String totalTimeSpentByReleaseString = formatReleaseTime(totalTimeSpentByRelease, release.getVersion());
 
             responseDto.getTotalTimeSpentByRelease().add(totalTimeSpentByReleaseString);
         }
 
-        String totalTimeSpentString = String.format("%02d hrs, %02d min",
-                TimeUnit.MILLISECONDS.toHours(totalTimeSpent),
-                TimeUnit.MILLISECONDS.toMinutes(totalTimeSpent) -
-                        TimeUnit.MILLISECONDS.toHours(totalTimeSpent) * 60
-        );
+        String totalTimeSpentString = formatTaskTime(totalTimeSpent);
+
         responseDto.setTotalTimeSpent(totalTimeSpentString);
         long averageTimeSpentOnTask;
         if (undeletedTasks.size() != 0) {
@@ -284,11 +273,7 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             averageTimeSpentOnTask = 0;
         }
-        String averageTimeSpentOnTaskString = String.format("%02d hrs, %02d min",
-                    TimeUnit.MILLISECONDS.toHours(averageTimeSpentOnTask),
-                    TimeUnit.MILLISECONDS.toMinutes(averageTimeSpentOnTask) -
-                            TimeUnit.MILLISECONDS.toHours(averageTimeSpentOnTask) * 60
-            );
+        String averageTimeSpentOnTaskString = formatTaskTime(averageTimeSpentOnTask);
         responseDto.setAverageTimeSpentOnTask(averageTimeSpentOnTaskString);
         responseDto.setExpiredTasksCount(expiredTasksCount);
         responseDto.setUnfinishedTasksCount(unfinishedTasksCount);

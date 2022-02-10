@@ -8,7 +8,7 @@ import org.example.exception.DeletedException;
 import org.example.exception.InvalidDateFormatException;
 import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
-import org.example.service.DateFormatConstants;
+import org.example.service.MyDateFormat;
 import org.example.service.ReleaseService;
 import org.example.translator.TranslationService;
 import org.hibernate.Filter;
@@ -121,10 +121,10 @@ public class ReleaseServiceImpl implements ReleaseService {
                     translationService.getTranslation("The date should be in 'yyyy-mm-dd' format!"));
         }
         if (!currentProjectReleases.isEmpty()){
-            long lastReleaseEndTimeInMillis = DateFormatConstants.formatterWithoutTime
+            long lastReleaseEndTimeInMillis = MyDateFormat.formatterWithoutTime
                     .parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
 
-            long requestDtoEndTimeInMillis = DateFormatConstants.formatterWithoutTime
+            long requestDtoEndTimeInMillis = MyDateFormat.formatterWithoutTime
                     .parse(releaseRequestDto.getEndTime()).getTime();
 
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
@@ -145,7 +145,7 @@ public class ReleaseServiceImpl implements ReleaseService {
                             "Project with id: %d already have %s version!"), projectId, releaseRequestDtoVersion));
         }
 
-        releaseRequestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
+        releaseRequestDto.setCreationTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
         ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() ->
                 new NotFoundException(String.format("No such project with id: %d", projectId)));
         if (project.isDeleted()){

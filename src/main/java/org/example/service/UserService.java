@@ -1,8 +1,10 @@
 package org.example.service;
 
 import javassist.NotFoundException;
+import org.example.dto.UserStatResponseDto;
 import org.example.entity.UserEntity;
 
+import java.text.ParseException;
 import java.util.List;
 
 public interface UserService {
@@ -18,4 +20,6 @@ public interface UserService {
     void delete(Long id) throws NotFoundException;
 
     UserEntity getCurrentSessionUser() throws NotFoundException;
+
+    UserStatResponseDto getStatistics(Long projectId, Long userId, String startTime, String endTime) throws NotFoundException, ParseException;
 }

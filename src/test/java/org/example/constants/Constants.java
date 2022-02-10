@@ -9,7 +9,7 @@ import org.example.enumeration.Active;
 import org.example.enumeration.Roles;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
-import org.example.service.DateFormatConstants;
+import org.example.service.MyDateFormat;
 
 import java.util.GregorianCalendar;
 
@@ -35,7 +35,7 @@ public class Constants {
     public static Long PROJECT_PRICE = 100L;
     //RELEASE DETAILS
     public static Long RELEASE_ID = 1L;
-    public static String RELEASE_CREATION_TIME = DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime());
+    public static String RELEASE_CREATION_TIME = MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime());
     public static String RELEASE_END_TIME = "2022-12-31";
     public static String RELEASE_VERSION = "1.0.0";
     //TASK DETAILS
@@ -44,7 +44,7 @@ public class Constants {
     public static String TASK_NAME = "TASK_NAME";
     public static String TASK_DESCRIPTION = "DESCRIPTION";
     public static Type TASK_TYPE = Type.BUG;
-    public static String TASK_CREATION_TIME = DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime());
+    public static String TASK_CREATION_TIME = MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime());
     //ENTITIES
     public static UserEntity USER = UserEntity.builder()
             .username(USER_USERNAME)

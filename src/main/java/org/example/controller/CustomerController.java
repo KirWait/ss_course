@@ -3,10 +3,7 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
-import org.example.dto.ProjectResponseDto;
-import org.example.dto.TaskResponseDto;
-import org.example.dto.TransactionRequestDto;
-import org.example.dto.TransactionResponseDto;
+import org.example.dto.*;
 import org.example.entity.ProjectEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.InvalidAccessException;
@@ -18,11 +15,10 @@ import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -101,6 +97,20 @@ public class CustomerController {
     public ResponseEntity<List<TransactionResponseDto>> getTransactionHistory() throws NotFoundException {
         Long currentSessionUserId = userService.getCurrentSessionUser().getId();
         return feignClient.getTransactionHistory(currentSessionUserId);
+    }
+
+    @GetMapping("/projects/{projectId}/users/{userId}/statistics")
+    @Operation(summary = "Gets the statistics of project worker")
+    public ResponseEntity<UserStatResponseDto> getUserStat(@PathVariable(name = "projectId") Long projectId,
+                                                           @PathVariable(name = "userId") Long userId,
+                                                           @RequestParam(name = "startTime", required = false) String startTime,
+                                                           @RequestParam(name = "endTime", required = false) String endTime
+    ) throws NotFoundException, ParseException {
+
+        UserStatResponseDto responseDto = userService.getStatistics(projectId, userId, startTime, endTime);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+
     }
 
 
