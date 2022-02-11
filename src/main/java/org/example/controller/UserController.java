@@ -47,15 +47,6 @@ public class UserController {
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
 
-      @Operation(summary = "Gets all projects")
-      @GetMapping("/projects")
-      public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(defaultValue = "false") boolean isDeleted){
-
-          List<ProjectResponseDto> responseDtoList = projectService.getAll(isDeleted).stream()
-                  .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
-          return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
-      }
-
       @Operation(summary = "Gets project by id")
       @GetMapping("/projects/{id}")
       public ResponseEntity<ProjectResponseDto> getProject(@PathVariable Long id) throws NotFoundException {

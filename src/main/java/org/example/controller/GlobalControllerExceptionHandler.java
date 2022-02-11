@@ -30,11 +30,11 @@ public class GlobalControllerExceptionHandler {
         this.translationService = translationService;
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException exception) {
         logger.warn(translationService.getTranslation("An UsernameNotFoundException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -52,11 +52,11 @@ public class GlobalControllerExceptionHandler {
     }
 
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         logger.warn(translationService.getTranslation("A NotFoundException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -115,17 +115,24 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DeletedException.class)
     public ResponseEntity<String> handleDeletedException(DeletedException exception) {
         logger.warn(translationService.getTranslation("An DeletedException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ServletException.class)
     public ResponseEntity<String> handleServletException(ServletException exception) {
         logger.warn(translationService.getTranslation("An ServletException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PageException.class)
+    public ResponseEntity<String> handlePageException(PageException exception) {
+        logger.warn(translationService.getTranslation("An PageException has thrown: ")+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 

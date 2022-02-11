@@ -8,6 +8,7 @@ import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.InvalidStatusException;
+import org.example.exception.PageException;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.ReleaseMapper;
 import org.example.mapper.TaskMapper;
@@ -22,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -32,12 +35,14 @@ public class AdminController {
     private final ProjectService projectService;
     private final ReleaseService releaseService;
     private final TranslationService translationService;
+    private final UserService userService;
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
-    private final UserService userService;
+    private final int PAGE_SIZE = 2;
+
 
     public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService,
                            TranslationService translationService, UserService userService) {
@@ -46,6 +51,17 @@ public class AdminController {
         this.releaseService = releaseService;
         this.translationService = translationService;
         this.userService = userService;
+    }
+
+    @Operation(summary = "Gets all projects")
+    @GetMapping("/projects")
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(defaultValue = "false") boolean isDeleted,
+                                                                   @RequestParam(name = "page", required = false, defaultValue = "1")
+                                                                           int page) throws PageException {
+
+        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(page, PAGE_SIZE, isDeleted).stream()
+                .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
+        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
     @PostMapping("/projects")

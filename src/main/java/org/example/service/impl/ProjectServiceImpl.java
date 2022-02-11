@@ -10,6 +10,7 @@ import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
+import org.example.exception.PageException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
 import org.example.mapper.TaskMapper;
@@ -22,6 +23,9 @@ import org.example.translator.TranslationService;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
@@ -29,6 +33,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.lang.Math.round;
 import static org.example.service.MyDateFormat.*;
 import static org.example.service.impl.TaskServiceImpl.countTaskTime;
 
@@ -110,6 +116,16 @@ public class ProjectServiceImpl implements ProjectService {
         }
         projectRepository.save(projectEntity);
 
+    }
+
+    @Override
+    public Page<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException {
+        if (page < 1) page = 1;
+        int maxPage = (int) round((double)getAll(isDeleted).size() / pageSize);
+        if (page - 1 >= maxPage) throw new PageException(String.format("Can not access such page! Max page is %d!",
+                maxPage));
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return projectRepository.findAllByDeleted(pageable, isDeleted);
     }
 
     /**
