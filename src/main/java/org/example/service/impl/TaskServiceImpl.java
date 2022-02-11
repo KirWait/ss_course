@@ -12,12 +12,16 @@ import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
-import org.example.service.*;
+import org.example.service.MyDateFormat;
+import org.example.service.ReleaseService;
+import org.example.service.TaskService;
+import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -287,17 +291,18 @@ public class TaskServiceImpl implements TaskService {
      * @return Returns 2 lists: unfinished and expired tasks
      */
     @Override
-    public List<List<TaskEntity>> findUnfinishedAndExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
+    public List<TaskEntity> findUnfinishedTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
 
-        List<TaskEntity> tasksWithReleaseVersion = taskRepository.findAllByProjectIdAndDeleted(projectId, false)
-                .orElseThrow(() -> new NotFoundException(String.format(
-                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId))).stream()
-                .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
+        List<TaskEntity> tasksByReleaseVersion = getTasksByReleaseVersion(projectId, releaseVersion);
 
-        List<TaskEntity> unfinishedTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() == null)
+        return tasksByReleaseVersion.stream().filter(task -> task.getEndTime() == null)
                 .collect(Collectors.toList());
+    }
 
-        List<TaskEntity> expiredTasks = tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() != null)
+    @Override
+    public List<TaskEntity> findExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
+        List<TaskEntity> tasksWithReleaseVersion = getTasksByReleaseVersion(projectId, releaseVersion);
+        return tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() != null)
                 .filter(task -> {
 
                     try {
@@ -309,12 +314,13 @@ public class TaskServiceImpl implements TaskService {
 
                     return false;
                 }).collect(Collectors.toList());
+    }
 
-        List<List<TaskEntity>> list = new ArrayList<>();
-        list.add(unfinishedTasks);
-        list.add(expiredTasks);
-
-        return list;
+    private List<TaskEntity> getTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
+        return taskRepository.findAllByProjectIdAndDeleted(projectId, false)
+                .orElseThrow(() -> new NotFoundException(String.format(
+                        translationService.getTranslation("Project with id: %d have no tasks!"), projectId))).stream()
+                .filter(task -> task.getRelease().getVersion().equals(releaseVersion)).collect(Collectors.toList());
     }
 
     /**

@@ -8,7 +8,6 @@ import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
-import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.PageException;
 import org.example.exception.UnpaidException;
@@ -27,6 +26,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.Math.round;
-import static org.example.service.MyDateFormat.*;
+import static org.example.service.MyDateFormat.formatReleaseTime;
+import static org.example.service.MyDateFormat.formatTaskTime;
 import static org.example.service.impl.TaskServiceImpl.countTaskTime;
 
 /**
@@ -254,6 +255,7 @@ public class ProjectServiceImpl implements ProjectService {
 
 
         long totalTimeSpentByRelease;
+        List<String> totalTimeSpentByReleaseList = new ArrayList<>();
         for (ReleaseEntity release : releases) {
 
             totalTimeSpentByRelease = 0;
@@ -265,24 +267,28 @@ public class ProjectServiceImpl implements ProjectService {
                     totalTimeSpentByRelease += duration;
                 }
             }
-            List<List<TaskEntity>> unfinishedAndExpiredTasks =
-                    taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, release.getVersion());
+            List<TaskEntity> unfinishedTasks =
+                    taskService.findUnfinishedTasksByReleaseVersion(projectId, release.getVersion());
 
-            unfinishedTasksCount += unfinishedAndExpiredTasks.get(0).size();
-            expiredTasksCount += unfinishedAndExpiredTasks.get(1).size();
-            responseDto.getUnfinishedTasks().add(unfinishedAndExpiredTasks.get(0)
+            List<TaskEntity> expiredTasks =
+                    taskService.findExpiredTasksByReleaseVersion(projectId, release.getVersion());
+
+            unfinishedTasksCount += unfinishedTasks.size();
+            expiredTasksCount += expiredTasks.size();
+            responseDto.setUnfinishedTasks(unfinishedTasks
                     .stream().map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
-            responseDto.getExpiredTasks().add(unfinishedAndExpiredTasks.get(1)
+            responseDto.setExpiredTasks(expiredTasks
                     .stream().map(taskMapper::taskEntityToTaskStatResponseDto).collect(Collectors.toList()));
             totalTimeSpent += totalTimeSpentByRelease;
             String totalTimeSpentByReleaseString = formatReleaseTime(totalTimeSpentByRelease, release.getVersion());
 
-            responseDto.getTotalTimeSpentByRelease().add(totalTimeSpentByReleaseString);
+            totalTimeSpentByReleaseList.add(totalTimeSpentByReleaseString);
         }
 
         String totalTimeSpentString = formatTaskTime(totalTimeSpent);
 
         responseDto.setTotalTimeSpent(totalTimeSpentString);
+        responseDto.setTotalTimeSpentByRelease(totalTimeSpentByReleaseList);
         long averageTimeSpentOnTask;
         if (undeletedTasks.size() != 0) {
             averageTimeSpentOnTask = totalTimeSpent / undeletedTasks.size();
@@ -324,7 +330,7 @@ public class ProjectServiceImpl implements ProjectService {
                         translationService.getTranslation("No such project with id: %d"), id)));
 
         if (project.isDeleted()) {
-            throw new DeletedException(String.format("The project with id: %d has already been deleted", id));
+            throw new NotFoundException(String.format("The project with id: %d has already been deleted", id));
         }
             return project;
         }

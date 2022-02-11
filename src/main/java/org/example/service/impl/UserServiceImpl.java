@@ -21,6 +21,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;

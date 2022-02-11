@@ -4,7 +4,9 @@ import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.dto.TaskStatResponseDto;
 import org.example.entity.TaskEntity;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 @Mapper
 public interface TaskMapper {

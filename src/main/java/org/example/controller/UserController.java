@@ -96,8 +96,10 @@ public class UserController {
     @GetMapping("/project/{projectId}/tasks/")
     public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) throws NotFoundException {
 
-        List<List<TaskEntity>> taskEntityList = taskService.findUnfinishedAndExpiredTasksByReleaseVersion(projectId, releaseVersion);
-        Stream<TaskEntity> concatLists = Stream.concat(taskEntityList.get(0).stream(), taskEntityList.get(1).stream());
+        List<TaskEntity> expiredTasks = taskService.findExpiredTasksByReleaseVersion(projectId, releaseVersion);
+        List<TaskEntity> unfinishedTasks = taskService.findUnfinishedTasksByReleaseVersion(projectId, releaseVersion);
+
+        Stream<TaskEntity> concatLists = Stream.concat(expiredTasks.stream(), unfinishedTasks.stream());
         List<TaskResponseDto> resultResponseDto = concatLists.map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
         return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
