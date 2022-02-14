@@ -12,7 +12,6 @@ import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
 import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
-import org.example.service.MyDateFormat;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
@@ -24,11 +23,11 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.example.service.MyDateFormat.formatterWithTime;
+import static org.example.service.MyDateFormat.formatterWithoutTime;
 
 /**
  * This is the class that implements business-logic of tasks in this app.
@@ -96,11 +95,11 @@ public class TaskServiceImpl implements TaskService {
             throw new InvalidStatusException(translationService.getTranslation("The task has already been done!"));
         }
         if (status == Status.IN_PROGRESS) {
-            task.setEndTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setEndTime(new GregorianCalendar().getTime());
             task.setStatus(Status.DONE);
         }
         if (status == Status.BACKLOG) {
-            task.setStartTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
+            task.setStartTime(new GregorianCalendar().getTime());
             task.setStatus(Status.IN_PROGRESS);
         }
 
@@ -191,7 +190,7 @@ public class TaskServiceImpl implements TaskService {
             requestDto.setResponsible(userService.findByUsername(requestDto.getResponsibleUsername()));
         }
 
-        requestDto.setCreationTime(MyDateFormat.formatterWithTime.format(Calendar.getInstance().getTime()));
+        requestDto.setCreationTime(Calendar.getInstance().getTime());
         UserEntity currentSessionUser = userService.getCurrentSessionUser();
         requestDto.setAuthor(currentSessionUser);
         ProjectEntity project = projectRepository.findById(projectId)
@@ -267,17 +266,17 @@ public class TaskServiceImpl implements TaskService {
         }
         if (filterDto.getStartTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                            task -> task.getStartTime().contains(filterDto.getStartTime()))
+                            task -> formatterWithoutTime.format(task.getStartTime()).contains(formatterWithoutTime.format(filterDto.getStartTime())))
                     .collect(Collectors.toList());
         }
         if (filterDto.getCreationTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                            task -> task.getCreationTime().contains(filterDto.getCreationTime()))
+                            task -> formatterWithoutTime.format(task.getCreationTime()).contains(formatterWithoutTime.format(filterDto.getCreationTime())))
                     .collect(Collectors.toList());
         }
         if (filterDto.getEndTime() != null && checkIfEmpty(result)) {
             result = result.stream().filter(
-                            task -> task.getEndTime().contains(filterDto.getEndTime()))
+                            task -> formatterWithTime.format(task.getEndTime()).contains(formatterWithoutTime.format(filterDto.getEndTime())))
                     .collect(Collectors.toList());
         }
 
@@ -303,17 +302,8 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskEntity> findExpiredTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
         List<TaskEntity> tasksWithReleaseVersion = getTasksByReleaseVersion(projectId, releaseVersion);
         return tasksWithReleaseVersion.stream().filter(task -> task.getEndTime() != null)
-                .filter(task -> {
-
-                    try {
-                        return MyDateFormat.formatterWithoutTime.parse(task.getRelease().getEndTime()).getTime()
-                                < MyDateFormat.formatterWithTime.parse(task.getEndTime()).getTime();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    return false;
-                }).collect(Collectors.toList());
+                .filter(task -> task.getRelease().getEndTime().getTime()
+                                < task.getEndTime().getTime()).collect(Collectors.toList());
     }
 
     private List<TaskEntity> getTasksByReleaseVersion(Long projectId, String releaseVersion) throws NotFoundException {
@@ -349,16 +339,16 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
-    public static long countTaskTime(TaskEntity task) throws ParseException {
+    public static long countTaskTime(TaskEntity task) {
         if (task.getStartTime() == null) {
             return 0;
         }
         if (task.getEndTime() == null) {
-            return System.currentTimeMillis() - formatterWithTime.parse(task.getStartTime()).getTime();
+            return System.currentTimeMillis() - task.getStartTime().getTime();
 
         }
-        return formatterWithTime.parse(task.getEndTime()).getTime() -
-                formatterWithTime.parse(task.getStartTime()).getTime();
+        return task.getEndTime().getTime() -
+                task.getStartTime().getTime();
 
     }
 

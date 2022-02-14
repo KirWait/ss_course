@@ -5,6 +5,7 @@ import org.example.dto.UserStatResponseDto;
 import org.example.entity.UserEntity;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 public interface UserService {
@@ -21,5 +22,5 @@ public interface UserService {
 
     UserEntity getCurrentSessionUser() throws NotFoundException;
 
-    UserStatResponseDto getStatistics(Long projectId, Long userId, String startTime, String endTime) throws NotFoundException, ParseException;
+    UserStatResponseDto getStatistics(Long projectId, Long userId, Date startTime, Date endTime) throws NotFoundException, ParseException;
 }

@@ -10,6 +10,7 @@ import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -65,13 +66,13 @@ public class TaskEntity {
     private Type type;
 
     @Column(name = "creation_time")
-    private String creationTime;
+    private Date creationTime;
 
     @Column(name = "start_time")
-    private String startTime;
+    private Date startTime;
 
     @Column(name = "end_time")
-    private String endTime;
+    private Date endTime;
 
     @Column(name = "deleted")
     @JsonIgnore

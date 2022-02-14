@@ -41,8 +41,6 @@ public class AdminController {
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
-    private final int PAGE_SIZE = 2;
-
 
     public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService,
                            TranslationService translationService, UserService userService) {
@@ -55,11 +53,14 @@ public class AdminController {
 
     @Operation(summary = "Gets all projects")
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(defaultValue = "false") boolean isDeleted,
-                                                                   @RequestParam(name = "page", required = false, defaultValue = "1")
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(name = "isDeleted", defaultValue = "false")
+                                                                               boolean isDeleted,
+                                                                   @RequestParam(name = "pageSize", defaultValue = "2", required = false)
+                                                                           int pageSize,
+                                                                   @RequestParam(name = "page", defaultValue = "1", required = false)
                                                                            int page) throws PageException {
 
-        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(page, PAGE_SIZE, isDeleted).stream()
+        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(page, pageSize, isDeleted).stream()
                 .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }

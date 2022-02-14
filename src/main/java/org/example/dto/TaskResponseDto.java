@@ -12,6 +12,8 @@ import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -50,11 +52,11 @@ public class TaskResponseDto {
     private Type type;
 
     @Schema(description = "Field that stores start time of the task")
-    private String startTime;
+    private Date startTime;
 
     @Schema(description = "Field that stores end time of the task")
-    private String endTime;
+    private Date endTime;
 
     @Schema(description = "Field that stores creation time of the task")
-    private String creationTime;
+    private Date creationTime;
 }

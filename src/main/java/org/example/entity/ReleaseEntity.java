@@ -8,6 +8,7 @@ import org.hibernate.annotations.FilterDef;
 import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -29,10 +30,10 @@ public class ReleaseEntity {
     private Long id;
 
     @Column(name = "creation_time")
-    private String creationTime;
+    private Date creationTime;
 
     @Column(name = "end_time")
-    private String endTime;
+    private Date endTime;
 
     @Column(name = "version")
     private String version;

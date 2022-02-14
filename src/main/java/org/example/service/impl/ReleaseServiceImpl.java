@@ -5,10 +5,8 @@ import org.example.dto.ReleaseRequestDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.exception.DeletedException;
-import org.example.exception.InvalidDateFormatException;
 import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
-import org.example.service.MyDateFormat;
 import org.example.service.ReleaseService;
 import org.example.translator.TranslationService;
 import org.hibernate.Filter;
@@ -30,7 +28,6 @@ import java.util.Objects;
 @Service
 public class ReleaseServiceImpl implements ReleaseService {
 
-    private static final String CORRECT_DATE_REGEX = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
 
     private final EntityManager entityManager;
     private final ReleaseRepository releaseRepository;
@@ -116,16 +113,10 @@ public class ReleaseServiceImpl implements ReleaseService {
             throw new IllegalArgumentException(
                     translationService.getTranslation("Enter the end date!"));
         }
-        if (!releaseRequestDto.getEndTime().matches(CORRECT_DATE_REGEX)) {
-            throw new InvalidDateFormatException(
-                    translationService.getTranslation("The date should be in 'yyyy-mm-dd' format!"));
-        }
         if (!currentProjectReleases.isEmpty()){
-            long lastReleaseEndTimeInMillis = MyDateFormat.formatterWithoutTime
-                    .parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
+            long lastReleaseEndTimeInMillis = currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime().getTime();
 
-            long requestDtoEndTimeInMillis = MyDateFormat.formatterWithoutTime
-                    .parse(releaseRequestDto.getEndTime()).getTime();
+            long requestDtoEndTimeInMillis = releaseRequestDto.getEndTime().getTime();
 
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
 
@@ -145,7 +136,7 @@ public class ReleaseServiceImpl implements ReleaseService {
                             "Project with id: %d already have %s version!"), projectId, releaseRequestDtoVersion));
         }
 
-        releaseRequestDto.setCreationTime(MyDateFormat.formatterWithTime.format(new GregorianCalendar().getTime()));
+        releaseRequestDto.setCreationTime(new GregorianCalendar().getTime());
         ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() ->
                 new NotFoundException(String.format("No such project with id: %d", projectId)));
         if (project.isDeleted()){

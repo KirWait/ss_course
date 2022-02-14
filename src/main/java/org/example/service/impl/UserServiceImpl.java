@@ -26,10 +26,11 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import static org.example.service.MyDateFormat.*;
+import static org.example.service.MyDateFormat.formatTaskTime;
 import static org.example.service.impl.TaskServiceImpl.countTaskTime;
 
 /**
@@ -136,8 +137,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserStatResponseDto getStatistics(Long projectId, Long userId, String startTime, String endTime)
-            throws NotFoundException, ParseException {
+    public UserStatResponseDto getStatistics(Long projectId, Long userId, Date startTime, Date endTime)
+            throws NotFoundException {
         UserEntity currentSessionUser = getCurrentSessionUser();
         Roles role = currentSessionUser.getRoles();
         UserStatResponseDto responseDto = UserStatResponseDto.builder()
@@ -148,9 +149,8 @@ public class UserServiceImpl implements UserService {
             if (role == Roles.ROLE_ADMIN || projectRepository.findAllByCustomerIdAndDeleted(currentSessionUser.getId(), false) // checks if this customer is a customer of that project(projectId)
                     .stream().anyMatch(project -> Objects.equals(project.getId(), projectId))) {
 
-                ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() ->                                 // checks if this user(userId) works on that project(projectId)
-                        new NotFoundException(String.format("No such project with id: %d", projectId)));
-                if (role == Roles.ROLE_ADMIN || project.getTasks().stream()
+                if (role == Roles.ROLE_ADMIN || taskRepository.findAllByProjectIdAndDeleted(projectId, false)
+                        .orElse(new ArrayList<>()).stream()
                         .filter(task -> !task.isDeleted())
                         .anyMatch(task -> Objects.equals(task.getResponsible().getId(), userId))) {
 
@@ -164,13 +164,13 @@ public class UserServiceImpl implements UserService {
 
 
                     if (startTime != null) {
-                        startTimeInMillis = formatterWithoutTime.parse(startTime).getTime();
+                        startTimeInMillis = startTime.getTime();
                     } else {
                         startTimeInMillis = 0;
                     }
 
                     if (endTime != null) {
-                        endTimeInMillis = formatterWithoutTime.parse(endTime).getTime();
+                        endTimeInMillis = endTime.getTime();
                     } else {
                         endTimeInMillis = System.currentTimeMillis();
                     }
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
                     for (TaskEntity task : taskRepository.findAllByProjectIdAndDeleted(projectId, false)
                             .orElse(new ArrayList<>())) {
                         if (task.getEndTime() != null){
-                            taskEndTimeInMillis = formatterWithTime.parse(task.getEndTime()).getTime();
+                            taskEndTimeInMillis = task.getEndTime().getTime();
                             if (taskEndTimeInMillis < endTimeInMillis && taskEndTimeInMillis > startTimeInMillis){
                                 tasksDone++;
                                 long duration = countTaskTime(task);

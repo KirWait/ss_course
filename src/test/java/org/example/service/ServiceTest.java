@@ -52,9 +52,6 @@ public class ServiceTest {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private ServiceFeignClient feignClient;
-
 
     @Test
     @Order(1)

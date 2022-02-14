@@ -15,11 +15,13 @@ import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -104,8 +106,8 @@ public class CustomerController {
     @Operation(summary = "Gets the statistics of project worker")
     public ResponseEntity<UserStatResponseDto> getUserStat(@PathVariable(name = "projectId") Long projectId,
                                                            @PathVariable(name = "userId") Long userId,
-                                                           @RequestParam(name = "startTime", required = false) String startTime,
-                                                           @RequestParam(name = "endTime", required = false) String endTime
+                                                           @DateTimeFormat(pattern="yyyy-MM-dd") Date startTime,
+                                                           @DateTimeFormat(pattern="yyyy-MM-dd") Date endTime
     ) throws NotFoundException, ParseException {
 
         UserStatResponseDto responseDto = userService.getStatistics(projectId, userId, startTime, endTime);

@@ -11,6 +11,8 @@ import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -55,13 +57,13 @@ public class TaskRequestDto {
     private String releaseVersion;
 
     @Schema(description = "Field that stores release start time of the release of the task")
-    private String startTime;
+    private Date startTime;
 
     @Schema(description = "Field that stores release end time of the release of the task")
-    private String endTime;
+    private Date endTime;
 
     @Schema(description = "Field that stores release creation time of the release of the task")
-    private String creationTime;
+    private Date creationTime;
 
 }
 

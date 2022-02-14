@@ -5,6 +5,7 @@ import lombok.*;
 import org.example.entity.ProjectEntity;
 import org.example.entity.TaskEntity;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -21,10 +22,10 @@ public class ReleaseRequestDto {
     private String version;
 
     @Schema(description = "Field that stores deadline of the release")
-    private String endTime;
+    private Date endTime;
 
     @Schema(description = "Field that stores creation time of the release")
-    private String creationTime;
+    private Date creationTime;
 
     @Schema(description = "Field that stores id of the release")
     private Long id;
