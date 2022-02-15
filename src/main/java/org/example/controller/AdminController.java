@@ -9,6 +9,7 @@ import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.PageException;
+import org.example.filters.ProjectFilter;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.ReleaseMapper;
 import org.example.mapper.TaskMapper;
@@ -51,21 +52,17 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @Operation(summary = "Gets all projects")
-    @GetMapping("/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(name = "isDeleted", defaultValue = "false" , required = false)
-                                                                               boolean isDeleted,
-                                                                   @RequestParam(name = "pageSize", defaultValue = "2", required = false)
-                                                                           int pageSize,
-                                                                   @RequestParam(name = "page", defaultValue = "1", required = false)
-                                                                           int page) throws PageException {
+    @Operation(summary = "Gets all projects by filter")
+    @PostMapping("/projects")
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestBody ProjectFilter filter) throws PageException {
 
-        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(page, pageSize, isDeleted).stream()
+        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(filter.getPage(), filter.getPageSize(),
+                        filter.isDeleted()).stream()
                 .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
         return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
     }
 
-    @PostMapping("/projects")
+    @PostMapping("/projects/create")
     @Operation(summary = "Creates project")
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto requestDto) throws NotFoundException {
 

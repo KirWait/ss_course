@@ -9,13 +9,11 @@ import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.exception.InvalidStatusException;
-import org.example.exception.PageException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
 import org.example.mapper.TaskMapper;
 import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
-import org.example.service.PageService;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
@@ -47,20 +45,18 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskService taskService;
     private final UserService userService;
     private final ServiceFeignClient feignClient;
-    private final PageService pageService;
     private final TranslationService translationService;
     private final ReleaseRepository releaseRepository;
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
     public ProjectServiceImpl(EntityManager entityManager, ProjectRepository projectRepository,
                               TaskService taskService, UserService userService,
-                              ServiceFeignClient feignClient, PageService pageService, TranslationService translationService, ReleaseRepository releaseRepository) {
+                              ServiceFeignClient feignClient, TranslationService translationService, ReleaseRepository releaseRepository) {
         this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
         this.feignClient = feignClient;
-        this.pageService = pageService;
         this.translationService = translationService;
         this.releaseRepository = releaseRepository;
     }
@@ -118,9 +114,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException {
-        List<ProjectEntity> projects = projectRepository.findAllByDeleted(false);
-        return pageService.findAllByPage(page, pageSize, projects);
+    public List<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) {
+        int pageStartIndex = pageSize * (page - 1);
+        return projectRepository.findAllByDeleted(false, pageStartIndex, pageSize);
     }
 
 

@@ -24,5 +24,10 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Modifying
     void deleteById(@Param("id")Long id);
 
-    List<ProjectEntity> findAllByDeleted(boolean isDeleted);
+    @Query(value = "SELECT * FROM projects WHERE deleted = :isDeleted ORDER BY id " +
+            "OFFSET :pageStartIndex ROWS FETCH NEXT :pageSize ROWS ONLY;",
+    nativeQuery = true)
+    @Modifying
+    List<ProjectEntity> findAllByDeleted(@Param("isDeleted")boolean isDeleted, @Param("pageStartIndex")int pageStartIndex,
+                                         @Param("pageSize")int pageSize);
 }

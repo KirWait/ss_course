@@ -21,6 +21,13 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long>, JpaSpec
     @Modifying
     void deleteById(@Param("id")Long id);
 
+    @Query(value = "SELECT * FROM tasks WHERE deleted = :isDeleted ORDER BY id " +
+            "OFFSET :pageStartIndex ROWS FETCH NEXT :pageSize ROWS ONLY;",
+            nativeQuery = true)
+    @Modifying
+    List<TaskEntity> findAllByDeleted(@Param("isDeleted")boolean isDeleted, @Param("pageStartIndex")int pageStartIndex,
+                                         @Param("pageSize")int pageSize);
+
 
 
 }
