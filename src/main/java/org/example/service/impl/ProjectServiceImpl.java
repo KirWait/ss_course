@@ -15,6 +15,7 @@ import org.example.feignClient.ServiceFeignClient;
 import org.example.mapper.TaskMapper;
 import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
+import org.example.service.PageService;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
@@ -22,19 +23,14 @@ import org.example.translator.TranslationService;
 import org.hibernate.Filter;
 import org.hibernate.Session;
 import org.mapstruct.factory.Mappers;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.lang.Math.round;
 import static org.example.service.MyDateFormat.formatReleaseTime;
 import static org.example.service.MyDateFormat.formatTaskTime;
 import static org.example.service.impl.TaskServiceImpl.countTaskTime;
@@ -51,24 +47,27 @@ public class ProjectServiceImpl implements ProjectService {
     private final TaskService taskService;
     private final UserService userService;
     private final ServiceFeignClient feignClient;
+    private final PageService pageService;
     private final TranslationService translationService;
     private final ReleaseRepository releaseRepository;
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
     public ProjectServiceImpl(EntityManager entityManager, ProjectRepository projectRepository,
                               TaskService taskService, UserService userService,
-                              ServiceFeignClient feignClient, TranslationService translationService, ReleaseRepository releaseRepository) {
+                              ServiceFeignClient feignClient, PageService pageService, TranslationService translationService, ReleaseRepository releaseRepository) {
         this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
         this.feignClient = feignClient;
+        this.pageService = pageService;
         this.translationService = translationService;
         this.releaseRepository = releaseRepository;
     }
 
     /**
      * Saves task to the database using Spring JPA Repository
+     *
      * @param projectEntity Entity of a project to save
      */
     @Override
@@ -79,10 +78,11 @@ public class ProjectServiceImpl implements ProjectService {
 
     /**
      * Changes task status of project and saving it in database
+     *
      * @param id Project id
      */
     @Override
-    public void changeStatus(Long id) throws InvalidStatusException, NotFoundException  {
+    public void changeStatus(Long id) throws InvalidStatusException, NotFoundException {
 
         ProjectEntity projectEntity = findById(id);
 
@@ -91,11 +91,10 @@ public class ProjectServiceImpl implements ProjectService {
         if (projectEntityStatus == Status.DONE) {
             throw new InvalidStatusException(translationService.getTranslation("The project has already been done!"));
         }
-        if (projectEntityStatus == Status.IN_PROGRESS){
-            if(taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
+        if (projectEntityStatus == Status.IN_PROGRESS) {
+            if (taskService.checkForTasksInProgressAndBacklog(projectEntity.getId())) {
                 projectEntity.setStatus(Status.DONE);
-            }
-            else{
+            } else {
                 throw new InvalidStatusException(
                         translationService.getTranslation("Can't finish the project: there are unfinished tasks!"));
             }
@@ -103,14 +102,13 @@ public class ProjectServiceImpl implements ProjectService {
         if (projectEntityStatus == Status.BACKLOG) {
             Long paidSum = feignClient.getPaidSum(id);
 
-            if(paidSum >= projectEntity.getPrice()){
+            if (paidSum >= projectEntity.getPrice()) {
                 projectEntity.setPaid(true);
                 projectRepository.save(projectEntity);
             }
             if (projectEntity.isPaid()) {
                 projectEntity.setStatus(Status.IN_PROGRESS);
-            }
-            else{
+            } else {
                 throw new UnpaidException(String.format(
                         translationService.getTranslation("The project with id: %d haven't even been paid!"), id));
             }
@@ -120,14 +118,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Page<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException {
-        if (page < 1) page = 1;
-        int maxPage = (int) round((double)getAll(isDeleted).size() / pageSize);
-        if (page - 1 >= maxPage) throw new PageException(String.format("Can not access such page! Max page is %d!",
-                maxPage));
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
-        return projectRepository.findAllByDeleted(pageable, isDeleted);
+    public List<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException {
+        List<ProjectEntity> projects = projectRepository.findAllByDeleted(false);
+        return pageService.findAllByPage(page, pageSize, projects);
     }
+
+
 
     /**
      * Checks availability of changing task status
@@ -223,7 +219,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectStatisticsResponseDto getStatistic(Long projectId) throws NotFoundException, ParseException {
+    public ProjectStatisticsResponseDto getStatistic(Long projectId) throws NotFoundException {
 
         List<TaskEntity> deletedTasks = taskService.findAllByProjectIdAndDeleted(projectId, true);
         for (TaskEntity deletedTask : deletedTasks) {

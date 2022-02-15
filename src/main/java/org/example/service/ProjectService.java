@@ -6,7 +6,6 @@ import org.example.dto.ProjectStatisticsResponseDto;
 import org.example.entity.ProjectEntity;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.PageException;
-import org.springframework.data.domain.Page;
 
 import java.text.ParseException;
 import java.util.List;
@@ -17,7 +16,7 @@ public interface ProjectService{
 
     void changeStatus(Long id) throws InvalidStatusException, NotFoundException;
 
-    Page<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException;
+    List<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) throws PageException;
 
     List<ProjectEntity> getAll(boolean isDeleted);
 

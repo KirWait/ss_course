@@ -7,8 +7,10 @@ import org.example.dto.ProjectResponseDto;
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
+import org.example.exception.PageException;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.TaskMapper;
+import org.example.service.PageService;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
@@ -34,14 +36,15 @@ public class UserController {
     private final TaskService taskService;
     private final ProjectService projectService;
     private final TranslationService translationService;
+    private final PageService pageService;
 
 
-
-    public UserController(TaskService taskService, ProjectService projectService, TranslationService translationService) {
+    public UserController(TaskService taskService, ProjectService projectService, TranslationService translationService, PageService pageService) {
 
         this.projectService = projectService;
         this.taskService = taskService;
         this.translationService = translationService;
+        this.pageService = pageService;
     }
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
@@ -84,8 +87,10 @@ public class UserController {
 
     @Operation(summary = "Finds task by filter")
     @PostMapping("/tasks/filter_search")
-    public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto) throws NotFoundException {
-          List<TaskEntity> resultEntity = taskService.searchByFilter(requestDto);
+    public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto,
+                                                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                              @RequestParam(value = "pageSize", required = false, defaultValue = "2") int pageSize) throws NotFoundException, PageException {
+          List<TaskEntity> resultEntity = pageService.findAllByPage(page, pageSize, taskService.searchByFilter(requestDto));
           List<TaskResponseDto> resultResponseDto = resultEntity.stream()
                   .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
 
@@ -107,7 +112,9 @@ public class UserController {
 
     @Operation(summary = "Finds task by filter using JPA Specifications")
     @GetMapping("/tasks/filter_search2")
-    public ResponseEntity<List<TaskResponseDto>> filterSearch2(@RequestParam(value = "search") String search){
+    public ResponseEntity<List<TaskResponseDto>> filterSearch2(@RequestParam(value = "search") String search,
+                                                               @RequestParam(value = "page", required = false, defaultValue = "1") int page,
+                                                               @RequestParam(value = "pageSize", required = false, defaultValue = "2") int pageSize) throws PageException {
 
         TaskSpecificationBuilder builder = new TaskSpecificationBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
@@ -118,7 +125,7 @@ public class UserController {
 
         Specification<TaskEntity> spec = builder.build();
 
-        List<TaskEntity> result = taskService.findAll(spec);
+        List<TaskEntity> result = pageService.findAllByPage(page, pageSize, taskService.findAll(spec));
 
         List<TaskResponseDto> resultResponseDto = result.stream()
                 .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());

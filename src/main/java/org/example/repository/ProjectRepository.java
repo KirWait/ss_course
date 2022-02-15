@@ -24,5 +24,5 @@ public interface ProjectRepository extends JpaRepository<ProjectEntity, Long> {
     @Modifying
     void deleteById(@Param("id")Long id);
 
-    Page<ProjectEntity> findAllByDeleted(Pageable pageable, boolean isDeleted);
+    List<ProjectEntity> findAllByDeleted(boolean isDeleted);
 }

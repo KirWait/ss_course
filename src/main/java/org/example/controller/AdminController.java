@@ -53,7 +53,7 @@ public class AdminController {
 
     @Operation(summary = "Gets all projects")
     @GetMapping("/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(name = "isDeleted", defaultValue = "false")
+    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestParam(name = "isDeleted", defaultValue = "false" , required = false)
                                                                                boolean isDeleted,
                                                                    @RequestParam(name = "pageSize", defaultValue = "2", required = false)
                                                                            int pageSize,
