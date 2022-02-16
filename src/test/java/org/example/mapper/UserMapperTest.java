@@ -3,8 +3,6 @@ package org.example.mapper;
 import org.example.dto.UserRequestDto;
 import org.example.dto.UserResponseDto;
 import org.example.entity.UserEntity;
-import org.example.enumeration.Active;
-import org.example.enumeration.Roles;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
 

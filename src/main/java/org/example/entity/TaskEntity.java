@@ -2,12 +2,15 @@ package org.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.Objects;
 
 
@@ -17,58 +20,67 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@FilterDef(name = "deletedTaskFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedTaskFilter", condition = "deleted = :isDeleted")
 @Table(name = "tasks")
 public class TaskEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "project_id")
     @ToString.Exclude
-    ProjectEntity project;
+    private ProjectEntity project;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
-    Status status;
+    private Status status =Status.BACKLOG;
 
     @Column(name = "name")
-    String name;
+    private String name;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
     @ToString.Exclude
-    UserEntity author;
+    private UserEntity author;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "responsible_id")
     @ToString.Exclude
-    UserEntity responsible;
+    private UserEntity responsible;
 
     @JsonIgnore
-    @ManyToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "release_id")
-    ReleaseEntity release;
+    private ReleaseEntity release;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
-    Type type;
+    private Type type;
 
     @Column(name = "creation_time")
-    String creationTime;
+    private Date creationTime;
 
     @Column(name = "start_time")
-    String startTime;
+    private Date startTime;
 
     @Column(name = "end_time")
-    String endTime;
+    private Date endTime;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
+
+    @Transient
+    @JsonIgnore
+    private String timeSpent;
 
     @Override
     public boolean equals(Object o) {

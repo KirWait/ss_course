@@ -2,10 +2,13 @@ package org.example.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
-import lombok.experimental.FieldDefaults;
 import org.hibernate.Hibernate;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,38 +16,43 @@ import java.util.Objects;
 @Getter
 @Setter
 @ToString
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-@Builder
+@FilterDef(name = "deletedReleaseFilter", parameters = @ParamDef(name = "isDeleted", type = "boolean"))
+@Filter(name = "deletedReleaseFilter", condition = "deleted = :isDeleted")
 @Table(name = "releases")
 public class ReleaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    Long id;
+    private Long id;
 
     @Column(name = "creation_time")
-    String creationTime;
+    private Date creationTime;
 
     @Column(name = "end_time")
-    String endTime;
+    private Date endTime;
 
     @Column(name = "version")
-    String version;
+    private String version;
 
     @JsonIgnore
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "release")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "release")
     @Singular
     @ToString.Exclude
-    List<TaskEntity> tasks;
+    private List<TaskEntity> tasks;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     @ToString.Exclude
-    ProjectEntity project;
+    private ProjectEntity project;
+
+    @Column(name = "deleted")
+    @JsonIgnore
+    private boolean deleted = false;
 
     @Override
     public boolean equals(Object o) {

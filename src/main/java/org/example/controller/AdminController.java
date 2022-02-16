@@ -3,29 +3,30 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
+import org.example.dto.*;
+import org.example.entity.ProjectEntity;
+import org.example.entity.ReleaseEntity;
+import org.example.entity.TaskEntity;
+import org.example.exception.InvalidStatusException;
+import org.example.exception.PageException;
+import org.example.filters.ProjectFilter;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.ReleaseMapper;
 import org.example.mapper.TaskMapper;
-import org.example.dto.ProjectRequestDto;
-import org.example.dto.ProjectResponseDto;
-import org.example.dto.TaskRequestDto;
-import org.example.dto.TaskResponseDto;
-import org.example.dto.ReleaseRequestDto;
-import org.example.dto.ReleaseResponseDto;
-import org.example.entity.ReleaseEntity;
-import org.example.entity.TaskEntity;
-import org.example.entity.ProjectEntity;
-import org.example.exception.InvalidStatusException;
 import org.example.service.ProjectService;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
+import org.example.service.UserService;
 import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.text.ParseException;
 
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -36,20 +37,33 @@ public class AdminController {
     private final ProjectService projectService;
     private final ReleaseService releaseService;
     private final TranslationService translationService;
+    private final UserService userService;
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
     private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
     private final ReleaseMapper releaseMapper = Mappers.getMapper(ReleaseMapper.class);
 
+
     public AdminController(TaskService taskService, ProjectService projectService, ReleaseService releaseService,
-    TranslationService translationService) {
+                           TranslationService translationService, UserService userService) {
         this.taskService = taskService;
         this.projectService = projectService;
         this.releaseService = releaseService;
         this.translationService = translationService;
+        this.userService = userService;
     }
 
+    @Operation(summary = "Gets all projects by filter")
     @PostMapping("/projects")
+    public ResponseEntity<PageableResponseDto<ProjectResponseDto>> getAllProjects(@RequestBody ProjectFilter filter) throws PageException, SQLException {
+
+        PageableResponseDto<ProjectResponseDto> responseDto = projectService.getAllByPage(filter.getPage(), filter.getPageSize(),
+                        filter.isDeleted());
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @PostMapping("/projects/create")
     @Operation(summary = "Creates project")
     public ResponseEntity<ProjectResponseDto> createProject(@RequestBody ProjectRequestDto requestDto) throws NotFoundException {
 
@@ -78,7 +92,7 @@ public class AdminController {
 
     @DeleteMapping("/tasks/{taskId}")
     @Operation(summary = "Deletes task by id")
-    public ResponseEntity<String> deleteTaskById(@PathVariable Long taskId){
+    public ResponseEntity<String> deleteTaskById(@PathVariable Long taskId) throws NotFoundException {
 
         taskService.delete(taskId);
 
@@ -112,4 +126,46 @@ public class AdminController {
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
+
+    @DeleteMapping("/projects/{projectId}")
+    @Operation(summary = "Deletes project by id")
+    public ResponseEntity<String> deleteProjectById(@PathVariable Long projectId) throws NotFoundException {
+
+        projectService.delete(projectId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The project with id: %d has been deleted successfully!"),
+                projectId));
+    }
+
+    @DeleteMapping("/users/{userId}")
+    @Operation(summary = "Deletes user by id")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long userId) throws NotFoundException {
+
+        userService.delete(userId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The user with id: %d has been deleted successfully!"),
+                userId));
+    }
+
+    @DeleteMapping("/releases/{releaseId}")
+    @Operation(summary = "Deletes release by id")
+    public ResponseEntity<String> deleteReleaseById(@PathVariable Long releaseId) throws NotFoundException {
+
+        releaseService.delete(releaseId);
+
+        return ResponseEntity.ok().body(String.format(
+                translationService.getTranslation("The release with id: %d has been deleted successfully!"),
+                releaseId));
+    }
+    @GetMapping("projects/{projectId}/statistics")
+    @Operation(summary = "Gets statistic of a projects")
+    public ResponseEntity<ProjectStatisticsResponseDto> getStatistics(@PathVariable Long projectId)
+            throws NotFoundException, ParseException {
+        ProjectStatisticsResponseDto responseDto = projectService.getStatistic(projectId);
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }
+

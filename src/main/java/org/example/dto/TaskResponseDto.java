@@ -1,58 +1,64 @@
 package org.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "DTO for showing json of task entity")
 public class TaskResponseDto {
 
     @Schema(description = "Field that stores id of the task")
-    Long id;
+    private Long id;
 
     @Schema(description = "Field that stores project of the task")
-    ProjectEntity project;
+    @JsonIgnore
+    private ProjectEntity project;
 
     @Schema(description = "Field that stores status of the task")
-    Status status;
+    private Status status;
 
     @Schema(description = "Field that stores name of the task")
-    String name;
+    private String name;
 
     @Schema(description = "Field that stores description of the task")
-    String description;
+    private String description;
 
     @JsonIgnore
     @Schema(description = "Field that stores author of the task")
-    UserEntity author;
+    private UserEntity author;
 
     @JsonIgnore
     @Schema(description = "Field that stores responsible of the task")
-    UserEntity responsible;
+    private UserEntity responsible;
 
     @Schema(description = "Field that stores release of the task")
-    ReleaseEntity release;
+    private ReleaseEntity release;
 
     @Schema(description = "Field that stores type of the task")
-    Type type;
+    private Type type;
 
     @Schema(description = "Field that stores start time of the task")
-    String startTime;
+    private Date startTime;
 
     @Schema(description = "Field that stores end time of the task")
-    String endTime;
+    private Date endTime;
 
     @Schema(description = "Field that stores creation time of the task")
-    String creationTime;
+    private Date creationTime;
 }

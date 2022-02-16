@@ -36,7 +36,6 @@ databaseChangeLog:
                   name: author_id
                   type: bigint
                   constraints:
-                    deleteCascade: true
                     foreignKeyName: author_task_fk
                     referencedTableName: users
                     referencedColumnNames: id
@@ -44,7 +43,6 @@ databaseChangeLog:
                   name: responsible_id
                   type: bigint
                   constraints:
-                    deleteCascade: true
                     foreignKeyName: responsible_task_fk
                     referencedTableName: users
                     referencedColumnNames: id
@@ -52,7 +50,6 @@ databaseChangeLog:
                   name: release_id
                   type: bigint
                   constraints:
-                    deleteCascade: true
                     foreignKeyName: release_task_fk
                     referencedTableName: releases
                     referencedColumnNames: id
@@ -75,3 +72,8 @@ databaseChangeLog:
                     foreignKeyName: project_task_fk
                     referencedTableName: projects
                     referencedColumnNames: id
+              - column:
+                  name: deleted
+                  type: boolean
+                  constraints:
+                    nullable: false

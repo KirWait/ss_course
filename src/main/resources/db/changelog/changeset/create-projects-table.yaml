@@ -27,7 +27,6 @@ databaseChangeLog:
               - column:
                   name: paid
                   type: boolean
-                  defaultValueBoolean: false
                   constraints:
                     nullable: false
               - column:
@@ -44,3 +43,8 @@ databaseChangeLog:
                     referencedTableName: users
                     referencedColumnNames: id
                     deleteCascade: true
+              - column:
+                  name: deleted
+                  type: boolean
+                  constraints:
+                    nullable: false

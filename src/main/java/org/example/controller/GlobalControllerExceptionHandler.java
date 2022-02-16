@@ -1,7 +1,7 @@
 package org.example.controller;
 
 
-import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.ClaimJwtException;
 import javassist.NotFoundException;
 import org.example.exception.*;
 import org.example.translator.TranslationService;
@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import javax.servlet.ServletException;
+
 
 @RestControllerAdvice
 public class GlobalControllerExceptionHandler {
@@ -28,11 +30,11 @@ public class GlobalControllerExceptionHandler {
         this.translationService = translationService;
     }
 
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleUsernameNotFoundException(UsernameNotFoundException exception) {
         logger.warn(translationService.getTranslation("An UsernameNotFoundException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.FORBIDDEN)
@@ -50,11 +52,11 @@ public class GlobalControllerExceptionHandler {
     }
 
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handleNotFoundException(NotFoundException exception) {
         logger.warn(translationService.getTranslation("A NotFoundException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -78,12 +80,12 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-        logger.warn(translationService.getTranslation("An IllegalArgumentException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+//        logger.warn(translationService.getTranslation("An IllegalArgumentException has thrown: ")+exception.getMessage());
+//        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidDateFormatException.class)
@@ -107,10 +109,32 @@ public class GlobalControllerExceptionHandler {
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<String> handleExpiredJwtException(ExpiredJwtException exception) {
+    @ExceptionHandler(ClaimJwtException.class)
+    public ResponseEntity<String> handleExpiredJwtException(ClaimJwtException exception) {
         logger.warn(translationService.getTranslation("An ExpiredJwtException has thrown: ")+exception.getMessage());
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DeletedException.class)
+    public ResponseEntity<String> handleDeletedException(DeletedException exception) {
+        logger.warn(translationService.getTranslation("An DeletedException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ServletException.class)
+    public ResponseEntity<String> handleServletException(ServletException exception) {
+        logger.warn(translationService.getTranslation("An ServletException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PageException.class)
+    public ResponseEntity<String> handlePageException(PageException exception) {
+        logger.warn(translationService.getTranslation("An PageException has thrown: ")+exception.getMessage());
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 
 }

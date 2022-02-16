@@ -1,66 +1,69 @@
 package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 
+import java.util.Date;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "DTO for storing json input for further transformation into task entity")
 public class TaskRequestDto {
 
     @Schema(description = "Field that stores author username of the task")
-    String authorUsername;
+    private String authorUsername;
 
     @Schema(description = "Field that stores responsible username of the task")
-    String responsibleUsername;
+    private String responsibleUsername;
 
     @Schema(description = "Field that stores id of the task")
-    Long id;
+    private Long id;
 
     @Schema(description = "Field that stores project of the task")
-    ProjectEntity project;
+    private ProjectEntity project;
 
     @Schema(description = "Field that stores status of the task")
-    Status status;
+    private Status status;
 
     @Schema(description = "Field that stores name of the task")
-    String name;
+    private String name;
 
     @Schema(description = "Field that stores description of the task")
-    String description;
+    private String description;
 
     @Schema(description = "Field that stores author of the task")
-    UserEntity author;
+    private UserEntity author;
 
     @Schema(description = "Field that stores responsible of the task")
-    UserEntity responsible;
+    private UserEntity responsible;
 
     @Schema(description = "Field that stores release of the task")
-    ReleaseEntity release;
+    private ReleaseEntity release;
 
     @Schema(description = "Field that stores type of the task")
-    Type type;
+    private Type type;
 
     @Schema(description = "Field that stores release version of the release of the task")
-    String releaseVersion;
+    private String releaseVersion;
 
     @Schema(description = "Field that stores release start time of the release of the task")
-    String startTime;
+    private Date startTime;
 
     @Schema(description = "Field that stores release end time of the release of the task")
-    String endTime;
+    private Date endTime;
 
     @Schema(description = "Field that stores release creation time of the release of the task")
-    String creationTime;
+    private Date creationTime;
 
 }
 

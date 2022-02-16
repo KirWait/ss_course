@@ -4,13 +4,14 @@ import javassist.NotFoundException;
 import org.example.dto.ReleaseRequestDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
-import org.example.exception.InvalidDateFormatException;
+import org.example.exception.DeletedException;
 import org.example.repository.ProjectRepository;
-import org.example.service.DateFormatConstants;
 import org.example.repository.ReleaseRepository;
 import org.example.service.ReleaseService;
 import org.example.translator.TranslationService;
 import org.springframework.stereotype.Service;
+
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.text.ParseException;
 import java.util.GregorianCalendar;
@@ -25,18 +26,17 @@ import java.util.Objects;
 @Service
 public class ReleaseServiceImpl implements ReleaseService {
 
-    private static final String CORRECT_DATE_REGEX = "^[0-9]{4}-(((0[13578]|(10|12))-(0[1-9]|[1-2][0-9]|3[0-1]))|(02-(0[1-9]|[1-2][0-9]))|((0[469]|11)-(0[1-9]|[1-2][0-9]|30)))$";
 
     private final ReleaseRepository releaseRepository;
     private final TranslationService translationService;
-    private final ProjectRepository projectService;
+    private final ProjectRepository projectRepository;
 
 
     public ReleaseServiceImpl(ReleaseRepository releaseRepository, TranslationService translationService,
-                              ProjectRepository projectService) {
+                              ProjectRepository projectRepository) {
         this.releaseRepository = releaseRepository;
         this.translationService = translationService;
-        this.projectService = projectService;
+        this.projectRepository = projectRepository;
     }
 
 
@@ -49,7 +49,7 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Override
     public ReleaseEntity findByVersionAndProjectId(String version, Long projectId) throws NotFoundException {
 
-        return releaseRepository.findByVersionAndProjectId(version, projectId)
+        return releaseRepository.findByVersionAndProjectIdAndDeleted(version, projectId, false)
                 .orElseThrow(() -> new NotFoundException(
                         String.format(translationService.getTranslation(
                                 "No such release with version: %s, and project id: %d!"), version, projectId))
@@ -63,9 +63,10 @@ public class ReleaseServiceImpl implements ReleaseService {
      */
     @Override
     @Transactional
-    public void delete(Long id){
+    public void delete(Long id) throws NotFoundException {
+        releaseRepository.findById(id).orElseThrow(()->
+                new NotFoundException(String.format("No such release with id: %d", id)));
         releaseRepository.deleteById(id);
-//        logger.info(String.format("Successfully deleted release with id: %d to the database", id));
     }
 
 
@@ -77,7 +78,6 @@ public class ReleaseServiceImpl implements ReleaseService {
     @Transactional
     public void save(ReleaseEntity releaseEntity) {
         releaseRepository.save(releaseEntity);
-//        logger.info("Successfully saved release to the database");
     }
 
     /**
@@ -86,9 +86,11 @@ public class ReleaseServiceImpl implements ReleaseService {
      * @param releaseRequestDto Json from HTTP request that mapped into request dto
      */
     @Override
-    public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId) throws ParseException, NotFoundException {
+    public void setUpRequestDto(ReleaseRequestDto releaseRequestDto, Long projectId)
+            throws ParseException, NotFoundException {
 
-        List<ReleaseEntity> currentProjectReleases = releaseRepository.findAllByProjectIdOrderByCreationTime(projectId)
+        List<ReleaseEntity> currentProjectReleases =
+                releaseRepository.findAllByProjectIdAndDeletedOrderByCreationTime(projectId, false)
                 .orElseThrow(() -> new NotFoundException(String.format(
                         translationService.getTranslation("Project with id: %d have no releases"), projectId)));
 
@@ -96,16 +98,10 @@ public class ReleaseServiceImpl implements ReleaseService {
             throw new IllegalArgumentException(
                     translationService.getTranslation("Enter the end date!"));
         }
-        if (!releaseRequestDto.getEndTime().matches(CORRECT_DATE_REGEX)) {
-            throw new InvalidDateFormatException(
-                    translationService.getTranslation("The date should be in 'yyyy-mm-dd' format!"));
-        }
         if (!currentProjectReleases.isEmpty()){
-            long lastReleaseEndTimeInMillis = DateFormatConstants.formatterWithoutTime
-                    .parse(currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime()).getTime();
+            long lastReleaseEndTimeInMillis = currentProjectReleases.get(currentProjectReleases.size() - 1).getEndTime().getTime();
 
-            long requestDtoEndTimeInMillis = DateFormatConstants.formatterWithoutTime
-                    .parse(releaseRequestDto.getEndTime()).getTime();
+            long requestDtoEndTimeInMillis = releaseRequestDto.getEndTime().getTime();
 
             long requestDtoStartTimeInMillis = new GregorianCalendar().getTimeInMillis();
 
@@ -125,8 +121,12 @@ public class ReleaseServiceImpl implements ReleaseService {
                             "Project with id: %d already have %s version!"), projectId, releaseRequestDtoVersion));
         }
 
-        releaseRequestDto.setCreationTime(DateFormatConstants.formatterWithTime.format(new GregorianCalendar().getTime()));
-        ProjectEntity project = projectService.findById(projectId).orElseThrow(() -> new NotFoundException("No such project with id: %d"));
+        releaseRequestDto.setCreationTime(new GregorianCalendar().getTime());
+        ProjectEntity project = projectRepository.findById(projectId).orElseThrow(() ->
+                new NotFoundException(String.format("No such project with id: %d", projectId)));
+        if (project.isDeleted()){
+            throw new DeletedException(String.format("The project with id: %d has already been deleted!", projectId));
+        }
         releaseRequestDto.setProject(project);
 
     }

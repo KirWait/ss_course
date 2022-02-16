@@ -6,8 +6,9 @@ import org.example.entity.ProjectEntity;
 import org.example.entity.UserEntity;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
-import static org.junit.Assert.assertEquals;
+
 import static org.example.constants.Constants.*;
+import static org.junit.Assert.assertEquals;
 
 public class ProjectMapperTest {
     private final ProjectMapper mapper = Mappers.getMapper(ProjectMapper.class);

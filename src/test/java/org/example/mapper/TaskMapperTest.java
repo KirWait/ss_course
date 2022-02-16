@@ -1,12 +1,12 @@
 package org.example.mapper;
 
 
-
 import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
 import org.junit.Test;
 import org.mapstruct.factory.Mappers;
+
 import static org.example.constants.Constants.*;
 import static org.junit.Assert.assertEquals;
 

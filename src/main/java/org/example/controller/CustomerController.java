@@ -8,6 +8,7 @@ import org.example.entity.ProjectEntity;
 import org.example.entity.TaskEntity;
 import org.example.exception.InvalidAccessException;
 import org.example.feignClient.ServiceFeignClient;
+import org.example.filters.UserStatFilter;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.TaskMapper;
 import org.example.service.ProjectService;
@@ -17,9 +18,9 @@ import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -53,8 +54,7 @@ public class CustomerController {
     @Operation(summary = "Gets all projects where author is current session user")
     public ResponseEntity<List<ProjectResponseDto>> getCustomerProjects() throws NotFoundException {
 
-        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
+        Long currentSessionUserId = userService.getCurrentSessionUser().getId();
         List<ProjectEntity> customerProjects = projectService.findAllByCustomerId(currentSessionUserId);
         List<ProjectResponseDto> responseDto = customerProjects.stream()
                 .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
@@ -67,13 +67,12 @@ public class CustomerController {
     public ResponseEntity<List<TaskResponseDto>> getCustomerProjects(@PathVariable Long projectId) throws NotFoundException, InvalidAccessException {
 
         projectService.findById(projectId);
-        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
+        Long currentSessionUserId = userService.getCurrentSessionUser().getId();
         List<ProjectEntity> customerProjects = projectService.findAllByCustomerId(currentSessionUserId);
         boolean isCustomer = customerProjects.stream().anyMatch(project -> Objects.equals(project.getId(), projectId));
 
         if (isCustomer){
-            List<TaskEntity> taskEntityList = taskService.findAllByProjectId(projectId);
+            List<TaskEntity> taskEntityList = taskService.findAllByProjectIdAndDeleted(projectId, false);
             List<TaskResponseDto> responseDtoList = taskEntityList.stream().
                     map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
             return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
@@ -89,8 +88,7 @@ public class CustomerController {
     public ResponseEntity<TransactionResponseDto> payForProject(@PathVariable Long projectId, @RequestBody TransactionRequestDto requestDto) throws NotFoundException {
 
         projectService.findById(projectId);
-        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
+        Long currentSessionUserId = userService.getCurrentSessionUser().getId();
         requestDto.setUserId(currentSessionUserId);
 
         return feignClient.payForProject(projectId, requestDto);
@@ -99,10 +97,21 @@ public class CustomerController {
     @GetMapping("/transaction_history")
     @Operation(summary = "Gets the transaction history of current session user")
     public ResponseEntity<List<TransactionResponseDto>> getTransactionHistory() throws NotFoundException {
-        String currentSessionUserName = SecurityContextHolder.getContext().getAuthentication().getName();
-        Long currentSessionUserId = userService.findByUsername(currentSessionUserName).getId();
-
+        Long currentSessionUserId = userService.getCurrentSessionUser().getId();
         return feignClient.getTransactionHistory(currentSessionUserId);
+    }
+
+    @PostMapping("/projects/{projectId}/users/statistics")
+    @Operation(summary = "Gets the statistics of project worker")
+    public ResponseEntity<UserStatResponseDto> getUserStat(@PathVariable("projectId") Long projectId,
+                                                           @RequestBody UserStatFilter filter)
+            throws NotFoundException, ParseException {
+
+        UserStatResponseDto responseDto = userService.getStatistics(projectId, filter.getUserId(), filter.getStartTime(),
+                filter.getEndTime());
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+
+
     }
 
 

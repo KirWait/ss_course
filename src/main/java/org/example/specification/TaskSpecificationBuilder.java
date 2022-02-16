@@ -2,6 +2,7 @@ package org.example.specification;
 
 import org.example.entity.TaskEntity;
 import org.springframework.data.jpa.domain.Specification;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,10 @@ public class TaskSpecificationBuilder {
     }
 
     public void with(String key, String operation, Object value) {
+        if (value.toString().equals("false")) value = false;
+        else if (value.toString().equals("true")) {
+            value = true;
+        }
         params.add(new SearchCriteria(key, operation, value));
 
     }

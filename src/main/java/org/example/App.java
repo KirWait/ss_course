@@ -15,7 +15,6 @@ public class App {
     public static void main(String[] args) throws IOException {
 
         LogManager.getLogManager().readConfiguration();
-
         SpringApplication.run(App.class, args);
     }
 }
