@@ -1,6 +1,9 @@
 package org.example.repository;
 
 import org.example.entity.TaskEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,13 +24,6 @@ public interface TaskRepository extends JpaRepository<TaskEntity, Long>, JpaSpec
     @Modifying
     void deleteById(@Param("id")Long id);
 
-    @Query(value = "SELECT * FROM tasks WHERE deleted = :isDeleted ORDER BY id " +
-            "OFFSET :pageStartIndex ROWS FETCH NEXT :pageSize ROWS ONLY;",
-            nativeQuery = true)
-    @Modifying
-    List<TaskEntity> findAllByDeleted(@Param("isDeleted")boolean isDeleted, @Param("pageStartIndex")int pageStartIndex,
-                                         @Param("pageSize")int pageSize);
-
-
+    Page<TaskEntity> findAll(Specification<TaskEntity> spec, Pageable pageable);
 
 }

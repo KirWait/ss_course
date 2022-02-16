@@ -1,6 +1,7 @@
 package org.example.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProjectStatisticsResponseDto {
 
     private UserEntity customer;
@@ -25,7 +27,6 @@ public class ProjectStatisticsResponseDto {
     private String averageTimeSpentOnTask;
     private List<String> totalTimeSpentByRelease;
     private int expiredTasksCount;
-
     private List<TaskStatResponseDto> expiredTasks;
     private int unfinishedTasksCount;
     private List<TaskStatResponseDto> unfinishedTasks;

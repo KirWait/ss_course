@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,12 +55,12 @@ public class AdminController {
 
     @Operation(summary = "Gets all projects by filter")
     @PostMapping("/projects")
-    public ResponseEntity<List<ProjectResponseDto>> getAllProjects(@RequestBody ProjectFilter filter) throws PageException {
+    public ResponseEntity<PageableResponseDto<ProjectResponseDto>> getAllProjects(@RequestBody ProjectFilter filter) throws PageException, SQLException {
 
-        List<ProjectResponseDto> responseDtoList = projectService.getAllByPage(filter.getPage(), filter.getPageSize(),
-                        filter.isDeleted()).stream()
-                .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList());
-        return new ResponseEntity<>(responseDtoList, HttpStatus.OK);
+        PageableResponseDto<ProjectResponseDto> responseDto = projectService.getAllByPage(filter.getPage(), filter.getPageSize(),
+                        filter.isDeleted());
+
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     @PostMapping("/projects/create")

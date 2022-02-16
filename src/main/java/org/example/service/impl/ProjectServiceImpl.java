@@ -1,7 +1,9 @@
 package org.example.service.impl;
 
 import javassist.NotFoundException;
+import org.example.dto.PageableResponseDto;
 import org.example.dto.ProjectRequestDto;
+import org.example.dto.ProjectResponseDto;
 import org.example.dto.ProjectStatisticsResponseDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
@@ -11,6 +13,7 @@ import org.example.enumeration.Status;
 import org.example.exception.InvalidStatusException;
 import org.example.exception.UnpaidException;
 import org.example.feignClient.ServiceFeignClient;
+import org.example.mapper.ProjectMapper;
 import org.example.mapper.TaskMapper;
 import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
@@ -18,17 +21,15 @@ import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
-import org.hibernate.Filter;
-import org.hibernate.Session;
 import org.mapstruct.factory.Mappers;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.lang.Math.ceil;
 import static org.example.service.MyDateFormat.formatReleaseTime;
 import static org.example.service.MyDateFormat.formatTaskTime;
 import static org.example.service.impl.TaskServiceImpl.countTaskTime;
@@ -40,7 +41,6 @@ import static org.example.service.impl.TaskServiceImpl.countTaskTime;
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
-    private final EntityManager entityManager;
     private final ProjectRepository projectRepository;
     private final TaskService taskService;
     private final UserService userService;
@@ -48,11 +48,11 @@ public class ProjectServiceImpl implements ProjectService {
     private final TranslationService translationService;
     private final ReleaseRepository releaseRepository;
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
+    private final ProjectMapper projectMapper = Mappers.getMapper(ProjectMapper.class);
 
-    public ProjectServiceImpl(EntityManager entityManager, ProjectRepository projectRepository,
+    public ProjectServiceImpl(ProjectRepository projectRepository,
                               TaskService taskService, UserService userService,
                               ServiceFeignClient feignClient, TranslationService translationService, ReleaseRepository releaseRepository) {
-        this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskService = taskService;
         this.userService = userService;
@@ -114,9 +114,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectEntity> getAllByPage(int page, int pageSize, boolean isDeleted) {
+    public PageableResponseDto<ProjectResponseDto> getAllByPage(int page, int pageSize, boolean isDeleted) {
         int pageStartIndex = pageSize * (page - 1);
-        return projectRepository.findAllByDeleted(false, pageStartIndex, pageSize);
+        int totalRows = projectRepository.getTotalRows();
+        return PageableResponseDto.<ProjectResponseDto>builder()
+                .resultList(
+                        projectRepository.findAllByDeleted(false, pageStartIndex, pageSize).stream()
+                                .map(projectMapper::projectEntityToProjectResponseDto).collect(Collectors.toList())
+                )
+                .maxPage((int)ceil(totalRows / (double)pageSize))
+                .totalFound(totalRows)
+                .build();
     }
 
 
@@ -295,20 +303,6 @@ public class ProjectServiceImpl implements ProjectService {
         return responseDto;
     }
 
-
-
-    /**
-     * Gets all the projects
-     */
-    @Override
-    public List<ProjectEntity> getAll(boolean isDeleted) {
-        Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("deletedProjectFilter");
-        filter.setParameter("isDeleted", isDeleted);
-        List<ProjectEntity> projects =  projectRepository.findAll();
-        session.disableFilter("deletedProjectFilter");
-        return projects;
-    }
 
     /**
      * Finds a project by id

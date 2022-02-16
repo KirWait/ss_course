@@ -2,6 +2,7 @@ package org.example.service.impl;
 
 import javassist.NotFoundException;
 import org.example.dto.TaskRequestDto;
+import org.example.dto.TaskResponseDto;
 import org.example.entity.ProjectEntity;
 import org.example.entity.ReleaseEntity;
 import org.example.entity.TaskEntity;
@@ -10,24 +11,24 @@ import org.example.enumeration.Status;
 import org.example.enumeration.Type;
 import org.example.exception.DeletedException;
 import org.example.exception.InvalidStatusException;
+import org.example.mapper.TaskMapper;
 import org.example.repository.ProjectRepository;
 import org.example.repository.TaskRepository;
 import org.example.service.ReleaseService;
 import org.example.service.TaskService;
 import org.example.service.UserService;
 import org.example.translator.TranslationService;
-import org.hibernate.Filter;
-import org.hibernate.Session;
+import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.example.service.MyDateFormat.formatterWithTime;
-import static org.example.service.MyDateFormat.formatterWithoutTime;
 
 /**
  * This is the class that implements business-logic of tasks in this app.
@@ -37,19 +38,18 @@ import static org.example.service.MyDateFormat.formatterWithoutTime;
 @Service
 public class TaskServiceImpl implements TaskService {
 
-    private final EntityManager entityManager;
     private final TaskRepository taskRepository;
     private final UserService userService;
     private final ReleaseService releaseService;
     private final ProjectRepository projectRepository;
     private final TranslationService translationService;
+    private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
 
 
 
-    public TaskServiceImpl(EntityManager entityManager, TaskRepository taskRepository, UserService userService,
+    public TaskServiceImpl(TaskRepository taskRepository, UserService userService,
                            ReleaseService releaseService, TranslationService translationService,
                            ProjectRepository projectRepository) {
-        this.entityManager = entityManager;
         this.taskRepository = taskRepository;
         this.userService = userService;
         this.releaseService = releaseService;
@@ -204,84 +204,7 @@ public class TaskServiceImpl implements TaskService {
         requestDto.setRelease(currentRelease);
     }
 
-    /**
-     * Searches for tasks that contains data from the request dto
-     * @param filterDto Json from HTTP request that mapped into request dto
-     */
-    @Override
-    public List<TaskEntity> searchByFilter(TaskRequestDto filterDto) throws NotFoundException {
 
-        List<TaskEntity> result = findAll(false);
-
-        if (filterDto.getAuthorUsername() != null && checkIfEmpty(result)) {
-            UserEntity author = userService.findByUsername(filterDto.getAuthorUsername());
-            result = result.stream().filter(task -> Objects.equals(task.getAuthor().getId(), author.getId()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getResponsibleUsername() != null && checkIfEmpty(result)) {
-            UserEntity responsible = userService.findByUsername(filterDto.getResponsibleUsername());
-            result = result.stream().filter(task -> Objects.equals(task.getResponsible().getId(), responsible.getId()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getId() != null && checkIfEmpty(result)) {
-            result = result.stream()
-                    .filter(task -> task.getId().toString().contains(filterDto.getId().toString()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getStatus() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(task -> task.getStatus() == filterDto.getStatus())
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getType() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(task -> task.getType() == filterDto.getType())
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getAuthor() != null && checkIfEmpty(result)) {
-            result = result.stream()
-                    .filter(task -> task.getAuthor().toString().contains(filterDto.getAuthor().toString()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getResponsible() != null && checkIfEmpty(result)) {
-            result = result.stream()
-                    .filter(task -> task.getResponsible().toString().contains(filterDto.getResponsible().toString()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getProject() != null && checkIfEmpty(result)) {
-            result = result.stream()
-                    .filter(task -> task.getProject().toString().contains(filterDto.getProject().toString()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getName() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(task -> task.getName().contains(filterDto.getName()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getDescription() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(task -> task.getDescription().contains(filterDto.getDescription()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getReleaseVersion() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(
-                            task -> task.getRelease().getVersion().contains(filterDto.getReleaseVersion()))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getStartTime() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(
-                            task -> formatterWithoutTime.format(task.getStartTime()).contains(formatterWithoutTime.format(filterDto.getStartTime())))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getCreationTime() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(
-                            task -> formatterWithoutTime.format(task.getCreationTime()).contains(formatterWithoutTime.format(filterDto.getCreationTime())))
-                    .collect(Collectors.toList());
-        }
-        if (filterDto.getEndTime() != null && checkIfEmpty(result)) {
-            result = result.stream().filter(
-                            task -> formatterWithTime.format(task.getEndTime()).contains(formatterWithoutTime.format(filterDto.getEndTime())))
-                    .collect(Collectors.toList());
-        }
-
-        return result;
-    }
 
     /**
      * Searches for unfinished or expired(ended after release end) tasks of a project with stated id by version
@@ -317,27 +240,15 @@ public class TaskServiceImpl implements TaskService {
      * Searches for unfinished or expired(ended after release end) tasks of a project with stated id by release version
      * @param spec Specification of TaskEntity using Spring Data JPA
      *
+     * @return Undeleted tasks by filter
      */
     @Override
-    public List<TaskEntity> findAll(Specification<TaskEntity> spec) {
-
-        List<TaskEntity> tasks = taskRepository.findAll(spec);
-
-        return tasks.stream().filter(task -> !task.isDeleted()).collect(Collectors.toList());
+    public Page<TaskResponseDto> findAll(Specification<TaskEntity> spec, int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        return taskRepository.findAll(spec, pageable).map(taskMapper::taskEntityToTaskResponseDto);
     }
 
-    /**
-     * Finds all the tasks of all projects
-     */
-    @Override
-    public List<TaskEntity> findAll(boolean isDeleted) {
-        Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("deletedTaskFilter");
-        filter.setParameter("isDeleted", isDeleted);
-        List<TaskEntity> tasks = taskRepository.findAll();
-        session.disableFilter("deletedTaskFilter");
-        return tasks;
-    }
+
 
     public static long countTaskTime(TaskEntity task) {
         if (task.getStartTime() == null) {
@@ -352,15 +263,6 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    private boolean checkIfEmpty(List<TaskEntity> list) throws NotFoundException {
-
-        if (list.isEmpty()) {
-            throw new NotFoundException(
-                    translationService.getTranslation("No tasks were found with stated filters!"));
-        }
-
-        return true;
-    }
 
     private void checkIfNull(Object o, String msg) {
         if (o == null) {

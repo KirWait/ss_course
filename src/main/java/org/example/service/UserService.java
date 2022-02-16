@@ -12,8 +12,6 @@ public interface UserService {
 
     void register(UserEntity user);
 
-    List<UserEntity> getAll(boolean isDeleted);
-
     UserEntity findByUsername(String username) throws NotFoundException;
 
     UserEntity findById(Long id) throws NotFoundException;

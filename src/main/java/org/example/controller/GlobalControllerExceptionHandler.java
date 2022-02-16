@@ -80,12 +80,12 @@ public class GlobalControllerExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
-        logger.warn(translationService.getTranslation("An IllegalArgumentException has thrown: ")+exception.getMessage());
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
-    }
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    @ExceptionHandler(IllegalArgumentException.class)
+//    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException exception) {
+//        logger.warn(translationService.getTranslation("An IllegalArgumentException has thrown: ")+exception.getMessage());
+//        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
+//    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(InvalidDateFormatException.class)

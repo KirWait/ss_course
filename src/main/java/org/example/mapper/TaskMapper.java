@@ -19,40 +19,5 @@ public interface TaskMapper {
     })
     TaskStatResponseDto taskEntityToTaskStatResponseDto(TaskEntity entity);
 
-//    @AfterMapping
-//    @Named("timeSpent")
-//    default void setBookAuthor(@MappingTarget TaskStatResponseDto responseDto, TaskEntity task) throws ParseException {
-//        if (task.getStartTime() == null) {
-//            responseDto.setTimeSpent("00 hrs, 00 min");
-//            return;
-//        }
-//        long start = formatterWithTime.parse(task.getStartTime()).getTime();
-//        long end;
-//        if (task.getEndTime() == null) {
-//            end = System.currentTimeMillis();
-//        } else {
-//            end = formatterWithTime.parse(task.getEndTime()).getTime();
-//        }
-//        long duration = end - start;
-//        responseDto.setTimeSpent(String.format("%02d hrs, %02d min",
-//                TimeUnit.MILLISECONDS.toHours(duration),
-//                TimeUnit.MILLISECONDS.toMinutes(duration) -
-//                        TimeUnit.MILLISECONDS.toHours(duration) * 60
-//        ));
-//    }
-//    @Named("responsibleToResponsibleUsername")
-//    static String responsibleToResponsibleUsername(UserEntity responsible){
-//        return responsible.getUsername();
-//    }
-
-//    @Named("releaseToReleaseVersion")
-//    static String releaseToReleaseVersion(ReleaseEntity release){
-//        return release.getVersion();
-//    }
-
-//    @Named("startTimeAndEndTimeToTimeSpent")
-//    static String startTimeAndEndTimeToTimeSpent(String startTime, String endTime) throws ParseException {
-//
-//    }
 
 }

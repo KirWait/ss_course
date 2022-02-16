@@ -13,8 +13,6 @@ public interface ReleaseService {
 
     void delete(Long id) throws NotFoundException;
 
-    List<ReleaseEntity> getAll(boolean isDeleted);
-
     void save(ReleaseEntity version);
 
     void setUpRequestDto(ReleaseRequestDto version, Long projectId) throws ParseException, NotFoundException;

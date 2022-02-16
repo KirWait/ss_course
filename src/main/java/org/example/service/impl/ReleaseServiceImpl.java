@@ -9,8 +9,6 @@ import org.example.repository.ProjectRepository;
 import org.example.repository.ReleaseRepository;
 import org.example.service.ReleaseService;
 import org.example.translator.TranslationService;
-import org.hibernate.Filter;
-import org.hibernate.Session;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -29,16 +27,13 @@ import java.util.Objects;
 public class ReleaseServiceImpl implements ReleaseService {
 
 
-    private final EntityManager entityManager;
     private final ReleaseRepository releaseRepository;
     private final TranslationService translationService;
     private final ProjectRepository projectRepository;
 
 
-    public ReleaseServiceImpl(EntityManager entityManager,
-                              ReleaseRepository releaseRepository, TranslationService translationService,
+    public ReleaseServiceImpl(ReleaseRepository releaseRepository, TranslationService translationService,
                               ProjectRepository projectRepository) {
-        this.entityManager = entityManager;
         this.releaseRepository = releaseRepository;
         this.translationService = translationService;
         this.projectRepository = projectRepository;
@@ -72,16 +67,6 @@ public class ReleaseServiceImpl implements ReleaseService {
         releaseRepository.findById(id).orElseThrow(()->
                 new NotFoundException(String.format("No such release with id: %d", id)));
         releaseRepository.deleteById(id);
-    }
-
-    @Override
-    public List<ReleaseEntity> getAll(boolean isDeleted) {
-        Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("deletedReleaseFilter");
-        filter.setParameter("isDeleted", isDeleted);
-        List<ReleaseEntity> releases =  releaseRepository.findAll();
-        session.disableFilter("deletedReleaseFilter");
-        return releases;
     }
 
 

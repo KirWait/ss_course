@@ -16,6 +16,10 @@ public class TaskSpecificationBuilder {
     }
 
     public void with(String key, String operation, Object value) {
+        if (value.toString().equals("false")) value = false;
+        else if (value.toString().equals("true")) {
+            value = true;
+        }
         params.add(new SearchCriteria(key, operation, value));
 
     }

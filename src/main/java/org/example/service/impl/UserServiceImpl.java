@@ -3,7 +3,6 @@ package org.example.service.impl;
 import javassist.NotFoundException;
 import org.example.dto.TaskStatResponseDto;
 import org.example.dto.UserStatResponseDto;
-import org.example.entity.ProjectEntity;
 import org.example.entity.TaskEntity;
 import org.example.entity.UserEntity;
 import org.example.enumeration.Active;
@@ -24,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -43,16 +41,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final EntityManager entityManager;
     private final ProjectRepository projectRepository;
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
     private final TaskRepository taskRepository;
 
-    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder,
-                           EntityManager entityManager, ProjectRepository projectRepository, TaskRepository taskRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder, ProjectRepository projectRepository, TaskRepository taskRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.entityManager = entityManager;
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
     }
@@ -73,19 +68,6 @@ public class UserServiceImpl implements UserService {
         user.setActive(Active.ACTIVE);
 
         userRepository.save(user);
-    }
-
-    /**
-     * Gets all the users from the database
-     */
-    @Override
-    public List<UserEntity> getAll(boolean isDeleted) {
-        Session session = entityManager.unwrap(Session.class);
-        Filter filter = session.enableFilter("deletedUserFilter");
-        filter.setParameter("isDeleted", isDeleted);
-        List<UserEntity> users = userRepository.findAll();
-        session.disableFilter("deletedUserFilter");
-        return users;
     }
 
     /**

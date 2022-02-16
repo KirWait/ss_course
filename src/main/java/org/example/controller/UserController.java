@@ -3,19 +3,19 @@ package org.example.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import javassist.NotFoundException;
+import org.example.dto.PageableResponseDto;
 import org.example.dto.ProjectResponseDto;
-import org.example.dto.TaskRequestDto;
 import org.example.dto.TaskResponseDto;
 import org.example.entity.TaskEntity;
-import org.example.exception.PageException;
+import org.example.filters.TaskFilter;
 import org.example.mapper.ProjectMapper;
 import org.example.mapper.TaskMapper;
-import org.example.service.PageService;
 import org.example.service.ProjectService;
 import org.example.service.TaskService;
 import org.example.specification.TaskSpecificationBuilder;
 import org.example.translator.TranslationService;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,15 +36,12 @@ public class UserController {
     private final TaskService taskService;
     private final ProjectService projectService;
     private final TranslationService translationService;
-    private final PageService pageService;
 
-
-    public UserController(TaskService taskService, ProjectService projectService, TranslationService translationService, PageService pageService) {
+    public UserController(TaskService taskService, ProjectService projectService, TranslationService translationService) {
 
         this.projectService = projectService;
         this.taskService = taskService;
         this.translationService = translationService;
-        this.pageService = pageService;
     }
 
     private final TaskMapper taskMapper = Mappers.getMapper(TaskMapper.class);
@@ -85,18 +82,6 @@ public class UserController {
                   ), id, task.getStatus().name()), HttpStatus.OK);
       }
 
-    @Operation(summary = "Finds task by filter")
-    @PostMapping("/tasks/filter_search")
-    public ResponseEntity<List<TaskResponseDto>> filterSearch(@RequestBody TaskRequestDto requestDto,
-                                                              @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                              @RequestParam(value = "pageSize", required = false, defaultValue = "2") int pageSize) throws NotFoundException, PageException {
-          List<TaskEntity> resultEntity = pageService.findAllByPage(page, pageSize, taskService.searchByFilter(requestDto));
-          List<TaskResponseDto> resultResponseDto = resultEntity.stream()
-                  .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
-
-        return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
-      }
-
     @Operation(summary = "Counts unfinished tasks by release version")
     @GetMapping("/project/{projectId}/tasks/")
     public ResponseEntity<List<TaskResponseDto>> findUnfinishedTasks(@PathVariable Long projectId, @RequestParam(value = "releaseVersion") String releaseVersion) throws NotFoundException {
@@ -112,25 +97,21 @@ public class UserController {
 
     @Operation(summary = "Finds task by filter using JPA Specifications")
     @GetMapping("/tasks/filter_search2")
-    public ResponseEntity<List<TaskResponseDto>> filterSearch2(@RequestParam(value = "search") String search,
-                                                               @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-                                                               @RequestParam(value = "pageSize", required = false, defaultValue = "2") int pageSize) throws PageException {
-
+    public ResponseEntity<Page<TaskResponseDto>> filterSearch2(@RequestBody TaskFilter filter) {
+          filter.setSearch(filter.getSearch().concat(",deleted:false"));
+        System.out.println(filter.getSearch());
         TaskSpecificationBuilder builder = new TaskSpecificationBuilder();
         Pattern pattern = Pattern.compile("(\\w+?)([:<>])(\\w+?),");
-        Matcher matcher = pattern.matcher(search + ",");
+        Matcher matcher = pattern.matcher(filter.getSearch() + ",");
         while (matcher.find()) {
             builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
         }
 
         Specification<TaskEntity> spec = builder.build();
 
-        List<TaskEntity> result = pageService.findAllByPage(page, pageSize, taskService.findAll(spec));
+        Page<TaskResponseDto> result = taskService.findAll(spec, filter.getPage(), filter.getPageSize());
 
-        List<TaskResponseDto> resultResponseDto = result.stream()
-                .map(taskMapper::taskEntityToTaskResponseDto).collect(Collectors.toList());
-
-        return new ResponseEntity<>(resultResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(result, HttpStatus.OK);
       }
 }
 
